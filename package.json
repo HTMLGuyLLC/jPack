@@ -1,0 +1,23 @@
+{
+  "name": "htmlguyllc-jpack",
+  "version": "0.0.1",
+  "description": "Core Javascript Library of Everyday Objects, Events, and Utilities",
+  "main": "dist/jpack.js",
+  "author": {
+    "name" : "HTMLGuy, LLC",
+    "url" : "https://htmlguy.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HTMLGuyLLC/jPack"
+  },
+  "bugs": {
+    "url": "https://github.com/HTMLGuyLLC/jPack/issues"
+  },
+  "homepage": "https://htmlguyllc.github.io/jPack/",
+  "private": false,
+  "dependencies": {
+    "jquery": "^3.4.0"
+  },
+  "license": "MIT"
+}
