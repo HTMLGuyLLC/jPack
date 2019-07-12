@@ -1,7 +1,7 @@
 # jPack
 jPack is a library of components, objects, plugin wrappers, and utilities designed to make building custom websites simpler. 
 
-With jPack, you can easily upgrade your server-side rendered application to a pseudo-SPA using XHR requests for page-loads. 
+With jPack, you can easily upgrade your server-side rendered application to a pseudo-SPA using XHR requests for page-loads, get values from the querystring, store and interact with user/multi-tenant website data, and more. 
 
 ## Installation
 
