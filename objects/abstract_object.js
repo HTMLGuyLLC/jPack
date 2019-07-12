@@ -2,6 +2,7 @@ import {type_checks, strings} from "../utilities";
 
 export const abstract_object = {
     //keys this object contains (used to automatically populate it when you run populate(data);
+    //overwrite this in each extending class!
     keys: [],
 
     /**
