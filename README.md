@@ -36,7 +36,7 @@ Or you can download the latest release, unzip it, put it in your public folder t
 ```html
 <script href="/vendor/htmlguyllc-jpack/dist/jpack.min.js">
 <script>
-window.onload = function(){
+window.addEventListener('load', function() {
     jpack.components.navigation.load('/my-page');
 };
 </script>
