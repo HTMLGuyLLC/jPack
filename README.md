@@ -22,7 +22,7 @@ strings.ucfirst('bob');
 import {strings} from '@htmlguyllc/jpack/src/utilities';
 strings.ucfirst('bob');
 
-//or a multiple components from the collection file
+//or multiple components from the collection file
 import {strings, dom} from '@htmlguyllc/jpack/src/utilities';
 strings.ucfirst('bob');
 dom.exists('a.my-link');

@@ -7,7 +7,7 @@ const development = {
     mode: 'development',
     devtool: 'inline-source-map',
     output: {
-        filename: 'jpack.min.js',
+        filename: 'jpack.compiled.js',
         path: path.resolve(__dirname, 'src')
     }
 };
@@ -19,6 +19,21 @@ const production = {
     output: {
         filename: 'jpack.min.js',
         path: path.resolve(__dirname, 'dist')
+    },
+    module: {
+        rules: [
+            {
+                loader:'babel-loader',
+                test: /\.js$/,
+                exclude:  /node_modules/
+            }
+        ]
+    },
+    resolve: {
+        extensions: ['.js']
+    },
+    optimization: {
+        minimize: true
     }
 };
 

@@ -1,7 +1,10 @@
 {
   "name": "@htmlguyllc/jpack",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "Core Javascript Library of Everyday Objects, Events, and Utilities",
+  "keywords": [
+    "javascript", "javascript-library", "component-library", "utilities", "javascript-objects", "javascript-events", "javascript-helpers"
+  ],
   "main": "dist/jpack.min.js",
   "browser": "src/jpack.js",
   "module": "src/jpack.js",
