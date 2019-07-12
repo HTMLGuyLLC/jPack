@@ -13,7 +13,7 @@ npm i htmlguyllc-jpack;
 ```
 
 and then use what you need, where you need it (requires ES6):
-```ecmascript 6
+```javascript
 //a single component
 import {navigation} from 'htmlguyllc-jpack/components/navigation';
 navigation.load('/my-page');
@@ -79,7 +79,7 @@ _Provides a wrapper for window.location and query string access_
 - .appendSlash(string): string //adds a slash (if there isn't already one) to the end of a string. 
 
 ##### To use:
-```ecmascript 6
+```javascript
 import {request} from 'htmlguyllc-jpack/objects'; 
 
 //get product_id from the querystring
@@ -118,7 +118,7 @@ const $site = {
 ```
 
 The harder way: Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
-```ecmascript 6
+```javascript
 import {site} from 'htmlguyllc-jpack/objects';
  
 $.get('/my-site-info-endpoint.php', function(data){
@@ -176,7 +176,7 @@ const $user = {
 ```
 
 The harder way: Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
-```ecmascript 6
+```javascript
 import {user} from 'htmlguyllc-jpack/objects';
  
 $.get('/my-user-info-endpoint.php', function(data){
@@ -187,7 +187,7 @@ $.get('/my-user-info-endpoint.php', function(data){
 
 ##### To use:
 
-```ecmascript 6
+```javascript
 import {site} from 'htmlguyllc-jpack/objects';
 
 var site_id = site.getId();
@@ -207,7 +207,7 @@ _Common string manipulations_
 
 ##### To Use:
 
-```ecmascript 6
+```javascript
 import {strings} from 'htmlguyllc-jpack/utilities';
 
 strings.ucfirst('bob'); //returns 'Bob'
@@ -225,7 +225,7 @@ _HTML DOM helpers_
 
 ##### To Use:
 
-```ecmascript 6
+```javascript
 import {dom} from 'htmlguyllc-jpack/utilities';
 
 //Dont do this. Most of these are dumb examples.
@@ -247,7 +247,7 @@ _Check the data type of a value with more specificity than typeof or built-in fu
 
 ##### To Use:
 
-```ecmascript 6
+```javascript
 import {type_checks} from 'htmlguyllc-jpack/utilities/type_checks';
 
 var my_obj = {id:null, name:'John Doe', email:'john@doe.com'};
@@ -273,7 +273,7 @@ _Shorthand event handlers_
 
 ##### To Use:
 
-```ecmascript 6
+```javascript
 import {events} from 'htmlguyllc-jpack/utilities';
 
 events.onClick('a.my-link', function(){
