@@ -241,7 +241,7 @@ dom.multipleExist('a'); //returns true if more than 1 anchor on the page
 ```
 
 ### -Type Checks
-_Check the data type of a value with more specificity than typeof or built-in functions_
+_Check the data type of a value with more specificity than typeof or vanilla JS functions_
 
 - .isDataObject(object, array, bool, bool, bool): boolean //validates that an object contains data and not a dom element, array, null or anything else that would normally return true when you call typeof
 
