@@ -3,7 +3,7 @@ jPack is a library of components, objects, plugin wrappers, and utilities design
 
 With jPack, you can easily upgrade your server-side rendered application to a pseudo-SPA using XHR requests for page-loads, get values from the querystring, store and interact with user/multi-tenant website data, and more. 
 
-## Installation
+# Installation
 
 With Yarn or NPM:
 ```shell
@@ -40,7 +40,7 @@ Or you can download the latest release, unzip it, put it in your public folder t
 </script>
 ```
 
-## What's Included:
+# What's Included:
 
 Four categories of functionality are provided in this library. 
 Each has it's own namespace in parenthesis below.
@@ -56,6 +56,8 @@ None yet.
 
 #### Utilities (utilities): 
 strings, data_types, dom, events
+
+# Documentation
 
 ## - Components -
 None yet.
