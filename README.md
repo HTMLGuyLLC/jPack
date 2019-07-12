@@ -54,10 +54,10 @@ None yet.
 #### Utilities (namespace: utilities): 
 strings, data_types, dom, events
 
-## Components
+## - Components -
 None yet.
 
-## Objects
+## - Objects -
 
 ### -Request
 _Provides a wrapper for window.location and query string access_
@@ -186,10 +186,10 @@ import {site} from 'htmlguyllc-jpack/objects';
 var site_id = site.getId();
 ```
 
-## Plugin Wrappers
+## - Plugin Wrappers -
 None yet.
 
-## Utilities
+## - Utilities -
 
 ### -Strings
 _Common string manipulations_
