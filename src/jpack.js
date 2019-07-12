@@ -1,7 +1,7 @@
-import '../components/index.js';
-import '../objects/index.js';
-import '../plugin_wrappers/index.js';
-import '../utilities/index.js';
+import * as components from '../components';
+import * as objects from '../objects';
+import * as plugin_wrappers from '../plugin_wrappers';
+import * as utilities from '../utilities';
 
 export var jpack = {
     components: components,

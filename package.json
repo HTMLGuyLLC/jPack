@@ -1,6 +1,6 @@
 {
   "name": "htmlguyllc-jpack",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Core Javascript Library of Everyday Objects, Events, and Utilities",
   "main": "dist/jpack.min.js",
   "author": {
