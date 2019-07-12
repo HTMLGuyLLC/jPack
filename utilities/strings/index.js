@@ -15,6 +15,7 @@ export const strings = {
     getter: function(string){
         return 'get'+this.ucfirst(string);
     },
+
     /**
      * Creates a setter method name from a string
      *
@@ -26,6 +27,7 @@ export const strings = {
     setter: function(string){
         return 'set'+this.ucfirst(string);
     },
+
     /**
      * Adds ucfirst() functionality to JS (like PHP)
      *

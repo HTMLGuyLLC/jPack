@@ -4,8 +4,8 @@
   "description": "Core Javascript Library of Everyday Objects, Events, and Utilities",
   "main": "dist/jpack.js",
   "author": {
-    "name" : "HTMLGuy, LLC",
-    "url" : "https://htmlguy.com"
+    "name": "HTMLGuy, LLC",
+    "url": "https://htmlguy.com"
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,8 @@
   "homepage": "https://htmlguyllc.github.io/jPack/",
   "private": false,
   "dependencies": {
-    "jquery": "^3.4.0"
+    "jquery": "^3.4.0",
+    "url-search-params-polyfill": "^7.0.0"
   },
   "license": "MIT"
 }

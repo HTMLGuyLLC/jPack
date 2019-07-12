@@ -3,15 +3,15 @@ import {abstract_object} from "../abstract_object";
 //create an object of default values
 let user_defaults = {
     id: null,
-    isGuest:null,
-    isAdmin:null,
+    isGuest:false,
+    isAdmin:false,
     username:null,
     fname:null,
     lname:null,
     email:null,
     phone:null,
     permissions:[],
-    additionalData:[],
+    additionalData:{},
 };
 //override defaults from $user (if defined)
 if( typeof $user !== undefined ) user_defaults = {...user_defaults, ...$user};
