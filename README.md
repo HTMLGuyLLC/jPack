@@ -122,7 +122,7 @@ $.get('/my-site-info-endpoint.php', function(data){
 
 ### -User
 _Designed for sites with user accounts/guest accounts. This object stores a user's details and allows for front-end permission checks._
-'additionalData'
+
 - .getId(): string|int
 - .setId(string|int): this
 - .getIsGuest(): bool //if your site has users who don't login but still interact and have a user record (like guest checkout)
