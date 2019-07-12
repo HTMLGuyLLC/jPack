@@ -71,7 +71,7 @@ _Provides a wrapper for window.location and query string access_
 
 Method/Property | Params | Return | Notes
 --- | --- | --- | ---
-query|n/a|URLSearchParams|object to interact with the querystring
+query|n/a|URLSearchParams|see https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams#Methods
 isHttps| |bool|
 getDomain| |string|
 getDomainWithProtocol| |string|
