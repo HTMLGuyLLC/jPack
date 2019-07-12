@@ -72,12 +72,12 @@ _Provides a wrapper for window.location and query string access_
 Method/Property | Params | Return | Notes
 --- | --- | --- | ---
 query|n/a|URLSearchParams|object to interact with the querystring
-isHttps|none|bool|
-getDomain|none|string|
-getDomainWithProtocol|none|string|
-getURI|none|string|also known as the path - does not include querystring 
-getURIWithQueryString|none|string|full URL after the domain
-getFullURL|none|string|
+isHttps| |bool|
+getDomain| |string|
+getDomainWithProtocol| |string|
+getURI| |string|also known as the path - does not include querystring 
+getURIWithQueryString| |string|full URL after the domain
+getFullURL| |string|
 appendSlash|string|string|adds a slash (if there isn't already one) to the end of a string. 
 
 ##### To use:
@@ -95,15 +95,17 @@ var full_blog_url = request.appendSlash(request.getDomainWithProtocol())+'blog';
 ### -Site
 _Designed for multi-tenant applications, this object stores a site's id, name, and config object._
 
-- .getId(): string|int
-- .setId(string|int): this
-- .getName(): string|null
-- .setName(string): this
-- .getConfig(): object|array
-- .setConfig(object|array): this //overwrites all config
-- .getConfigItem(): mixed //returns an individual item from config
-- .setConfigItem(string, mixed): this //sets the value of an individual item in config
-- .populate(object): this //sets provided values all at once (id, name, config)
+Method/Property | Params | Return | Notes
+--- | --- | --- | ---
+getId| |string/int|
+setId|string/int|this|
+getName| |string|this
+setName|string|this|
+getConfig| |object/array|this
+setConfig|object/array|this|overwrites all config
+getConfigItem| |mixed|returns an individual item from config
+setConfigItem|string,mixed|this|sets the value of an individual item in config
+populate|object|this|sets provided values all at once (id,name,config)
 
 ##### To populate with data:
 
@@ -132,31 +134,33 @@ $.get('/my-site-info-endpoint.php', function(data){
 ### -User
 _Designed for sites with user accounts/guest accounts. This object stores a user's details and allows for front-end permission checks._
 
-- .getId(): string|int
-- .setId(string|int): this
-- .getIsGuest(): bool //if your site has users who don't login but still interact and have a user record (like guest checkout)
-- .setIsGuest(bool): this
-- .getIsAdmin(): bool //if your site has users who have ultimate permissions and you want to do something based on that
-- .setIsAdmin(bool): this
-- .getUsername(): string|null
-- .setUsername(string): this
-- .getFname(): string|null
-- .setFname(string): this
-- .getLname(): string|null
-- .setLname(string): this
-- .getName(): string //returns fname and lname concatenated with a space
-- .getEmail(): string|null
-- .setEmail(string): this
-- .getPhone(): string|null
-- .setPhone(string): this
-- .getPermissions(): array
-- .setPermissions(array): this
-- .addPermission(string|int): this
-- .removePermission(string|int): this
-- .hasPermission(string|int): bool
-- .getAdditionalData(): object|array //set any additional data about this user that doesn't fit the default getters and setters here (a better idea would be to extend this object with your custom properties/methods)
-- .setAdditionalData(object|array): this
-- .populate(object) //sets provided values all at once (id, isGuest, isAdmin, etc)
+Method/Property | Params | Return | Notes
+--- | --- | --- | ---
+getId| |string/int|
+setId|string/int|this|
+getIsGuest| |bool|if your site has users who don't login but still interact and have a user record (like guest checkout)
+setIsGuest|bool|this|
+setIsAdmin| |bool|if your site has users who have ultimate permissions and you want to do something based on that
+setIsGuest|bool|this|
+getUsername| |string|
+setUsername|string|this|
+getFname| |string|
+setFname|string|this|
+getLname| |string|
+setLname|string|this|
+getName| |string|returns fname and lname concatenated with a space
+getEmail| |string|
+setEmail|string|this|
+getPhone| |string|
+setPhone|string|this|
+getPermissions| |array|
+setPermissions|array|this|
+addPermission|string/int|this|
+removePermission|string/int|this|
+hasPermission|string/int|bool|
+getAdditionalData| |object/array|set any additional data about this user that doesn't fit the default getters and setters here (a better idea would be to extend this object with your custom properties/methods)
+setAdditionalData|object/array|this|
+populate|object|this|sets provided values all at once (id, isGuest, isAdmin, etc)
 
 ##### To populate with data:
 
@@ -203,9 +207,11 @@ None yet.
 ### -Strings
 _Common string manipulations_
 
-- .ucfirst(string): string //capitalizes the first letter of a string like ucfirst in PHP
-- .getter(string): string //reates a getter method name from a string
-- .setter(string): string //creates a setter method name from a string
+Method/Property | Params | Return | Notes
+--- | --- | --- | ---
+ucfirst|string|string|capitalizes the first letter of a string like ucfirst in PHP
+getter|string|string|creates a getter method name from a string
+setter|string|string|creates a setter method name from a string
 
 ##### To Use:
 
@@ -220,10 +226,12 @@ strings.setter('name'); //returns 'setName';
 ### -DOM
 _HTML DOM helpers_
 
-- .getDomElement(mixed, bool, bool): Element|HTMLDocument|null //returns a native DOM element for whatever you provide (selector string, array of elements, single element, jQuery wrapped DOM element, etc)
-- .getDomElements(mixed, bool): array //same as getDomElement, except it returns all matches 
-- .exists(mixed): boolean //checks to see if it exists in the DOM
-- .multipleExist(mixed): boolean //checks to see if more than 1 instance exists in the DOM
+Method/Property | Params | Return | Notes
+--- | --- | --- | ---
+getDomElement|mixed, bool, bool|Element/HTMLDocument/null|returns a native DOM element for whatever you provide (selector string, array of elements, single element, jQuery wrapped DOM element, etc)
+getDomElements|mixed, bool|array|same as getDomElement, except it returns all matches
+exists|mixed|bool|checks to see if it exists in the DOM
+multipleExist|mixed|bool|checks to see if more than 1 instance exists in the DOM
 
 ##### To Use:
 
@@ -245,7 +253,10 @@ dom.multipleExist('a'); //returns true if more than 1 anchor on the page
 ### -Type Checks
 _Check the data type of a value with more specificity than typeof or vanilla JS functions_
 
-- .isDataObject(object, array, bool, bool, bool): boolean //validates that an object contains data and not a dom element, array, null or anything else that would normally return true when you call typeof
+
+Method/Property | Params | Return | Notes
+--- | --- | --- | ---
+isDataObject|object, array, bool, bool, bool|bool|validates that an object contains data and not a dom element, array, null or anything else that would normally return true when you call typeof
 
 ##### To Use:
 
@@ -264,14 +275,17 @@ type_checks.isDataObject(my_obj, ['id', 'name', 'email'], true, true, true);
 ### -Events
 _Shorthand event handlers_
 
-- .onClick(mixed, function): array //prevents the browser's default so you can handle link clicks and form submissions with less code
-- .offClick(mixed, function): array //removes the handler you added using onClick
-- .onSubmit(mixed, function): array //same as .onClick() but for submit
-- .offSubmit(mixed, function): array //same as .offClick() but for submit
-- .onChange(mixed, function): array //adds an on change handler but does NOT preventDefault - mostly exists for consistency
-- .offChange(mixed, function): array //removes the handler you added using .onChange()
-- .onEventPreventDefault(mixed, string, function): array //attaches an event handler and prevents the default browser action
-- .offEventPreventDefault(mixed, string, function): array //removes the handler you attached with .onEventPreventDefault()
+
+Method/Property | Params | Return | Notes
+--- | --- | --- | ---
+onClick|mixed, function|array|prevents the browser's default so you can handle link clicks and form submissions with less code
+offClick|mixed, function|array|removes the handler you added using onClick
+onSubmit|mixed, function|array|same as .onClick() but for submit
+offSubmit|mixed, function|array|same as .offClick() but for submit
+onChange|mixed, function|array|adds an on change handler but does NOT preventDefault - mostly exists for consistency
+offChange|mixed, function|array|removes the handler you added using .onChange()
+onEventPreventDefault|mixed, string, function|array|attaches an event handler and prevents the default browser action
+offEventPreventDefault|mixed, string, function|array|removes the handler you attached with .onEventPreventDefault()
 
 ##### To Use:
 
