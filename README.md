@@ -69,14 +69,16 @@ None yet.
 ### -Request
 _Provides a wrapper for window.location and query string access_
 
-- .query: URLSearchParams //object to interact with the querystring
-- .isHttps(): bool
-- .getDomain(): string
-- .getDomainWithProtocol(): string
-- .getURI(): string //also known as the path - does not include querystring 
-- .getURIWithQueryString(): string //full URL after the domain
-- .getFullURL(): string
-- .appendSlash(string): string //adds a slash (if there isn't already one) to the end of a string. 
+Method/Property | Params | Return | Notes
+--- | --- | --- | ---
+query|n/a|URLSearchParams|object to interact with the querystring
+isHttps|none|bool|
+getDomain|none|string|
+getDomainWithProtocol|none|string|
+getURI|none|string|also known as the path - does not include querystring 
+getURIWithQueryString|none|string|full URL after the domain
+getFullURL|none|string|
+appendSlash|string|string|adds a slash (if there isn't already one) to the end of a string. 
 
 ##### To use:
 ```javascript
