@@ -1,9 +1,9 @@
-#jPack
+# jPack
 jPack is a library of components, objects, plugin wrappers, and utilities designed to make building custom websites simpler. 
 
 With jPack, you can easily upgrade your server-side rendered application to a pseudo-SPA using XHR requests for page-loads. 
 
-##Installation
+## Installation
 
 With Yarn or NPM:
 ```shell
@@ -42,22 +42,22 @@ Or you can download the latest release, unzip it, put it in your public folder t
 
 ## What's Included:
 
-####Components (namespace: components): 
+#### Components (namespace: components): 
 None yet.
 
-####Objects (namespace: objects): 
+#### Objects (namespace: objects): 
 request, site, user
 
-####Plugin Wrappers (namespace: plugin_wrappers): 
+#### Plugin Wrappers (namespace: plugin_wrappers): 
 None yet.
 
-####Utilities (namespace: utilities): 
+#### Utilities (namespace: utilities): 
 strings, data_types, dom, events
 
-##Components
+## Components
 None yet.
 
-##Objects
+## Objects
 
 ### -Request
 _Provides a wrapper for window.location and query string access_
@@ -71,7 +71,7 @@ _Provides a wrapper for window.location and query string access_
 - .getFullURL(): string
 - .appendSlash(string): string //adds a slash (if there isn't already one) to the end of a string. 
 
-#####To use:
+##### To use:
 ```ecmascript 6
 import {request} from 'htmlguyllc-jpack/objects'; 
 
@@ -96,7 +96,7 @@ _Designed for multi-tenant applications, this object stores a site's id, name, a
 - .setConfigItem(string, mixed): this //sets the value of an individual item in config
 - .populate(object): this //sets provided values all at once (id, name, config)
 
-#####To populate with data:
+##### To populate with data:
 
 The easy way: Create an object named $site with values from your server (prior to including jpack) 
 ```html
@@ -149,7 +149,7 @@ _Designed for sites with user accounts/guest accounts. This object stores a user
 - .setAdditionalData(object|array): this
 - .populate(object) //sets provided values all at once (id, isGuest, isAdmin, etc)
 
-#####To populate with data:
+##### To populate with data:
 
 The easy way: Create an object named $user with values from your server (prior to including jpack) 
 ```html
@@ -178,7 +178,7 @@ $.get('/my-user-info-endpoint.php', function(data){
 });
 ```
 
-#####To use:
+##### To use:
 
 ```ecmascript 6
 import {site} from 'htmlguyllc-jpack/objects';
@@ -186,10 +186,10 @@ import {site} from 'htmlguyllc-jpack/objects';
 var site_id = site.getId();
 ```
 
-##Plugin Wrappers
+## Plugin Wrappers
 None yet.
 
-##Utilities
+## Utilities
 
 ### -Strings
 _Common string manipulations_
@@ -198,7 +198,7 @@ _Common string manipulations_
 - .getter(string): string //reates a getter method name from a string
 - .setter(string): string //creates a setter method name from a string
 
-#####To Use:
+##### To Use:
 
 ```ecmascript 6
 import {strings} from 'htmlguyllc-jpack/utilities';
@@ -216,7 +216,7 @@ _HTML DOM helpers_
 - .exists(mixed): boolean //checks to see if it exists in the DOM
 - .multipleExist(mixed): boolean //checks to see if more than 1 instance exists in the DOM
 
-#####To Use:
+##### To Use:
 
 ```ecmascript 6
 import {dom} from 'htmlguyllc-jpack/utilities';
@@ -238,7 +238,7 @@ _Check the data type of a value with more specificity than typeof or built-in fu
 
 - .isDataObject(object, array, bool, bool, bool): boolean //validates that an object contains data and not a dom element, array, null or anything else that would normally return true when you call typeof
 
-#####To Use:
+##### To Use:
 
 ```ecmascript 6
 import {type_checks} from 'htmlguyllc-jpack/utilities/type_checks';
@@ -264,7 +264,7 @@ _Shorthand event handlers_
 - .onEventPreventDefault(mixed, string, function): array //attaches an event handler and prevents the default browser action
 - .offEventPreventDefault(mixed, string, function): array //removes the handler you attached with .onEventPreventDefault()
 
-#####To Use:
+##### To Use:
 
 ```ecmascript 6
 import {events} from 'htmlguyllc-jpack/utilities';
