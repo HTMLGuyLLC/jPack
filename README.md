@@ -42,16 +42,19 @@ Or you can download the latest release, unzip it, put it in your public folder t
 
 ## What's Included:
 
-#### Components (namespace: components): 
+Four categories of functionality are provided in this library. 
+Each has it's own namespace in parenthesis below.
+
+#### Components (components): 
 None yet.
 
-#### Objects (namespace: objects): 
+#### Objects (objects): 
 request, site, user
 
-#### Plugin Wrappers (namespace: plugin_wrappers): 
+#### Plugin Wrappers (plugin_wrappers): 
 None yet.
 
-#### Utilities (namespace: utilities): 
+#### Utilities (utilities): 
 strings, data_types, dom, events
 
 ## - Components -
