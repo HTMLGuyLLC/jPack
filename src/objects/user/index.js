@@ -14,13 +14,13 @@ let user_defaults = {
     additionalData:{},
 };
 //override defaults from $user (if defined)
-if( typeof $user !== undefined ) user_defaults = {...user_defaults, ...$user};
+if( typeof $user === "object" ) user_defaults = {...user_defaults, ...$user};
 
 /**
  *
  * Provides you with easy access to user information and allows you to perform permission checks
  *
- * @type {{getIsGuest: (function(): *), getPhone: (function(): *), getLname: (function(): *), getName: (function(): string), isGuest: null, setIsGuest: (function(*): user), addPermission: (function(*=): user), getId: (function(): *), setAdditionalData: (function(*): user), setPermissions: (function(*): user), getUsername: (function(): *), lname: null, setFname: (function(*): user), getFname: (function(): *), permissions: Array, setId: (function(*): user), id: null, additionalData: Array, email: (null|*), fname: null, setUsername: (function(*): user), setLname: (function(*): user), getAdditionalData: (function(): *), getPermissions: (function(): *), setPhone: (function(*): user), isAdmin: null, removePermission: (function(*): user), setIsAdmin: (function(*): user), populate: user.populate, getIsAdmin: (function(): *), setEmail: (function(*): user), phone: null, hasPermission: (function(*=): boolean), getEmail: (function()), username: null}}
+ * @type {{getIsGuest: (function(): *), getPhone: (function(): *), getLname: (function(): *), getName: (function(): string), isGuest: null, setIsGuest: (function(*): user), addPermission: (function(*=): user), getId: (function(): *), setAdditionalData: (function(*): user), setPermissions: (function(*): user), getUsername: (function(): *), lname: null, setFname: (function(*): user), getFname: (function(): *), permissions: Array, setId: (function(*): user), id: null, additionalData: Array, email: (null|*), fname: null, setUsername: (function(*): user), setLname: (function(*): user), getAdditionalData: (function(): *), getPermissions: (function(): *), setPhone: (function(*): user), isAdmin: null, removePermission: (function(*): user), setIsAdmin: (function(*): user), populate: (function(*): user), getIsAdmin: (function(): *), setEmail: (function(*): user), phone: null, hasPermission: (function(*=): boolean), getEmail: (function()), username: null}}
  */
 export const user = {...abstract_object, ...{
     //user object keys

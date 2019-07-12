@@ -11,12 +11,14 @@ export const abstract_object = {
      * @param data
      */
     populate: function(data){
+        const self = this;
+
         //validate the incoming data object and make sure it only contains these keys
         !type_checks.isDataObject(data, this.keys, false, true, true);
 
         //for each key that is set in the data object, set the value on this
         this.keys.forEach(function(key){
-            if( typeof data[key] !== undefined ) this[strings.setter(key)](data[key]);
+            if( typeof data[key] !== "undefined" ) self[strings.setter(key)](data[key]);
         });
 
         return this;

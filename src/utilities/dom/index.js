@@ -32,13 +32,13 @@ export const dom = {
      */
     getDomElements: function(el, error_on_none){
         //default to false
-        error_on_none = typeof error_on_none === undefined ? false : error_on_none;
+        error_on_none = typeof error_on_none === "undefined" ? false : error_on_none;
 
         //default to empty
         let el_array = [];
 
         //if not provided or doesn't exist
-        if( typeof el === undefined || !el ){
+        if( typeof el === "undefined" || !el ){
             //do nothing, default is empty array
         }
         //if a string was provided

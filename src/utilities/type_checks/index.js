@@ -21,22 +21,25 @@ export const type_checks = {
      */
     isDataObject: function(value, keys, require_all_keys, block_other_keys, throw_error){
         //default for throw_error is false
-        throw_error = typeof throw_error !== undefined ? throw_error : false;
+        throw_error = typeof throw_error !== "undefined" ? throw_error : false;
 
         //default for require_all_keys is false
-        require_all_keys = typeof require_all_keys !== undefined ? require_all_keys : false;
+        require_all_keys = typeof require_all_keys !== "undefined" ? require_all_keys : false;
+
+        //for error messages
+        var stringified_val = JSON.stringify(value);
 
         //default error_msg
-        const error_msg = `${value} is not an object`;
+        const error_msg = `${stringified_val} is not an object`;
 
         //if not provided or if null
-        if( typeof value === undefined || !value ){
+        if( typeof value === "undefined" || !value ){
             if( throw_error ) throw error_msg;
             return false;
         }
 
         //determine if it is an object
-        const is_object = typeof value !== 'object';
+        const is_object = typeof value === "object";
 
         //if not
         if( !is_object ){
@@ -64,14 +67,14 @@ export const type_checks = {
 
             //if not one of the keys were found
             if( !found_key ){
-                if( throw_error ) throw `${value} does not contain at least one of the following: `+keys.join(', ');
+                if( throw_error ) throw `${stringified_val} does not contain at least one of the following: `+keys.join(', ');
                 return false;
             }
 
             //if we didn't find all the keys
             if( require_all_keys && missing_keys.length )
             {
-                if( throw_error ) throw `${value} is missing data: `+missing_keys.join(', ');
+                if( throw_error ) throw `${stringified_val} is missing data: `+missing_keys.join(', ');
                 return false;
             }
 
@@ -86,7 +89,7 @@ export const type_checks = {
                 });
 
                 if( unrecognized_keys.length ){
-                    if( throw_error ) throw `${value} contains invalid data: `+unrecognized_keys.join(', ');
+                    if( throw_error ) throw `${stringified_val} contains invalid data: `+unrecognized_keys.join(', ');
                     return false;
                 }
             }

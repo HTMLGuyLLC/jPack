@@ -7,29 +7,33 @@ With jPack, you can easily upgrade your server-side rendered application to a ps
 
 With Yarn or NPM:
 ```shell
-yarn add htmlguyllc-jpack;
+yarn add @htmlguyllc/jpack;
 //or
-npm i htmlguyllc-jpack;
+npm i @htmlguyllc/jpack;
 ```
 
 and then use what you need, where you need it (requires ES6):
 ```javascript
-//a single component
-import {navigation} from 'htmlguyllc-jpack/components/navigation';
-navigation.load('/my-page');
+//a single component from it's own file
+import {strings} from '@htmlguyllc/jpack/src/utilities/strings';
+strings.ucfirst('bob');
+
+//or a single component from the collection file
+import {strings} from '@htmlguyllc/jpack/src/utilities';
+strings.ucfirst('bob');
+
+//or a multiple components from the collection file
+import {strings, dom} from '@htmlguyllc/jpack/src/utilities';
+strings.ucfirst('bob');
+dom.exists('a.my-link');
 
 //or a namespaced object containing all components
-import 'htmlguyllc-jpack/components';
-components.navigation.load('/my-page');
+import * as utilities from '@htmlguyllc/jpack/src/utilities';
+utilities.strings.ucfirst('bob');
 
-//or a namespaced object containing all types
-import 'htmlguyllc-jpack';
+//or a namespaced object containing all
+import {jpack} from '@htmlguyllc/jpack';
 jpack.components.navigation.load('/my-page');
-
-//or extract multiple
-import {user, site} from 'htmlguyllc-jpack/objects';
-user.getId();
-site.getId();
 ```
 
 Or you can download the latest release, unzip it, put it in your public folder then include the whole library:
@@ -82,7 +86,7 @@ appendSlash|string|string|adds a slash (if there isn't already one) to the end o
 
 ##### To use:
 ```javascript
-import {request} from 'htmlguyllc-jpack/objects'; 
+import {request} from '@htmlguyllc/jpack/src/objects'; 
 
 //get product_id from the querystring
 var product_id = request.query.get('product_id');
@@ -123,7 +127,7 @@ const $site = {
 
 The harder way: Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
 ```javascript
-import {site} from 'htmlguyllc-jpack/objects';
+import {site} from '@htmlguyllc/jpack/src/objects';
  
 $.get('/my-site-info-endpoint.php', function(data){
     //don't forget error handling!
@@ -183,7 +187,7 @@ const $user = {
 
 The harder way: Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
 ```javascript
-import {user} from 'htmlguyllc-jpack/objects';
+import {user} from '@htmlguyllc/jpack/src/objects';
  
 $.get('/my-user-info-endpoint.php', function(data){
     //don't forget error handling!
@@ -194,7 +198,7 @@ $.get('/my-user-info-endpoint.php', function(data){
 ##### To use:
 
 ```javascript
-import {site} from 'htmlguyllc-jpack/objects';
+import {site} from '@htmlguyllc/jpack/src/objects';
 
 var site_id = site.getId();
 ```
@@ -216,7 +220,7 @@ setter|string|string|creates a setter method name from a string
 ##### To Use:
 
 ```javascript
-import {strings} from 'htmlguyllc-jpack/utilities';
+import {strings} from '@htmlguyllc/jpack/src/utilities';
 
 strings.ucfirst('bob'); //returns 'Bob'
 strings.getter('name'); //returns 'getName';
@@ -236,7 +240,7 @@ multipleExist|mixed|bool|checks to see if more than 1 instance exists in the DOM
 ##### To Use:
 
 ```javascript
-import {dom} from 'htmlguyllc-jpack/utilities';
+import {dom} from '@htmlguyllc/jpack/src/utilities';
 
 //Dont do this. Most of these are dumb examples.
 dom.getDomElement('.my-fav-button', true, true); //will throw an error if it doesn't fine it, or if it finds more than 1
@@ -261,7 +265,7 @@ isDataObject|object, array, bool, bool, bool|bool|validates that an object conta
 ##### To Use:
 
 ```javascript
-import {type_checks} from 'htmlguyllc-jpack/utilities/type_checks';
+import {type_checks} from '@htmlguyllc/jpack/src/utilities';
 
 var my_obj = {id:null, name:'John Doe', email:'john@doe.com'};
 
@@ -290,7 +294,7 @@ offEventPreventDefault|mixed, string, function|array|removes the handler you att
 ##### To Use:
 
 ```javascript
-import {events} from 'htmlguyllc-jpack/utilities';
+import {events} from '@htmlguyllc/jpack/src/utilities';
 
 events.onClick('a.my-link', function(){
    //do something without the page redirecting to the href 

@@ -7,7 +7,7 @@ let site_defaults = {
     config:{},
 };
 //override defaults from $site (if defined)
-if( typeof $site !== undefined ) site_defaults = {...site_defaults, ...$site};
+if( typeof $site === "object" ) site_defaults = {...site_defaults, ...$site};
 
 /**
  *
@@ -47,7 +47,7 @@ export const site = {...abstract_object, ...{
 
     //returns an individual config value or null if it's not defined
     getConfigItem: function(key){
-        return typeof this.config[key] === undefined ? null : this.config[key];
+        return typeof this.config[key] === "undefined" ? null : this.config[key];
     },
     //adds or updates a value in the config object
     setConfigItem: function(key, val){
