@@ -269,7 +269,7 @@ modal_form.insertForm = function(parsed_content, response, form){
     if( form ){
         
         //replace and reassign
-        form = form.outerHTML = parsed_content.html;
+        form = dom.replaceElWithHTML(form, parsed_content.html);
         
         //attach submit handler
         self.attachSubmitHandler(form);

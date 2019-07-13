@@ -381,11 +381,11 @@ export const navigation = {
                 navigation.setTitle(parsed.title);
 
                 //replace content on the page
-                dom.getElement(replace_el).outerHTML = parsed.html;
+                const new_content = dom.replaceElWithHTML(replace_el, parsed.html);
 
                 //trigger nav complete event
                 //get replace_el again because it was replaced
-                navigation.triggerOnLoad(dom.getElement(incoming_el), incoming_el, parsed.route);
+                navigation.triggerOnLoad(new_content, incoming_el, parsed.route);
             }
         }, 100);
 

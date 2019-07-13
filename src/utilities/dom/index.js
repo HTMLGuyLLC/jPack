@@ -15,10 +15,7 @@ export const dom = {
     getElement: function(el, error_on_none, error_on_multiple){
         el = this.getElements(el, error_on_none);
 
-        if( el.length > 1 ){
-            if( error_on_multiple ) throw "Too many DOM elements found in getElement for "+JSON.stringify(el);
-            return null;
-        }
+        if( el.length > 1 && error_on_multiple ) throw "Too many DOM elements found in getElement for "+JSON.stringify(el);
 
         return el[0];
     },
@@ -85,6 +82,33 @@ export const dom = {
             el.parentNode.removeChild(el);
         });
         return this;
+    },
+
+    /**
+     * Replaces a dom element with HTML
+     *
+     * uses .getElement() so el can be just about anything
+     *
+     * @param el
+     * @param html
+     * @returns {ChildNode}
+     */
+    replaceElWithHTML: function(el, html){
+        if( typeof html !== 'string' ) throw `${html} is not a string`;
+
+        el = this.getElement(el);
+
+        //create element from HTML
+        let new_el = (new DOMParser()).parseFromString(html, "text/html");
+
+        //insert the new element before the current
+        new_el = el.parentNode.insertBefore(new_el.documentElement.querySelector('body').childNodes[0], el);
+
+        //remove original element
+        el.remove();
+
+        //return the new one
+        return new_el;
     },
 
     /**
