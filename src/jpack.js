@@ -18,7 +18,7 @@ const goGlobal = function(){
                 //set them on window so they're available globally
                 //example: objects.user becomes window.user
                 //usage after running this: user.getId()
-                window[property] = object.property;
+                window[property] = object[property];
             }
         }
     });
