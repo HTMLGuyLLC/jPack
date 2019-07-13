@@ -31,7 +31,7 @@ const goGlobal = function(namespace){
     });
 };
 
-export const jpack = {components, objects, plugin_wrappers, utilities};
+export const jpack = {components, objects, plugin_wrappers, utilities, goGlobal: goGlobal};
 
-//set jpack for the world to use and add the goGlobal method
-global.jpack = {...jpack, ...{goGlobal: goGlobal}};
+//set jpack globally so that it can be used anywhere
+global.jpack = jpack;
