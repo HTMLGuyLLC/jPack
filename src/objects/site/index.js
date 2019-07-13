@@ -51,7 +51,7 @@ export const site = {...abstract_object, ...{
     },
     //adds or updates a value in the config object
     setConfigItem: function(key, val){
-        this.config.key = val;
+        this.config[key] = val;
         return this;
     }
 }}.populate(site_defaults);

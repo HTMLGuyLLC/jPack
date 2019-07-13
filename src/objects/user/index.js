@@ -20,7 +20,7 @@ if( typeof $user === "object" ) user_defaults = {...user_defaults, ...$user};
  *
  * Provides you with easy access to user information and allows you to perform permission checks
  *
- * @type {{getIsGuest: (function(): *), getPhone: (function(): *), getLname: (function(): *), getName: (function(): string), isGuest: null, setIsGuest: (function(*): user), addPermission: (function(*=): user), getId: (function(): *), setAdditionalData: (function(*): user), setPermissions: (function(*): user), getUsername: (function(): *), lname: null, setFname: (function(*): user), getFname: (function(): *), permissions: Array, setId: (function(*): user), id: null, additionalData: Array, email: (null|*), fname: null, setUsername: (function(*): user), setLname: (function(*): user), getAdditionalData: (function(): *), getPermissions: (function(): *), setPhone: (function(*): user), isAdmin: null, removePermission: (function(*): user), setIsAdmin: (function(*): user), populate: (function(*): user), getIsAdmin: (function(): *), setEmail: (function(*): user), phone: null, hasPermission: (function(*=): boolean), getEmail: (function()), username: null}}
+ * @type {{getIsGuest: (function(): *), getPhone: (function(): *), getLname: (function(): *), getName: (function(): string), setIsGuest: (function(*): user), keys: string[], addPermission: (function(*=): user), getId: (function(): *), setAdditionalData: (function(*): user), setPermissions: (function(*): user), getUsername: (function(): *), setFname: (function(*): user), getFname: (function(): *), setId: (function(*): user), setUsername: (function(*): user), setLname: (function(*): user), getAdditionalData: (function(): *), getPermissions: (function(): *), setPhone: (function(*): user), removePermission: (function(*): user), getDataItem(*): null, setIsAdmin: (function(*): user), setDataItem(*, *): *, getIsAdmin: (function(): *), setEmail: (function(*): user), hasPermission: (function(*=): (*|boolean)), getEmail: (function(): *)}}
  */
 export const user = {...abstract_object, ...{
     //user object keys
@@ -130,4 +130,13 @@ export const user = {...abstract_object, ...{
         this.additionalData = additional_data;
         return this;
     },
+    //returns a single additional data value for this user
+    getDataItem(key){
+        return typeof this.additionalData[key] === "undefined" ? null : this.additionalData[key];
+    },
+    //sets a single additional data value for this user
+    setDataItem(key, val){
+        this.additionalData[key] = val;
+        return this;
+    }
 }}.populate(user_defaults); //immediately populate from user_defaults
