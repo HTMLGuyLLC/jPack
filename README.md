@@ -33,15 +33,22 @@ utilities.strings.ucfirst('bob');
 
 //or a namespaced object containing all
 import {jpack} from '@htmlguyllc/jpack';
-jpack.components.navigation.load('/my-page');
+jpack.objects.user.getId();
 ```
 
 Or you can download the latest release, unzip it, put it in your public folder then include the whole library:
 ```html
 <script href="/vendor/htmlguyllc-jpack/dist/jpack.min.js">
 <script>
+//wait for the page to finish loading so we know jpack is ready
 window.addEventListener('load', function() {
-    jpack.components.navigation.load('/my-page');
+    //now you can take advantage of the jpack library
+    var user_id = jpack.objects.user.getId();
+    
+    //or if you're feeling super lazy (not recommended)
+    jpack.goGlobal();
+    
+    var user_id = user.getId();
 };
 </script>
 ```
@@ -129,6 +136,7 @@ The harder way: Perform an XHR request to grab site details via a JSON API, then
 ```javascript
 import {site} from '@htmlguyllc/jpack/src/objects';
  
+//this example uses jQuery's shorthand AJAX call, you can use axios or any request you want
 $.get('/my-site-info-endpoint.php', function(data){
     //don't forget error handling!
     site.populate(JSON.parse(data));
