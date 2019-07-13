@@ -1,6 +1,6 @@
 {
   "name": "@htmlguyllc/jpack",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Core Javascript Library of Everyday Objects, Events, and Utilities",
   "keywords": [
     "javascript",
@@ -47,9 +47,13 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "addCompiledFiles": "git add -A",
+    "bumpPatchVersion": "npm version --no-git-tag-version patch"
   },
   "pre-commit": [
-    "build"
+    "build",
+    "bumpPatchVersion",
+    "addCompiledFiles"
   ]
 }
