@@ -73,6 +73,20 @@ export const dom = {
     },
 
     /**
+     * Quick method for removing elements from the DOM
+     *
+     * @param el
+     * @returns {dom}
+     */
+    remove: function(el){
+        let el_array = this.getDomElements(el);
+        el_array.forEach(function(el){
+            el.parentNode.removeChild(el);
+        });
+        return this;
+    },
+
+    /**
      * Returns true if the provided element exists
      *
      * Pass anything you want, it uses getDomElements

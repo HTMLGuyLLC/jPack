@@ -3,6 +3,7 @@ import {dom} from "../dom";
 /**
  * Shorthand/consistent event listener management
  *
+ * @type {{onClick: (function(*=, *=): (*|Array|el)), onChange: (function(*=, *=): (*|*|*[])), offChange: (function(*=, *=): (*|*|*[])), offEventPreventDefault: events.offEventPreventDefault, offClick(*=, *=): (Array|el), onSubmit: (function(*=, *=): (*|Array|el)), offSubmit: (function(*=, *=): (*|Array|el)), onEventPreventDefault: events.onEventPreventDefault, trigger: events.trigger, off: events.off, on: events.on}}
  */
 export const events = {
 
@@ -61,15 +62,7 @@ export const events = {
      * @returns array|el
      */
     onChange: function(el, handler){
-        const el_array = dom.getDomElements(el);
-
-        if( !el_array.length ) return el;
-
-        el_array.forEach(function(el){
-            el.addEventListener('change', handler);
-        });
-
-        return el_array;
+        return this.on(el, 'change', handler);
     },
 
     /**
@@ -80,15 +73,7 @@ export const events = {
      * @returns array|el
      */
     offChange: function(el, handler){
-        const el_array = dom.getDomElements(el);
-
-        if( !el_array.length ) return el;
-
-        el_array.forEach(function(el){
-            el.removeEventListener('change', handler);
-        });
-
-        return el_array;
+        return this.off(el, 'change', handler);
     },
 
     /**
@@ -141,6 +126,73 @@ export const events = {
                 handler.call(this, [e]);
                 return false;
             });
+        });
+
+        return el_array;
+    },
+
+    /**
+     * Adds an event listener
+     *
+     * @param el
+     * @param event
+     * @param handler
+     * @returns {*|*[]|*}
+     */
+    on: function(el, event, handler){
+        const el_array = dom.getDomElements(el);
+
+        if( !el_array.length ) return el;
+
+        el_array.forEach(function(el){
+            el.addEventListener(event, handler);
+        });
+
+        return el_array;
+    },
+
+    /**
+     * Removes an event listener
+     *
+     * @param el
+     * @param event
+     * @param handler
+     * @returns {*|*[]|*}
+     */
+    off: function(el, event, handler){
+        const el_array = dom.getDomElements(el);
+
+        if( !el_array.length ) return el;
+
+        el_array.forEach(function(el){
+            el.removeEventListener(event, handler);
+        });
+
+        return el_array;
+    },
+
+    /**
+     * Trigger an event on an element/elements
+     *
+     * @param el
+     * @param event
+     * @param event_options
+     * @returns {*|*[]|*}
+     */
+    trigger: function(el, event, event_options){
+        const el_array = dom.getDomElements(el);
+
+        if( !el_array.length ){
+            return el;
+        }
+
+        event_options = typeof event_options === "undefined" ? null : event_options;
+
+        //create the event
+        event = new CustomEvent(event, { detail: event_options });
+
+        el_array.forEach(function(el){
+            el.dispatchEvent(event);
         });
 
         return el_array;

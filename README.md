@@ -53,7 +53,13 @@ window.addEventListener('load', function() {
 </script>
 ```
 
-# What's Included:
+# Dependencies
+
+Name | Required by
+--- | --- 
+url-search-params-polyfill | request
+
+# What's Included
 
 Four categories of functionality are provided in this library. 
 Each has it's own namespace in parenthesis below.
@@ -252,6 +258,7 @@ Method/Property | Params | Return | Notes
 --- | --- | --- | ---
 getDomElement|mixed, bool, bool|Element/HTMLDocument/null|returns a native DOM element for whatever you provide (selector string, array of elements, single element, jQuery wrapped DOM element, etc)
 getDomElements|mixed, bool|array|same as getDomElement, except it returns all matches
+remove|mixed|this|removes elements from the DOM - uses .getDomElements()
 exists|mixed|bool|checks to see if it exists in the DOM
 multipleExist|mixed|bool|checks to see if more than 1 instance exists in the DOM
 
@@ -308,6 +315,9 @@ onChange|mixed, function|array|adds an on change handler but does NOT preventDef
 offChange|mixed, function|array|removes the handler you added using .onChange()
 onEventPreventDefault|mixed, string, function|array|attaches an event handler and prevents the default browser action
 offEventPreventDefault|mixed, string, function|array|removes the handler you attached with .onEventPreventDefault()
+on|mixed, string, function|array|attaches an event listener
+off|mixed, string, function|array|removes an event listener
+trigger|mixed, string, mixed|array|triggers an event on an element/elements - uses .getDomElements()
 
 ##### To Use:
 
@@ -321,4 +331,7 @@ events.onClick('a.my-link', function(){
 events.onSubmit('form.my-form', function(){
    //do something and submit the form using XHR 
 });
+
+//trigger submit on a form and pass an object as additional data in the event
+events.trigger('.my-form', 'submit', {id:1});
 ```

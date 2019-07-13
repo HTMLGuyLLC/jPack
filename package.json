@@ -3,7 +3,13 @@
   "version": "0.3.1",
   "description": "Core Javascript Library of Everyday Objects, Events, and Utilities",
   "keywords": [
-    "javascript", "javascript-library", "component-library", "utilities", "javascript-objects", "javascript-events", "javascript-helpers"
+    "javascript",
+    "javascript-library",
+    "component-library",
+    "utilities",
+    "javascript-objects",
+    "javascript-events",
+    "javascript-helpers"
   ],
   "main": "dist/jpack.min.js",
   "browser": "src/jpack.js",
@@ -24,6 +30,7 @@
   "homepage": "https://htmlguyllc.github.io/jPack/",
   "private": false,
   "dependencies": {
+    "axios": "^0.19.0",
     "url-search-params-polyfill": "^7.0.0"
   },
   "devDependencies": {
