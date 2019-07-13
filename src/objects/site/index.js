@@ -42,6 +42,9 @@ export const site = {...abstract_object, ...{
     },
     //sets all config data using the provided object
     setConfig: function(config){
+        //must be a data object, even if it's empty
+        type_checks.isDataObject(config, null, false, false, true);
+
         this._config = config;
         return this;
     },

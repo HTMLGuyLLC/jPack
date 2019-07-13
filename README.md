@@ -112,8 +112,8 @@ getId| |string/int|
 setId|string/int|this|
 getName| |string|this
 setName|string|this|
-getConfig| |object/array|this
-setConfig|object/array|this|overwrites all config
+getConfig| |object|this
+setConfig|object|this|overwrites all config
 getConfigItem| |mixed|returns an individual item from config
 setConfigItem|string,mixed|this|sets the value of an individual item in config
 populate|object|this|sets provided values all at once (id,name,config)
@@ -178,8 +178,8 @@ setPermissions|array|this|
 addPermission|string/int|this|
 removePermission|string/int|this|
 hasPermission|string/int|bool|
-getAdditionalData| |object/array|set any additional data about this user that doesn't fit the default getters and setters here (a better idea would be to extend this object with your custom properties/methods)
-setAdditionalData|object/array|this|
+getAdditionalData| |object|set any additional data about this user that doesn't fit the default getters and setters here (a better idea would be to extend this object with your custom properties/methods)
+setAdditionalData|object|this|
 getDataItem|string|mixed|returns a single value from the additional data object/array
 setDataItem|string, mixed|sets a single value in the additional data array/object
 populate|object|this|sets provided values all at once (id, isGuest, isAdmin, etc)

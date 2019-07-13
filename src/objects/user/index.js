@@ -1,4 +1,5 @@
 import {abstract_object} from "../abstract_object";
+import {type_checks} from "../../utilities/type_checks";
 
 //create an object of default values
 let user_defaults = {
@@ -101,6 +102,8 @@ export const user = {...abstract_object, ...{
     },
     //sets all permissions for this user
     setPermissions: function(permissions){
+        if( !Array.isArray(permissions) ) throw "setPermissions requires an array";
+
         this._permissions = permissions;
         return this;
     },
@@ -127,6 +130,9 @@ export const user = {...abstract_object, ...{
     },
     //sets all additional data for this user
     setAdditionalData: function(additional_data){
+        //must be a data object, even if it's empty
+        type_checks.isDataObject(additional_data, null, false, false, true);
+
         this._additionalData = additional_data;
         return this;
     },
