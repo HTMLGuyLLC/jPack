@@ -303,6 +303,29 @@ modal_form.insertForm = function(parsed_content, response, form){
 modal_form.getForm();
 ```
 
+#### Prototyping:
+
+You can use prototypes to globally overwrite 2 methods in form.fromURL (isValid and insertForm).
+
+```javascript
+import {form} from '@htmlguyllc/jpack/src/components'; 
+
+form.fromURL.prototype.insertForm = function(parsed_content, response, form) {
+    //this is useful if you always want to show your form in a modal like shown in the example above
+};
+
+form.fromURL.prototype.isValid = function(form){
+    //perform validation on the form and return a bool
+    //false prevents form submission so make sure you display any errors for the user
+};
+
+//now create a new form and both methods above will be used
+var my_form = new form.fromURL('/my-form');
+
+//no matter how many you create, they all share the same logic now
+var my_form2 = new form.fromURL('/my-form2');
+``` 
+
 ## - Objects -
 
 ### -Request

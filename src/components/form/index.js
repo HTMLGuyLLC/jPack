@@ -349,28 +349,6 @@ export const form = {
         };
 
         /**
-         * Uses Bootstrap 4's 'was-validated' class and :invalid attributes to determine validity and display errors
-         *
-         * If you need more custom front-end validation, you should extend this object and overwrite this method
-         *
-         * Nothing is kicked off if this returns false. It just prevents form submission, so make sure you display errors
-         *
-         * @returns {boolean}
-         */
-        this.isValid = function(form){
-            //add .was-validated for bootstrap to show errors
-            form.classList.add('was-validated');
-
-            //if there are any :invalid elements, the form is not valid
-            const is_valid = !form.querySelector(':invalid');
-
-            //if it's valid, clear the validation indicators
-            if( is_valid ) form.classList.remove('was-validated');
-
-            return is_valid;
-        };
-
-        /**
          * Returns an object containing all form values to be submitted
          *
          * Override/extend this if you want to manipulate the data prior to submission
@@ -459,4 +437,26 @@ form.fromURL.prototype.insertForm = function(parsed_content, response, form) {
     this.triggerOnload()();
 
     return el;
+};
+
+/**
+ * Uses Bootstrap 4's 'was-validated' class and :invalid attributes to determine validity and display errors
+ *
+ * If you need more custom front-end validation, you should extend this object and overwrite this method
+ *
+ * Nothing is kicked off if this returns false. It just prevents form submission, so make sure you display errors
+ *
+ * @returns {boolean}
+ */
+form.fromURL.prototype.isValid = function(form){
+    //add .was-validated for bootstrap to show errors
+    form.classList.add('was-validated');
+
+    //if there are any :invalid elements, the form is not valid
+    const is_valid = !form.querySelector(':invalid');
+
+    //if it's valid, clear the validation indicators
+    if( is_valid ) form.classList.remove('was-validated');
+
+    return is_valid;
 };
