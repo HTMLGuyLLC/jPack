@@ -275,7 +275,7 @@ modal_form.insertForm = function(parsed_content, response, form){
         self.attachSubmitHandler(form);
         
         //trigger onload again (you can pas a param to say it's the second time if you want
-        self.triggerOnload()();
+        self.triggerOnload(form);
         
         return;
     }
@@ -294,7 +294,7 @@ modal_form.insertForm = function(parsed_content, response, form){
             self.attachSubmitHandler(form);
     
             //run the onload callback now that the form is there
-            self.triggerOnload()();
+            self.triggerOnload(form);
         }
     });
 };

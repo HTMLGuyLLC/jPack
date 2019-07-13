@@ -434,7 +434,7 @@ form.fromURL.prototype.insertForm = function(parsed_content, response, form) {
     this.attachSubmitHandler(form);
 
     //run the onload callback now that the form is there
-    this.triggerOnload()();
+    this.triggerOnload(form);
 
     return el;
 };
