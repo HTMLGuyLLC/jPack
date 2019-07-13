@@ -65,7 +65,7 @@ Four categories of functionality are provided in this library.
 Each has it's own namespace in parenthesis below.
 
 #### Components (components): 
-None yet.
+navigation
 
 #### Objects (objects): 
 request, site, user
@@ -79,7 +79,123 @@ strings, data_types, dom, events
 # Documentation
 
 ## - Components -
-None yet.
+
+### -Navigation
+_Grabs content from a URL and replaces it on the current page (along with browser history button handling, onload/unload handlers, and much more_
+
+Method/Property | Params | Return | Notes
+--- | --- | --- | ---
+setPassthroughData|mixed|self|set data you want provided in the onload method for the next page
+clearPassthroughData| |self|must be called manually or the data will persist infinitely. you can set an onload callback to clear this every time
+getPassthroughData| |mixed|returns the data you set
+setIncomingElement|string|self|a selector string for the element being retrieved from another page which contains the HTML you want put on the current page
+getIncomingElement| |string|
+setReplaceElement|string|self|a selector string for the element on the current page you want the new HTML to replace
+getReplaceElement| |string|
+load|string,function/null,string/null,string/null,bool|void|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more
+loaderEnabled|n/a|bool|property to toggle the slow request loader on/off
+setLoaderDelay|int|self|set how long a request should take in ms before the loader displays
+getLoaderDelay| |self|
+getLoaderEl| |Element|
+showLoader| |self|shows the loader after the delay
+hideLoader| |self|clears the loader timeout and hides it
+parseHTML|string,string|object|parses HTML from the request to get key components like metas and the HTML to be displayed
+getRouteFromMeta|string|string|retrieves the value of a meta tag named "current_route" to be passed in the onload event to help trigger page-specific JS
+replacePageContent|string,string,string,string,bool|self|replaces HTML on the page with the new content, updates metas, runs the unload and load callbacks and more
+reload|function|self|reloads the current page using .load()
+fullReload| |void|performs a full browser refresh of the current page
+redirect|string|void|redirects the user to a new page (no XHR request)
+setTitle|string|self|sets the page title
+onLoad|function|self|add an onload callback (runs 100ms after unload)
+onUnload|function|self|add an unload callback
+onNavigationFailure|function|self|add a callback when the load() request fails - the error message is provided in event.detail.error
+triggerOnLoad|mixed,string,string|self|triggers all onload callbacks
+triggerUnload|mixed|self|triggers all unload callbacks
+triggerNavigationFailure|string|self|triggers the nav failure and provides an error message
+initHistoryHandlers| |self|sets event listeners to handle back/forward navigation in the user's browser
+
+##### To use:
+```javascript
+import {navigation} from '@htmlguyllc/jpack/src/components'; 
+
+//handles browser back/forward buttons
+navigation.initHistoryHandlers();
+
+//a selector that contains the HTML you'd like to pull from the response
+navigation.setIncomingElement('#main-content');
+
+//a selector that will be replaced with the incoming HTML
+navigation.setReplaceElement('#main-content');
+
+//enables a loader to show if a request takes more than 300ms
+navigation.loaderEnabled = true;
+navigation.setLoaderDelay(300);
+
+//things to do when a page loads
+navigation.onLoad(function(e){
+    var params = e.detail; //get info from the event
+    //if a current_route meta was set in the incoming HTML, it'll be provided to you here
+    //you can use this to kick off your page-specific JS
+    var route = params.route; 
+    //the data you set prior to loading the page, if any
+    var data = params.data; //or navigation.getPassthroughData()
+    //the DOM element that was added to the page replacing the previous
+    var el = params.el;
+    //the incomingElement selector from this request 
+    // since the new element MAY have a different selector than the last,
+    // you may want to run navigation.setReplaceElement(el_selector)
+    var el_selector = params.el_selector;
+   
+   //if gtag is set (google analytics), push a page view
+   if( typeof gtag !== 'undefined' ) {
+       gtag('config', 'GA_MEASUREMENT_ID', {
+           page_path: url.replace(request.getDomainWithProtocol(), '')
+       });
+   }
+   
+   //scroll to the top of the page
+   window.scrollTo(0, 0);
+   
+   //.. do something...like init tooltip plugins
+});
+
+//things to do when leaving a page
+navigation.onUnload(function(){
+   //.. do something...like remove generic event handlers or destroy plugins 
+});
+
+//things to do when a page fails to load
+navigation.onNavigationFailure(function(e){
+    var error = e.detail.error;
+    //.. do something...like show an error popup for the user or log the issue
+});
+
+//to prevent duplicate code, you can run your onload callbacks immediately
+navigation.triggerOnLoad(dom.getDomElement('body'), 'body', navigation.getRouteFromMeta());
+
+//now use the plugin to load pages
+//if you're lazy, the fastest way to integrate is to just add data-href to all internal links 
+//and then attach a handler like this:
+import {events} from '@htmlguyllc/jpack/src/utilities';
+events.onClick('[data-href]', function(){
+   navigation.load(this.href); 
+});
+
+//you can use the load method at any time to load a new page 
+// the second param is an optional callback that only runs for that page
+navigation.load('/my-page', function(){
+    //my page is now loaded
+});
+
+//if you have a page that isn't structure the same as the rest that you're requesting, 
+// you can set the incoming parent element on-the-fly
+navigation.load('/my-popup', null, '.popup-content');
+
+//now .popup-content is on the page instead of the previous element, 
+// so you probably want to set future requests to replace that one instead
+//see note in the onLoad block above regarding how you can do this automatically for every request
+navigation.setIncomingElement('.popup-content');
+```
 
 ## - Objects -
 
