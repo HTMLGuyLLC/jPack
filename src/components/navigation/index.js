@@ -284,7 +284,7 @@ export const navigation = {
     getRouteFromMeta: function(html){
         html = typeof html === 'undefined' ? document.head : html;
         var route = html.querySelector('[name="current_route"]');
-        route = route.length ? route.content : null;
+        route = route ? route.content : null;
         return route;
     },
 
