@@ -298,7 +298,7 @@ export const navigation = {
             metas:metas,
             links:links,
             body_classes:body_classes,
-            html:new_content
+            html:new_html
         };
     },
 
