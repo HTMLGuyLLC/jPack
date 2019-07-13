@@ -32,8 +32,8 @@ export const type_checks = {
         //default error_msg
         const error_msg = `${stringified_val} is not an object`;
 
-        //if not provided or if null
-        if( typeof value === "undefined" || !value ){
+        //if not provided
+        if( typeof value === "undefined" ){
             if( throw_error ) throw error_msg;
             return false;
         }
@@ -41,8 +41,8 @@ export const type_checks = {
         //determine if it is an object
         const is_object = typeof value === "object";
 
-        //if not
-        if( !is_object ){
+        //if not an object, or if null
+        if( !is_object || value === null ){
             if( throw_error ) throw error_msg;
             return false;
         }

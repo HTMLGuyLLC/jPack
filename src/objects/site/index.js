@@ -1,4 +1,5 @@
 import {abstract_object} from "../abstract_object";
+import {type_checks} from "../../utilities/type_checks";
 
 //create an object of default values
 let site_defaults = {
@@ -19,39 +20,39 @@ export const site = {...abstract_object, ...{
     keys: ['id', 'name', 'config'],
 
     getId: function(){
-        return this.id;
+        return this._id;
     },
     setId: function(id){
-        this.id = id;
+        this._id = id;
         return this;
     },
 
     //gets the website's name
     getName: function(){
-        return this.name;
+        return this._name;
     },
     setName: function(name){
-        this.name = name;
+        this._name = name;
         return this;
     },
 
     //returns all config data
     getConfig: function(){
-        return this.config;
+        return this._config;
     },
     //sets all config data using the provided object
     setConfig: function(config){
-        this.config = config;
+        this._config = config;
         return this;
     },
 
     //returns an individual config value or null if it's not defined
     getConfigItem: function(key){
-        return typeof this.config[key] === "undefined" ? null : this.config[key];
+        return typeof this._config[key] === "undefined" ? null : this._config[key];
     },
     //adds or updates a value in the config object
     setConfigItem: function(key, val){
-        this.config[key] = val;
+        this._config[key] = val;
         return this;
     }
 }}.populate(site_defaults);

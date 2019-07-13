@@ -27,50 +27,50 @@ export const user = {...abstract_object, ...{
     keys: ['id', 'isGuest', 'isAdmin', 'username', 'fname', 'lname', 'email', 'phone', 'permissions', 'additionalData'],
 
     setId: function(id){
-        this.id = id;
+        this._id = id;
         return this;
     },
     getId: function(){
-        return this.id;
+        return this._id;
     },
 
     setIsGuest: function(is_guest){
-        this.isGuest = is_guest;
+        this._isGuest = is_guest;
         return this;
     },
     getIsGuest: function(){
-        return this.isGuest;
+        return this._isGuest;
     },
 
     setIsAdmin: function(is_admin){
-        this.isAdmin = is_admin;
+        this._isAdmin = is_admin;
         return this;
     },
     getIsAdmin: function(){
-        return this.isAdmin;
+        return this._isAdmin;
     },
 
     setUsername: function(username){
-        this.username = username;
+        this._username = username;
         return this;
     },
     getUsername: function(){
-        return this.username;
+        return this._username;
     },
 
     getFname: function(){
-        return this.fname;
+        return this._fname;
     },
     setFname: function(first_name){
-        this.fname = first_name;
+        this._fname = first_name;
         return this;
     },
 
     getLname: function(){
-        return this.lname;
+        return this._lname;
     },
     setLname: function(last_name){
-        this.lname = last_name;
+        this._lname = last_name;
         return this;
     },
 
@@ -80,38 +80,38 @@ export const user = {...abstract_object, ...{
     },
 
     getEmail: function(){
-        return this.email;
+        return this._email;
     },
     setEmail: function(email){
-        this.email = email;
+        this._email = email;
         return this;
     },
 
     getPhone: function(){
-        return this.phone;
+        return this._phone;
     },
     setPhone: function(phone){
-        this.phone = phone;
+        this._phone = phone;
         return this;
     },
 
     //returns all permissions for this user
     getPermissions: function(){
-        return this.permissions;
+        return this._permissions;
     },
     //sets all permissions for this user
     setPermissions: function(permissions){
-        this.permissions = permissions;
+        this._permissions = permissions;
         return this;
     },
     //adds a single permission to this user
     addPermission: function(permission){
-        this.permissions.push(permission);
+        this._permissions.push(permission);
         return this;
     },
     //Removes a single permission from this user
     removePermission: function(permission){
-        this.setPermissions(this.permissions.filter(function(ele){
+        this.setPermissions(this._permissions.filter(function(ele){
             return ele !== permission;
         }));
         return this;
@@ -123,20 +123,20 @@ export const user = {...abstract_object, ...{
 
     //returns all additional data for this user
     getAdditionalData: function(){
-        return this.additionalData;
+        return this._additionalData;
     },
     //sets all additional data for this user
     setAdditionalData: function(additional_data){
-        this.additionalData = additional_data;
+        this._additionalData = additional_data;
         return this;
     },
     //returns a single additional data value for this user
     getDataItem(key){
-        return typeof this.additionalData[key] === "undefined" ? null : this.additionalData[key];
+        return typeof this._additionalData[key] === "undefined" ? null : this._additionalData[key];
     },
     //sets a single additional data value for this user
     setDataItem(key, val){
-        this.additionalData[key] = val;
+        this._additionalData[key] = val;
         return this;
     }
 }}.populate(user_defaults); //immediately populate from user_defaults
