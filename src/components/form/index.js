@@ -356,12 +356,12 @@ export const form = {
                 //if the response is a string, it's probably/hopefully the form with inline errors
                 if( typeof data === 'string' ){
                     //if we are looking for an element within the response
-                    if( typeof form.getIncomingElementSelector() === 'string' ){
+                    if( typeof self.getIncomingElementSelector() === 'string' ){
                         //parse the incoming HTML
-                        const parsed = navigation.parseHTML(data, form.getIncomingElementSelector());
+                        const parsed = navigation.parseHTML(data, self.getIncomingElementSelector());
                         //if the form was not found in it, let's assume it doesn't contain the form. If not, then maybe
                         if( !parsed.html.length ){
-                            return self.triggerOnError(`${form.getIncomingElementSelector()} could not be found in response from the server`, data, form);
+                            return self.triggerOnError(`${self.getIncomingElementSelector()} could not be found in response from the server`, data, form);
                         }
                         //provide the form's HTML in an object containing other details like the route and the full response to insertForm
                         return self.insertForm(parsed, data, form);
