@@ -389,7 +389,7 @@ export const form = {
             return this;
         };
         this.triggerOnError = function(error, response, form){
-            this._onError(eror, response, form);
+            this._onError(error, response, form);
             return this;
         };
         //set immediately from options
