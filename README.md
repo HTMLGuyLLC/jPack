@@ -504,8 +504,10 @@ Method/Property | Params | Return | Notes
 getElement|mixed, bool, bool|Element/HTMLDocument/null|returns a native DOM element for whatever you provide (selector string, array of elements, single element, jQuery wrapped DOM element, etc)
 getElements|mixed, bool|array|same as getElement, except it returns all matches
 remove|mixed|this|removes elements from the DOM - uses .getElements()
+replaceElWithHTML|mixed,string|Element|replaces an element in the DOM with HTML and returns a reference to the new Element
 exists|mixed|bool|checks to see if it exists in the DOM
 multipleExist|mixed|bool|checks to see if more than 1 instance exists in the DOM
+
 
 ##### To Use:
 
