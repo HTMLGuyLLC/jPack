@@ -288,7 +288,7 @@ modal_form.insertForm = function(parsed_content, response, form){
         content: parsed_content.html,
         onOpen: function(alert){
             //find my form in there
-            form = alert.querySelector(self.getIncomingElementSelector());
+            form = alert[0].querySelector(self.getIncomingElementSelector());
             
             //attach an on-submit listener to send the form's values via XHR
             self.attachSubmitHandler(form);
