@@ -303,7 +303,7 @@ export const navigation = {
     },
 
     /**
-     * Gets the current route from the meta tag - if it exists
+     * Gets the current route from the meta tag, if it exists
      *
      * If you don't provide HTML, it'll grab it from the current DOM
      *
