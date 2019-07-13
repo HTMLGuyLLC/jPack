@@ -298,9 +298,6 @@ export const form = {
                 url: url,
                 method: method,
                 data: form_values,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
             }).then(function (response) {
                 navigation.hideLoader();
 
