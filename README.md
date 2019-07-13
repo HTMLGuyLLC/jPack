@@ -515,7 +515,7 @@ multipleExist|mixed|bool|checks to see if more than 1 instance exists in the DOM
 import {dom} from '@htmlguyllc/jpack/src/utilities';
 
 //Dont do this. Most of these are dumb examples.
-dom.getElement('.my-fav-button', true, true); //will throw an error if it doesn't fine it, or if it finds more than 1
+dom.getElement('.my-fav-button', true, true); //will throw an error if it doesn't find it, or if it finds more than 1
 dom.getElements('.links', true); //will throw an error if none are found
 dom.getElement('.my-button'); //returns the button, or null (if multiple, it returns the first)
 dom.getElements('.links'); //returns an array of any matches for .links
