@@ -5,11 +5,11 @@ With jPack, you can easily upgrade your server-side rendered application to a ps
 
 # Installation
 
-With Yarn or NPM:
+With NPM or Yarn:
 ```shell
-yarn add @htmlguyllc/jpack;
-//or
 npm i @htmlguyllc/jpack;
+//or
+yarn add @htmlguyllc/jpack;
 ```
 
 and then use what you need, where you need it (requires ES6):
@@ -67,7 +67,7 @@ Four categories of functionality are provided in this library.
 Each has it's own namespace in parenthesis below.
 
 #### Components (components): 
-navigation
+navigation, form
 
 #### Objects (objects): 
 request, site, user
@@ -213,6 +213,94 @@ navigation.load('/my-page', function(new_el, new_el_selector, pass_through_param
 navigation.load('/my-popup', function(new_el, el_sel, data){
    //now the new element is on the page
 }, '.popup-content', '.current-popup');
+```
+
+### -Form
+_Makes dynamic form interactions simpler - currently only supports pulling a form from another page and submitting it using an XHR request_
+
+Method/Property | Params | Return | Notes
+--- | --- | --- | ---
+fromURL|string,object|self|instantiate a new form.fromURL('/my-form-url', options); to grab a form from another page and insert it into the current
+
+##### To use:
+```javascript
+import {form} from '@htmlguyllc/jpack/src/components'; 
+
+var remote_form = new form.fromURL('/my-form', {
+        incomingElementSelector: null, //the form element or wrapper that you want to retrieve from the URL
+        insertIntoElement: null, //what element to put the form into
+        onload: function(form){ return this; }, //once the form is loaded onto the page
+        xhrSubmit: true, //submit the form using XHR instead of the default action
+        submitURL:null, //will be grabbed from the form's action attribute, or fallback to the URL the form was retrieved from
+        submitMethod:null, //will be grabbed from the form's method attribute, or fallback to "POST"
+        onError: function(error, response, form){ }, //called when the form is submitted and fails
+        onSuccess: function(response, form){ }, //called when the form is submitted successfully
+});
+
+//grab the form and insert in into the "insertIntoElement"
+remote_form.getForm();
+
+//let's say you want to show it in a modal, here's what you would need to do:
+
+var modal_form = new form.fromURL('/my-form-popup', {
+        incomingElementSelector: 'form',
+        onload: function(form){
+            //attach plugins or do something with the form now that it's showing in the modal
+            return this; 
+        },
+        onError: function(error, response, form){
+            $.jAlert({
+                title:'Error',
+                theme:'red',
+                content:error
+            });
+        }, 
+        onSuccess: function(response, form){ 
+            form.parents('.jAlert').closeAlert();
+            //do something else
+        },
+});
+
+//override the insertForm method to use a modal
+modal_form.insertForm = function(parsed_content, response, form){
+    var self = this;
+    
+    //if form is already defined, it was submitted and the response contained HTML, so we need to just replace it ourselves
+    if( typeof form !== undefined ){
+        
+        //replace and reassign
+        form = form.outerHTML = parsed_content.html;
+        
+        //attach submit handler
+        self.attachSubmitHandler(form);
+        
+        //trigger onload again (you can pas a param to say it's the second time if you want
+        self.triggerOnload()();
+        
+        return;
+    }
+    
+    //using jAlert as an example (https://htmlguyllc.github.io/jAlert/)
+    $.jAlert({
+        title:'My Form',
+        theme:'blue',
+        size: '1000px',
+        content: parsed_content.html,
+        onOpen: function(alert){
+            //find my form in there
+            form = alert.querySelector(self.getIncomingElementSelector());
+            
+            //attach an on-submit listener to send the form's values via XHR
+            self.attachSubmitHandler(form);
+    
+            //run the onload callback now that the form is there
+            self.triggerOnload()();
+        }
+    });
+};
+
+//show the form in a modal
+modal_form.getForm();
 ```
 
 ## - Objects -
