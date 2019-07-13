@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {dom} from "../../utilities/dom";
 import {request} from "../../objects/request";
+import {events} from "../../utilities/events";
 
 /**
  * Allows you to simulate a page change by using an XHR request to grab content and replace it on the current page
