@@ -58,6 +58,7 @@ window.addEventListener('load', function() {
 Name | Required by
 --- | --- 
 url-search-params-polyfill | request
+axios | navigation
 
 # What's Included
 
