@@ -266,7 +266,7 @@ modal_form.insertForm = function(parsed_content, response, form){
     var self = this;
     
     //if form is already defined, it was submitted and the response contained HTML, so we need to just replace it ourselves
-    if( typeof form !== undefined ){
+    if( form ){
         
         //replace and reassign
         form = form.outerHTML = parsed_content.html;
