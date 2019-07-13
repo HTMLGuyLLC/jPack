@@ -94,16 +94,16 @@ setIncomingElement|string|self|a selector string for the element being retrieved
 getIncomingElement| |string|
 setReplaceElement|string|self|a selector string for the element on the current page you want the new HTML to replace
 getReplaceElement| |string|
-load|string,function/null,string/null,string/null,bool|void|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more
+load|string, function/null, string/null, string/null, bool|void|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more
 loaderEnabled|n/a|bool|property to toggle the slow request loader on/off
 setLoaderDelay|int|self|set how long a request should take in ms before the loader displays
 getLoaderDelay| |self|
 getLoaderEl| |Element|
 showLoader| |self|shows the loader after the delay
 hideLoader| |self|clears the loader timeout and hides it
-parseHTML|string,string|object|parses HTML from the request to get key components like metas and the HTML to be displayed
+parseHTML|string, string|object|parses HTML from the request to get key components like metas and the HTML to be displayed
 getRouteFromMeta|string|string|retrieves the value of a meta tag named "current_route" to be passed in the onload event to help trigger page-specific JS
-replacePageContent|string,string,string,string,bool|self|replaces HTML on the page with the new content, updates metas, runs the unload and load callbacks and more
+replacePageContent|string, string, string, string, bool|self|replaces HTML on the page with the new content, updates metas, runs the unload and load callbacks and more
 reload|function|self|reloads the current page using .load()
 fullReload| |void|performs a full browser refresh of the current page
 redirect|string|void|redirects the user to a new page (no XHR request)
@@ -111,7 +111,7 @@ setTitle|string|self|sets the page title
 onLoad|function|self|add an onload callback (runs 100ms after unload)
 onUnload|function|self|add an unload callback
 onNavigationFailure|function|self|add a callback when the load() request fails - the error message is provided in event.detail.error
-triggerOnLoad|mixed,string,string|self|triggers all onload callbacks
+triggerOnLoad|mixed, string, string|self|triggers all onload callbacks
 triggerUnload|mixed|self|triggers all unload callbacks
 triggerNavigationFailure|string|self|triggers the nav failure and provides an error message
 initHistoryHandlers| |self|sets event listeners to handle back/forward navigation in the user's browser
@@ -220,7 +220,7 @@ _Makes dynamic form interactions simpler - currently only supports pulling a for
 
 Method/Property | Params | Return | Notes
 --- | --- | --- | ---
-fromURL|string,object|self|instantiate a new form.fromURL('/my-form-url', options); to grab a form from another page and insert it into the current
+fromURL|string, object|self|instantiate a new form.fromURL('/my-form-url', options); to grab a form from another page and insert it into the current
 
 ##### To use:
 ```javascript
