@@ -110,8 +110,6 @@ export const form = {
          *
          */
         this.getForm = function(){
-            if (typeof callback !== 'function') throw "You must provide a callback function for form.getForm()";
-
             var self = this;
 
             navigation.showLoader();
