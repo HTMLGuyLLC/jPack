@@ -123,9 +123,9 @@ export const form = {
 
                 //if the response is a string (probably HTML)
                 if( typeof data === 'string' ){
-                    if( typeof form.getIncomingElementSelector() === 'string' ){
+                    if( typeof self.getIncomingElementSelector() === 'string' ){
                         //parse the incoming HTML
-                        const parsed = navigation.parseHTML(data, form.getIncomingElementSelector());
+                        const parsed = navigation.parseHTML(data, self.getIncomingElementSelector());
                         //provide the form's HTML in an object containing other details like the route and the full response to insertForm
                         return self.insertForm(parsed, data);
                     }
