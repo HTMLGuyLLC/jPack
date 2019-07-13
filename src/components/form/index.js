@@ -272,14 +272,22 @@ export const form = {
             //get the provided submit URL
             let url = this.getSubmitURL(form);
             //if the URL is null, grab from the form
-            url = url === null ? form.attributes.action : url;
+            if( url === null ){
+                if( form.attributes.action ){ //check that it was set explicitly
+                    url = form.action; //grab JUST the value
+                }
+            }
             //default to the URL used to grab the form if it's not provided
             url = !url ? this.getURL() : url;
 
             //get the provided submit method
             let method = this.getSubmitMethod();
             //if it's null, grab it from the form
-            method = method === null ? form.attributes.method : method;
+            if( method === null ){
+                if( typeof form.attributes.method !== 'undefined' ){ //check that it was set explicitly
+                    method = form.method; //grab JUST the value
+                }
+            }
             //default to post if we still don't have a method and lowercase anything that was provided
             method = !method ? 'post' : method.toLowerCase();
 
