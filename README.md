@@ -128,6 +128,7 @@ navigation.setIncomingElement('#main-content');
 navigation.setReplaceElement('#main-content');
 
 //enables a loader to show if a request takes more than 300ms
+//WARNING: No styling is provided at this time. It uses Bootstrap 4's progress-bar classes.
 navigation.loaderEnabled = true;
 navigation.setLoaderDelay(300);
 
@@ -149,7 +150,7 @@ navigation.onLoad(function(e){
    //if gtag is set (google analytics), push a page view
    if( typeof gtag !== 'undefined' ) {
        gtag('config', 'GA_MEASUREMENT_ID', {
-           page_path: url.replace(request.getDomainWithProtocol(), '')
+           page_path: request.getURIWithQueryString()
        });
    }
    
