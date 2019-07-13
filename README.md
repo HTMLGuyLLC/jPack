@@ -313,7 +313,7 @@ modal_form.getForm();
 
 #### Prototyping:
 
-You can use prototypes to globally overwrite 2 methods in form.fromURL (isValid and insertForm).
+You can use prototypes to globally overwrite 3 methods in form.fromURL (isValid, insertForm, and submitForm).
 
 ```javascript
 import {form} from '@htmlguyllc/jpack/es/components'; 

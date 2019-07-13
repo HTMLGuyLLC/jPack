@@ -142,10 +142,10 @@ export const form = {
 
                 throw `Unexpected server response ${data}`;
             })
-                .catch(function (error) {
-                    navigation.hideLoader();
-                    throw error;
-                });
+            .catch(function (error) {
+                navigation.hideLoader();
+                throw error;
+            });
         };
 
         /**
@@ -246,114 +246,6 @@ export const form = {
         this.setSubmitURL(options.submitURL);
 
         /**
-         * Submits the form using XHR
-         *
-         * 1) Determines the URL
-         * 2) Determines the method (GET, POST, PATCH, etc)
-         * 3) Determines if the form is valid
-         * 4) Gets the form's values
-         * 5) Submits the form
-         * 6) Replaces the form, runs onError, or runs onSuccess based on the response (see next line)
-         *  Response Type = Action Taken
-         *    string html with form inside = replace form
-         *    string html with incomingElementSelector set, but not found = kickoff onError
-         *    string - replace form on page with entire response
-         *    object.html = replace form
-         *    object.error = kickoff onError
-         *    object in general = kickoff onSuccess
-         *
-         * @param form
-         * @returns {form|boolean}
-         */
-        this.submitForm = function(form) {
-            //cache for use inside other scopes
-            var self = this;
-
-            //get the provided submit URL
-            let url = this.getSubmitURL(form);
-            //if the URL is null, grab from the form
-            if( url === null ){
-                if( form.attributes.action ){ //check that it was set explicitly
-                    url = form.action; //grab JUST the value
-                }
-            }
-            //default to the URL used to grab the form if it's not provided
-            url = !url ? this.getURL() : url;
-
-            //get the provided submit method
-            let method = this.getSubmitMethod();
-            //if it's null, grab it from the form
-            if( method === null ){
-                if( typeof form.attributes.method !== 'undefined' ){ //check that it was set explicitly
-                    method = form.method; //grab JUST the value
-                }
-            }
-            //default to post if we still don't have a method and lowercase anything that was provided
-            method = !method ? 'post' : method.toLowerCase();
-
-            //if not valid, stop here until they resubmit
-            if (!this.isValid(form)) return false;
-
-            navigation.showLoader();
-
-            //get form values
-            const form_values = Array.from(
-                this.getFormValues(form),
-                e => e.map(encodeURIComponent).join('=')
-            ).join('&');
-
-            axios({
-                url: url,
-                method: method,
-                data: form_values,
-            }).then(function (response) {
-                navigation.hideLoader();
-
-                let data = response.data;
-
-                //just in case the server returned the wrong response type and it's actually JSON - ignore errors
-                try{ data = typeof data === 'string' ? JSON.parse(data) : data; } catch(e){ }
-
-                //if the response is a string, it's probably/hopefully the form with inline errors
-                if( typeof data === 'string' ){
-                    //if we are looking for an element within the response
-                    if( typeof self.getIncomingElementSelector() === 'string' ){
-                        //parse the incoming HTML
-                        const parsed = navigation.parseHTML(data, self.getIncomingElementSelector());
-                        //if the form was not found in it, let's assume it doesn't contain the form. If not, then maybe
-                        if( !parsed.html.length ){
-                            return self.triggerOnError(`${self.getIncomingElementSelector()} could not be found in response from the server`, data, form);
-                        }
-                        //provide the form's HTML in an object containing other details like the route and the full response to insertForm
-                        return self.insertForm(parsed, data, form);
-                    }
-                    return self.insertForm({html:data}, data, form);
-                }
-                //if the response is an object, it's probably JSON
-                else if( typeof data === 'object' ){
-                    //if it contains the HTML, just pop it back on the page
-                    if( data.html ){
-                        return self.insertForm({html:data.html}, data, form);
-                    }
-
-                    //if it contains an error message, trigger the callback
-                    if( data.error ){
-                        return self.triggerOnError(data.error, data, form);
-                    }
-
-                    //if it doesn't APPEAR to be the form again, or an error, let's call it a success
-                    return self.triggerOnSuccess(data, form)
-                }
-            })
-                .catch(function (error) {
-                    navigation.hideLoader();
-                    throw error;
-                });
-
-            return this;
-        };
-
-        /**
          * Returns an object containing all form values to be submitted
          *
          * Override/extend this if you want to manipulate the data prior to submission
@@ -398,7 +290,6 @@ export const form = {
         return this;
     }
 };
-
 
 /**
  * Allows you to insert the form wherever you want on the page
@@ -464,4 +355,112 @@ form.fromURL.prototype.isValid = function(form){
     if( is_valid ) form.classList.remove('was-validated');
 
     return is_valid;
+};
+
+/**
+ * Submits the form using XHR
+ *
+ * 1) Determines the URL
+ * 2) Determines the method (GET, POST, PATCH, etc)
+ * 3) Determines if the form is valid
+ * 4) Gets the form's values
+ * 5) Submits the form
+ * 6) Replaces the form, runs onError, or runs onSuccess based on the response (see next line)
+ *  Response Type = Action Taken
+ *    string html with form inside = replace form
+ *    string html with incomingElementSelector set, but not found = kickoff onError
+ *    string - replace form on page with entire response
+ *    object.html = replace form
+ *    object.error = kickoff onError
+ *    object in general = kickoff onSuccess
+ *
+ * @param form
+ * @returns {form|boolean}
+ */
+form.fromURL.prototype.submitForm = function(form) {
+    //cache for use inside other scopes
+    var self = this;
+
+    //get the provided submit URL
+    let url = this.getSubmitURL(form);
+    //if the URL is null, grab from the form
+    if( url === null ){
+        if( form.attributes.action ){ //check that it was set explicitly
+            url = form.action; //grab JUST the value
+        }
+    }
+    //default to the URL used to grab the form if it's not provided
+    url = !url ? this.getURL() : url;
+
+    //get the provided submit method
+    let method = this.getSubmitMethod();
+    //if it's null, grab it from the form
+    if( method === null ){
+        if( typeof form.attributes.method !== 'undefined' ){ //check that it was set explicitly
+            method = form.method; //grab JUST the value
+        }
+    }
+    //default to post if we still don't have a method and lowercase anything that was provided
+    method = !method ? 'post' : method.toLowerCase();
+
+    //if not valid, stop here until they resubmit
+    if (!this.isValid(form)) return false;
+
+    navigation.showLoader();
+
+    //get form values
+    const form_values = Array.from(
+        this.getFormValues(form),
+        e => e.map(encodeURIComponent).join('=')
+    ).join('&');
+
+    axios({
+        url: url,
+        method: method,
+        data: form_values,
+    }).then(function (response) {
+        navigation.hideLoader();
+
+        let data = response.data;
+
+        //just in case the server returned the wrong response type and it's actually JSON - ignore errors
+        try{ data = typeof data === 'string' ? JSON.parse(data) : data; } catch(e){ }
+
+        //if the response is a string, it's probably/hopefully the form with inline errors
+        if( typeof data === 'string' ){
+            //if we are looking for an element within the response
+            if( typeof self.getIncomingElementSelector() === 'string' ){
+                //parse the incoming HTML
+                const parsed = navigation.parseHTML(data, self.getIncomingElementSelector());
+                //if the form was not found in it, let's assume it doesn't contain the form. If not, then maybe
+                if( !parsed.html.length ){
+                    return self.triggerOnError(`${self.getIncomingElementSelector()} could not be found in response from the server`, data, form);
+                }
+                //provide the form's HTML in an object containing other details like the route and the full response to insertForm
+                return self.insertForm(parsed, data, form);
+            }
+            return self.insertForm({html:data}, data, form);
+        }
+        //if the response is an object, it's probably JSON
+        else if( typeof data === 'object' ){
+            //if it contains the HTML, just pop it back on the page
+            if( data.html ){
+                return self.insertForm({html:data.html}, data, form);
+            }
+
+            //if it contains an error message, trigger the callback
+            if( data.error ){
+                return self.triggerOnError(data.error, data, form);
+            }
+
+            //if it doesn't APPEAR to be the form again, or an error, let's call it a success
+            return self.triggerOnSuccess(data, form)
+        }
+    })
+        .catch(function (error) {
+            navigation.hideLoader();
+            throw error;
+        });
+
+    return this;
 };
