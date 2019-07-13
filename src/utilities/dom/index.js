@@ -41,6 +41,11 @@ export const dom = {
         if( typeof el === "undefined" || !el ){
             //do nothing, default is empty array
         }
+        //if it's an Element or HTMLDocument (a singular DOM element)
+        else if( el instanceof Element || el instanceof HTMLDocument ){
+            //add to the array
+            el_array.push(el);
+        }
         //if a string was provided
         else if (typeof el === 'string') {
             //convert the NodeList returned by querySelectorAll into an array
@@ -54,11 +59,6 @@ export const dom = {
                 //get all the elements in an array
                 el_array = el.toArray();
             }
-        }
-        //if it's an Element or HTMLDocument (a singular DOM element)
-        else if( el instanceof Element || el instanceof HTMLDocument ){
-            //add to the array
-            el_array.push(el);
         }
         //otherwise, what the heck did you pass? Throw error...
         else {
