@@ -1,7 +1,7 @@
 /**
  * HTML DOM helpers
  *
- * @type {{getDomElements: (function(*=, *=): Array), getDomElement: dom.getDomElement, exists: (function(*=): number), multipleExist: (function(*=): number)}}
+ * @type {{getElements: (function(*=, *=): Array), getElement: dom.getElement, exists: (function(*=): number), multipleExist: (function(*=): number)}}
  */
 export const dom = {
     /**
@@ -12,11 +12,11 @@ export const dom = {
      * @param error_on_multiple - throw an error if more than 1 exists
      * @returns Element|HTMLDocument|null
      */
-    getDomElement: function(el, error_on_none, error_on_multiple){
-        el = this.getDomElements(el, error_on_none);
+    getElement: function(el, error_on_none, error_on_multiple){
+        el = this.getElements(el, error_on_none);
 
         if( el.length > 1 ){
-            if( error_on_multiple ) throw "Too many DOM elements found in getDomElement for "+JSON.stringify(el);
+            if( error_on_multiple ) throw "Too many DOM elements found in getElement for "+JSON.stringify(el);
             return null;
         }
 
@@ -30,7 +30,7 @@ export const dom = {
      * @param error_on_none - throw an error if no elements were found, default: false
      * @returns []
      */
-    getDomElements: function(el, error_on_none){
+    getElements: function(el, error_on_none){
         //default to false
         error_on_none = typeof error_on_none === "undefined" ? false : error_on_none;
 
@@ -61,7 +61,7 @@ export const dom = {
         }
         //otherwise, what the heck did you pass? Throw error...
         else {
-            throw "Invalid value provided to getDomElements: "+JSON.stringify(el);
+            throw "Invalid value provided to getElements: "+JSON.stringify(el);
         }
 
         if( !el_array.length && error_on_none ){
@@ -79,7 +79,7 @@ export const dom = {
      * @returns {dom}
      */
     remove: function(el){
-        let el_array = this.getDomElements(el);
+        let el_array = this.getElements(el);
         el_array.forEach(function(el){
             el.parentNode.removeChild(el);
         });
@@ -89,24 +89,24 @@ export const dom = {
     /**
      * Returns true if the provided element exists
      *
-     * Pass anything you want, it uses getDomElements
+     * Pass anything you want, it uses getElements
      *
      * @param el
      * @returns {number}
      */
     exists: function(el){
-        return this.getDomElements(el).length;
+        return this.getElements(el).length;
     },
 
     /**
      * Returns true if there are multiple instances of the provided element
      *
-     * Pass anything you want, it uses getDomElements
+     * Pass anything you want, it uses getElements
      *
      * @param el
      * @returns {boolean}
      */
     multipleExist: function(el){
-        return this.getDomElements(el).length > 1;
+        return this.getElements(el).length > 1;
     },
 };

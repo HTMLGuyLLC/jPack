@@ -140,7 +140,7 @@ export const navigation = {
             if (typeof callback === 'function') {
                 //wait for the onunload callbacks to run and the new content to be put on the page first
                 window.setTimeout(function(){
-                    callback(dom.getDomElement(replace_el), parent_el, navigation.getPassThroughData());
+                    callback(dom.getElement(replace_el), parent_el, navigation.getPassThroughData());
                 }, 105);
             }
         })
@@ -207,7 +207,7 @@ export const navigation = {
         document.body.prepend(div);
 
         //get and cache a reference to it for future requests
-        navigation.navLoaderCached = dom.getDomElement('.page-navigation-loader');
+        navigation.navLoaderCached = dom.getElement('.page-navigation-loader');
 
         return navigation.navLoaderCached;
     },
@@ -258,15 +258,20 @@ export const navigation = {
         var doc = parser.parseFromString(html, "text/html");
 
         //get page title
-        var title = doc.head.getElementsByTagName('title')[0].innerText;
+        var title = doc.querySelector('title');
+        title = title ? title.innerText : null;
+
         //get any meta tags
         var metas = doc.head.getElementsByTagName('meta');
-        //get any link tags (like canonical)
-        var links = doc.head.getElementsByTagName('link');
+        //get the canonical link
+        var links = doc.querySelectorAll('link[rel="canonical"]');
         //get body classes
         var body_classes = doc.body.classList;
+
         //get the new parent_el
-        var new_content = doc.querySelector(parent_el).outerHTML;
+        var new_content = doc.querySelector(parent_el);
+        new_content = new_content ? new_content.outerHTML : null;
+
         //get the new page's route from the meta tag (if it exists)
         var route = navigation.getRouteFromMeta(doc);
 
@@ -331,7 +336,7 @@ export const navigation = {
 
         //trigger nav complete event
         //get replace_el again because it was replaced
-        navigation.triggerUnload(dom.getDomElement(replace_el), replace_el);
+        navigation.triggerUnload(dom.getElement(replace_el), replace_el);
 
         //very slight 100ms delay to let the on unload handlers run first
         window.setTimeout(function(){
@@ -362,11 +367,11 @@ export const navigation = {
                 navigation.setTitle(parsed.title);
 
                 //replace content on the page
-                dom.getDomElement(replace_el).outerHTML = parsed.html;
+                dom.getElement(replace_el).outerHTML = parsed.html;
 
                 //trigger nav complete event
                 //get replace_el again because it was replaced
-                navigation.triggerOnLoad(dom.getDomElement(incoming_el), incoming_el, parsed.route);
+                navigation.triggerOnLoad(dom.getElement(incoming_el), incoming_el, parsed.route);
             }
         }, 100);
 

@@ -86,7 +86,7 @@ export const events = {
      * @returns array|el
      */
     onEventPreventDefault: function(el, event, handler) {
-        const el_array = dom.getDomElements(el);
+        const el_array = dom.getElements(el);
 
         if( !el_array.length ){
             return el;
@@ -114,7 +114,7 @@ export const events = {
      */
     offEventPreventDefault: function(el, event, handler){
 
-        const el_array = dom.getDomElements(el);
+        const el_array = dom.getElements(el);
 
         if( !el_array.length ){
             return el;
@@ -140,7 +140,7 @@ export const events = {
      * @returns {*|*[]|*}
      */
     on: function(el, event, handler){
-        const el_array = dom.getDomElements(el);
+        const el_array = dom.getElements(el);
 
         if( !el_array.length ) return el;
 
@@ -160,7 +160,7 @@ export const events = {
      * @returns {*|*[]|*}
      */
     off: function(el, event, handler){
-        const el_array = dom.getDomElements(el);
+        const el_array = dom.getElements(el);
 
         if( !el_array.length ) return el;
 
@@ -180,7 +180,7 @@ export const events = {
      * @returns {*|*[]|*}
      */
     trigger: function(el, event, event_options){
-        const el_array = dom.getDomElements(el);
+        const el_array = dom.getElements(el);
 
         if( !el_array.length ){
             return el;

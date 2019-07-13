@@ -173,7 +173,7 @@ navigation.onNavigationFailure(function(e){
 });
 
 //to prevent duplicate code, you can run your onload callbacks immediately
-navigation.triggerOnLoad(dom.getDomElement('body'), 'body', navigation.getRouteFromMeta());
+navigation.triggerOnLoad(dom.getElement('body'), 'body', navigation.getRouteFromMeta());
 
 //now use the plugin to load pages
 //if you're lazy, the fastest way to integrate is to just add data-href to all internal links 
@@ -378,9 +378,9 @@ _HTML DOM helpers_
 
 Method/Property | Params | Return | Notes
 --- | --- | --- | ---
-getDomElement|mixed, bool, bool|Element/HTMLDocument/null|returns a native DOM element for whatever you provide (selector string, array of elements, single element, jQuery wrapped DOM element, etc)
-getDomElements|mixed, bool|array|same as getDomElement, except it returns all matches
-remove|mixed|this|removes elements from the DOM - uses .getDomElements()
+getElement|mixed, bool, bool|Element/HTMLDocument/null|returns a native DOM element for whatever you provide (selector string, array of elements, single element, jQuery wrapped DOM element, etc)
+getElements|mixed, bool|array|same as getElement, except it returns all matches
+remove|mixed|this|removes elements from the DOM - uses .getElements()
 exists|mixed|bool|checks to see if it exists in the DOM
 multipleExist|mixed|bool|checks to see if more than 1 instance exists in the DOM
 
@@ -390,12 +390,12 @@ multipleExist|mixed|bool|checks to see if more than 1 instance exists in the DOM
 import {dom} from '@htmlguyllc/jpack/src/utilities';
 
 //Dont do this. Most of these are dumb examples.
-dom.getDomElement('.my-fav-button', true, true); //will throw an error if it doesn't fine it, or if it finds more than 1
-dom.getDomElements('.links', true); //will throw an error if none are found
-dom.getDomElement('.my-button'); //returns the button, or null (if multiple, it returns the first)
-dom.getDomElements('.links'); //returns an array of any matches for .links
-dom.getDomElement($('a')); //returns the native DOM element for the link and removes the jQuery wrapper
-dom.getDomElement(document.querySelectorAll('a')); //returns the first anchor
+dom.getElement('.my-fav-button', true, true); //will throw an error if it doesn't fine it, or if it finds more than 1
+dom.getElements('.links', true); //will throw an error if none are found
+dom.getElement('.my-button'); //returns the button, or null (if multiple, it returns the first)
+dom.getElements('.links'); //returns an array of any matches for .links
+dom.getElement($('a')); //returns the native DOM element for the link and removes the jQuery wrapper
+dom.getElement(document.querySelectorAll('a')); //returns the first anchor
 
 dom.exists('a'); //returns true if there is an anchor on the page
 dom.multipleExist('a'); //returns true if more than 1 anchor on the page
@@ -439,7 +439,7 @@ onEventPreventDefault|mixed, string, function|array|attaches an event handler an
 offEventPreventDefault|mixed, string, function|array|removes the handler you attached with .onEventPreventDefault()
 on|mixed, string, function|array|attaches an event listener
 off|mixed, string, function|array|removes an event listener
-trigger|mixed, string, mixed|array|triggers an event on an element/elements - uses .getDomElements()
+trigger|mixed, string, mixed|array|triggers an event on an element/elements - uses .getElements()
 
 ##### To Use:
 

@@ -2600,7 +2600,7 @@ const navigation = {
             if (typeof callback === 'function') {
                 //wait for the onunload callbacks to run and the new content to be put on the page first
                 window.setTimeout(function(){
-                    callback(_utilities_dom__WEBPACK_IMPORTED_MODULE_1__["dom"].getDomElement(replace_el), parent_el, navigation.getPassThroughData());
+                    callback(_utilities_dom__WEBPACK_IMPORTED_MODULE_1__["dom"].getElement(replace_el), parent_el, navigation.getPassThroughData());
                 }, 105);
             }
         })
@@ -2667,7 +2667,7 @@ const navigation = {
         document.body.prepend(div);
 
         //get and cache a reference to it for future requests
-        navigation.navLoaderCached = _utilities_dom__WEBPACK_IMPORTED_MODULE_1__["dom"].getDomElement('.page-navigation-loader');
+        navigation.navLoaderCached = _utilities_dom__WEBPACK_IMPORTED_MODULE_1__["dom"].getElement('.page-navigation-loader');
 
         return navigation.navLoaderCached;
     },
@@ -2791,7 +2791,7 @@ const navigation = {
 
         //trigger nav complete event
         //get replace_el again because it was replaced
-        navigation.triggerUnload(_utilities_dom__WEBPACK_IMPORTED_MODULE_1__["dom"].getDomElement(replace_el), replace_el);
+        navigation.triggerUnload(_utilities_dom__WEBPACK_IMPORTED_MODULE_1__["dom"].getElement(replace_el), replace_el);
 
         //very slight 100ms delay to let the on unload handlers run first
         window.setTimeout(function(){
@@ -2822,11 +2822,11 @@ const navigation = {
                 navigation.setTitle(parsed.title);
 
                 //replace content on the page
-                _utilities_dom__WEBPACK_IMPORTED_MODULE_1__["dom"].getDomElement(replace_el).outerHTML = parsed.html;
+                _utilities_dom__WEBPACK_IMPORTED_MODULE_1__["dom"].getElement(replace_el).outerHTML = parsed.html;
 
                 //trigger nav complete event
                 //get replace_el again because it was replaced
-                navigation.triggerOnLoad(_utilities_dom__WEBPACK_IMPORTED_MODULE_1__["dom"].getDomElement(incoming_el), incoming_el, parsed.route);
+                navigation.triggerOnLoad(_utilities_dom__WEBPACK_IMPORTED_MODULE_1__["dom"].getElement(incoming_el), incoming_el, parsed.route);
             }
         }, 100);
 
@@ -3468,7 +3468,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * HTML DOM helpers
  *
- * @type {{getDomElements: (function(*=, *=): Array), getDomElement: dom.getDomElement, exists: (function(*=): number), multipleExist: (function(*=): number)}}
+ * @type {{getElements: (function(*=, *=): Array), getElement: dom.getElement, exists: (function(*=): number), multipleExist: (function(*=): number)}}
  */
 const dom = {
     /**
@@ -3479,11 +3479,11 @@ const dom = {
      * @param error_on_multiple - throw an error if more than 1 exists
      * @returns Element|HTMLDocument|null
      */
-    getDomElement: function(el, error_on_none, error_on_multiple){
-        el = this.getDomElements(el, error_on_none);
+    getElement: function(el, error_on_none, error_on_multiple){
+        el = this.getElements(el, error_on_none);
 
         if( el.length > 1 ){
-            if( error_on_multiple ) throw "Too many DOM elements found in getDomElement for "+JSON.stringify(el);
+            if( error_on_multiple ) throw "Too many DOM elements found in getElement for "+JSON.stringify(el);
             return null;
         }
 
@@ -3497,7 +3497,7 @@ const dom = {
      * @param error_on_none - throw an error if no elements were found, default: false
      * @returns []
      */
-    getDomElements: function(el, error_on_none){
+    getElements: function(el, error_on_none){
         //default to false
         error_on_none = typeof error_on_none === "undefined" ? false : error_on_none;
 
@@ -3528,7 +3528,7 @@ const dom = {
         }
         //otherwise, what the heck did you pass? Throw error...
         else {
-            throw "Invalid value provided to getDomElements: "+JSON.stringify(el);
+            throw "Invalid value provided to getElements: "+JSON.stringify(el);
         }
 
         if( !el_array.length && error_on_none ){
@@ -3546,7 +3546,7 @@ const dom = {
      * @returns {dom}
      */
     remove: function(el){
-        let el_array = this.getDomElements(el);
+        let el_array = this.getElements(el);
         el_array.forEach(function(el){
             el.parentNode.removeChild(el);
         });
@@ -3556,25 +3556,25 @@ const dom = {
     /**
      * Returns true if the provided element exists
      *
-     * Pass anything you want, it uses getDomElements
+     * Pass anything you want, it uses getElements
      *
      * @param el
      * @returns {number}
      */
     exists: function(el){
-        return this.getDomElements(el).length;
+        return this.getElements(el).length;
     },
 
     /**
      * Returns true if there are multiple instances of the provided element
      *
-     * Pass anything you want, it uses getDomElements
+     * Pass anything you want, it uses getElements
      *
      * @param el
      * @returns {boolean}
      */
     multipleExist: function(el){
-        return this.getDomElements(el).length > 1;
+        return this.getElements(el).length > 1;
     },
 };
 
@@ -3680,7 +3680,7 @@ const events = {
      * @returns array|el
      */
     onEventPreventDefault: function(el, event, handler) {
-        const el_array = _dom__WEBPACK_IMPORTED_MODULE_0__["dom"].getDomElements(el);
+        const el_array = _dom__WEBPACK_IMPORTED_MODULE_0__["dom"].getElements(el);
 
         if( !el_array.length ){
             return el;
@@ -3708,7 +3708,7 @@ const events = {
      */
     offEventPreventDefault: function(el, event, handler){
 
-        const el_array = _dom__WEBPACK_IMPORTED_MODULE_0__["dom"].getDomElements(el);
+        const el_array = _dom__WEBPACK_IMPORTED_MODULE_0__["dom"].getElements(el);
 
         if( !el_array.length ){
             return el;
@@ -3734,7 +3734,7 @@ const events = {
      * @returns {*|*[]|*}
      */
     on: function(el, event, handler){
-        const el_array = _dom__WEBPACK_IMPORTED_MODULE_0__["dom"].getDomElements(el);
+        const el_array = _dom__WEBPACK_IMPORTED_MODULE_0__["dom"].getElements(el);
 
         if( !el_array.length ) return el;
 
@@ -3754,7 +3754,7 @@ const events = {
      * @returns {*|*[]|*}
      */
     off: function(el, event, handler){
-        const el_array = _dom__WEBPACK_IMPORTED_MODULE_0__["dom"].getDomElements(el);
+        const el_array = _dom__WEBPACK_IMPORTED_MODULE_0__["dom"].getElements(el);
 
         if( !el_array.length ) return el;
 
@@ -3774,7 +3774,7 @@ const events = {
      * @returns {*|*[]|*}
      */
     trigger: function(el, event, event_options){
-        const el_array = _dom__WEBPACK_IMPORTED_MODULE_0__["dom"].getDomElements(el);
+        const el_array = _dom__WEBPACK_IMPORTED_MODULE_0__["dom"].getElements(el);
 
         if( !el_array.length ){
             return el;
