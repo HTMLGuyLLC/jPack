@@ -44,7 +44,8 @@ export const dom = {
         //if a string was provided
         else if (typeof el === 'string') {
             //convert the NodeList returned by querySelectorAll into an array
-            el_array = Array.from(document.querySelectorAll(el));
+            el_array = document.querySelectorAll(el);
+            el_array = el_array ? Array.from(el_array) : el_array;
         }
         //if a jquery object was provided
         else if( el instanceof jQuery ){
