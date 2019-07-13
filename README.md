@@ -15,20 +15,20 @@ yarn add @htmlguyllc/jpack;
 and then use what you need, where you need it (requires ES6):
 ```javascript
 //a single component from it's own file
-import {strings} from '@htmlguyllc/jpack/src/utilities/strings';
+import {strings} from '@htmlguyllc/jpack/es/utilities/strings';
 strings.ucfirst('bob');
 
 //or a single component from the collection file
-import {strings} from '@htmlguyllc/jpack/src/utilities';
+import {strings} from '@htmlguyllc/jpack/es/utilities';
 strings.ucfirst('bob');
 
 //or multiple components from the collection file
-import {strings, dom} from '@htmlguyllc/jpack/src/utilities';
+import {strings, dom} from '@htmlguyllc/jpack/es/utilities';
 strings.ucfirst('bob');
 dom.exists('a.my-link');
 
 //or a namespaced object containing all components
-import * as utilities from '@htmlguyllc/jpack/src/utilities';
+import * as utilities from '@htmlguyllc/jpack/es/utilities';
 utilities.strings.ucfirst('bob');
 
 //or a namespaced object containing all
@@ -39,13 +39,21 @@ jpack.objects.user.getId();
 Or you can download the latest release, unzip it, put it in your public folder then include the whole library:
 ```html
 <script href="/vendor/htmlguyllc-jpack/dist/jpack.min.js">
+
 <script>
 //wait for the page to finish loading so we know jpack is ready
 window.addEventListener('load', function() {
+    
     //now you can take advantage of the jpack library
     var user_id = jpack.objects.user.getId();
     
-    //or if you're feeling super lazy (not recommended)
+    //or if you're feeling lazy, you can tie all jpack components to window for shorter use.
+    jpack.goGlobal("jp");
+    
+    var user_id = jp.user.getId();
+    
+    //or if you're insanely lazy and want to cross your fingers that nothing conflicts, you can tie 
+    // everything to window WITHOUT a namespace
     jpack.goGlobal();
     
     var user_id = user.getId();
@@ -118,7 +126,7 @@ initHistoryHandlers| |self|sets event listeners to handle back/forward navigatio
 
 ##### To use:
 ```javascript
-import {navigation} from '@htmlguyllc/jpack/src/components'; 
+import {navigation} from '@htmlguyllc/jpack/es/components'; 
 
 //handles browser back/forward buttons
 navigation.initHistoryHandlers();
@@ -183,7 +191,7 @@ navigation.triggerOnLoad(dom.getElement('body'), 'body', navigation.getRouteFrom
 //now use the plugin to load pages
 //if you're lazy, the fastest way to integrate is to just add data-href to all internal links 
 //and then attach a handler like this:
-import {events} from '@htmlguyllc/jpack/src/utilities';
+import {events} from '@htmlguyllc/jpack/es/utilities';
 events.onClick('[data-href]', function(){
    navigation.load(this.href); 
 });
@@ -224,7 +232,7 @@ fromURL|string, object|self|instantiate a new form.fromURL('/my-form-url', optio
 
 ##### To use:
 ```javascript
-import {form} from '@htmlguyllc/jpack/src/components'; 
+import {form} from '@htmlguyllc/jpack/es/components'; 
 
 var remote_form = new form.fromURL('/my-form', {
         incomingElementSelector: null, //the form element or wrapper that you want to retrieve from the URL
@@ -308,7 +316,7 @@ modal_form.getForm();
 You can use prototypes to globally overwrite 2 methods in form.fromURL (isValid and insertForm).
 
 ```javascript
-import {form} from '@htmlguyllc/jpack/src/components'; 
+import {form} from '@htmlguyllc/jpack/es/components'; 
 
 form.fromURL.prototype.insertForm = function(parsed_content, response, form) {
     //this is useful if you always want to show your form in a modal like shown in the example above
@@ -344,7 +352,7 @@ appendSlash|string|string|adds a slash (if there isn't already one) to the end o
 
 ##### To use:
 ```javascript
-import {request} from '@htmlguyllc/jpack/src/objects'; 
+import {request} from '@htmlguyllc/jpack/es/objects'; 
 
 //get product_id from the querystring
 var product_id = request.query.get('product_id');
@@ -385,7 +393,7 @@ const $site = {
 
 The harder way: Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
 ```javascript
-import {site} from '@htmlguyllc/jpack/src/objects';
+import {site} from '@htmlguyllc/jpack/es/objects';
  
 //this example uses jQuery's shorthand AJAX call, you can use axios or any request you want
 $.get('/my-site-info-endpoint.php', function(data){
@@ -397,7 +405,7 @@ $.get('/my-site-info-endpoint.php', function(data){
 ##### To Use:
 
 ```javascript
-import {site} from '@htmlguyllc/jpack/src/objects';
+import {site} from '@htmlguyllc/jpack/es/objects';
 
 var site_id = site.getId();
 ```
@@ -456,7 +464,7 @@ const $user = {
 
 The harder way: Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
 ```javascript
-import {user} from '@htmlguyllc/jpack/src/objects';
+import {user} from '@htmlguyllc/jpack/es/objects';
  
 $.get('/my-user-info-endpoint.php', function(data){
     //don't forget error handling!
@@ -467,7 +475,7 @@ $.get('/my-user-info-endpoint.php', function(data){
 ##### To use:
 
 ```javascript
-import {site} from '@htmlguyllc/jpack/src/objects';
+import {site} from '@htmlguyllc/jpack/es/objects';
 
 var site_id = site.getId();
 ```
@@ -489,7 +497,7 @@ setter|string|string|creates a setter method name from a string
 ##### To Use:
 
 ```javascript
-import {strings} from '@htmlguyllc/jpack/src/utilities';
+import {strings} from '@htmlguyllc/jpack/es/utilities';
 
 strings.ucfirst('bob'); //returns 'Bob'
 strings.getter('name'); //returns 'getName';
@@ -512,7 +520,7 @@ multipleExist|mixed|bool|checks to see if more than 1 instance exists in the DOM
 ##### To Use:
 
 ```javascript
-import {dom} from '@htmlguyllc/jpack/src/utilities';
+import {dom} from '@htmlguyllc/jpack/es/utilities';
 
 //Dont do this. Most of these are dumb examples.
 dom.getElement('.my-fav-button', true, true); //will throw an error if it doesn't find it, or if it finds more than 1
@@ -537,7 +545,7 @@ isDataObject|object, array, bool, bool, bool|bool|validates that an object conta
 ##### To Use:
 
 ```javascript
-import {type_checks} from '@htmlguyllc/jpack/src/utilities';
+import {type_checks} from '@htmlguyllc/jpack/es/utilities';
 
 var my_obj = {id:null, name:'John Doe', email:'john@doe.com'};
 
@@ -569,7 +577,7 @@ trigger|mixed, string, mixed|array|triggers an event on an element/elements - us
 ##### To Use:
 
 ```javascript
-import {events} from '@htmlguyllc/jpack/src/utilities';
+import {events} from '@htmlguyllc/jpack/es/utilities';
 
 events.onClick('a.my-link', function(){
    //do something without the page redirecting to the href 

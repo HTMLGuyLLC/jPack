@@ -1,7 +1,8 @@
-import {form} from "@htmlguyllc/jpack/src/components/form";
+import {form} from "@htmlguyllc/jpack/es/components/form";
 
 /**
- * Overwrites the form
+ * Overwrites the form and opens it in a jAlert modal
+ *
  * @param parsed_content
  * @param response
  * @param form
@@ -24,7 +25,7 @@ form.fromURL.prototype.insertForm = function(parsed_content, response, form){
     }
 
     $.jAlert({
-        title:parsed_content.title,
+        title:parsed_content.title, //modal title comes from the title of the page we're retrieving the form from
         theme:'blue',
         size: '1000px',
         content: parsed_content.html,
