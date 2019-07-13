@@ -135,6 +135,14 @@ $.get('/my-site-info-endpoint.php', function(data){
 });
 ```
 
+##### To Use:
+
+```javascript
+import {site} from '@htmlguyllc/jpack/src/objects';
+
+var site_id = site.getId();
+```
+
 ### -User
 _Designed for sites with user accounts/guest accounts. This object stores a user's details and allows for front-end permission checks._
 
