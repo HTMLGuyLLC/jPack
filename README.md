@@ -143,9 +143,13 @@ navigation.onLoad(function(e){
     var data = params.data; //or navigation.getPassthroughData()
     //the DOM element that was added to the page replacing the previous
     var el = params.el;
-    //the incomingElement selector from this request 
-    // since the new element MAY have a different selector than the last,
-    // you may want to run navigation.setReplaceElement(el_selector)
+    
+    //el_selector is the incoming selector that was used for this request
+    //WARNING: If you change the incomingElement for a single request
+    //and the replaceElement is not the same, future requests will not work
+    //because the replaceElement no longer exists in the DOM
+    //in this case you'll want to run navigation.setReplaceElement(params.el_selector);
+    //now future requests will replace the new element on the page
     var el_selector = params.el_selector;
    
    //if gtag is set (google analytics), push a page view
@@ -183,24 +187,31 @@ events.onClick('[data-href]', function(){
    navigation.load(this.href); 
 });
 
+//set something that will be received onload of the next page
+navigation.setPassthroughData({
+    product_id:1
+});
+
 //you can use the load method at any time to load a new page 
 // the second param is an optional callback that only runs for that page
 navigation.load('/my-page', function(new_el, new_el_selector, pass_through_params){
     //my page is now loaded
+    
     //new_el is the new element on the page
     //new_el_selector is the incomingSelector used for this request
+    
     //pass_through_data is any data that was set on navigation prior to this request
-    // using setPassthroughData(object)
+    //so in this instance, it will be {product_id:1} (set above)
+    
+    //now clear that data so it's gone for the next page load
+    navigation.clearPassthroughData();
 });
 
-//if you have a page that isn't structure the same as the rest that you're requesting, 
-// you can set the incoming parent element on-the-fly
-navigation.load('/my-popup', null, '.popup-content');
-
-//now .popup-content is on the page instead of the previous element, 
-// so you probably want to set future requests to replace that one instead
-//see note in the onLoad block above regarding how you can do this automatically for every request
-navigation.setIncomingElement('.popup-content');
+//in some cases, you'll want to grab a different element from the URL
+//this example grabs .popup-content from /my-popup and replaces .current-popup
+navigation.load('/my-popup', function(new_el, el_sel, data){
+   //now the new element is on the page
+}, '.popup-content', '.current-popup');
 ```
 
 ## - Objects -
