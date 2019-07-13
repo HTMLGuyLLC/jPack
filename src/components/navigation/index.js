@@ -183,6 +183,13 @@ export const navigation = {
     },
 
     /**
+     * Classes for the loader
+     * Defaults are for bootstrap (with the exception of page-navigation-loader)
+     */
+    _loaderClasses: 'progress page-navigation-loader',
+    _loaderInnerDivClasses: 'progress-bar progress-bar-striped progress-bar-animated',
+
+    /**
      * If enabled, adds a loader to the page and caches a reference to it, then returns that reference
      *
      * @returns Element
@@ -192,9 +199,12 @@ export const navigation = {
         if( navigation.navLoaderCached ) return navigation.navLoaderCached;
 
         //prepend the loader elements
-        document.body.prepend(`<div class="progress page-navigation-loader">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>`);
+        let div = document.createElement('div');
+        div.classList = this._loaderClasses;
+        let inner_div = document.createElement('div');
+        inner_div.classList = this._loaderInnerDivClasses;
+        div.append(inner_div);
+        document.body.prepend(div);
 
         //get and cache a reference to it for future requests
         navigation.navLoaderCached = dom.getDomElement('.page-navigation-loader');
