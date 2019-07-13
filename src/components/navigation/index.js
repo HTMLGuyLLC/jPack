@@ -243,15 +243,19 @@ export const navigation = {
     /**
      * Parses the incoming HTML to grab key components like meta tags and the inner content of the parent element
      *
+     * If no parent element is provided, it will just return the provided html
+     *
      * @param html
      * @param parent_el
      * @returns {{metas: HTMLCollectionOf<HTMLElementTagNameMap[string]>, route: (*|any|Element), links: HTMLCollectionOf<HTMLElementTagNameMap[string]>, html: string, title: string, body_classes: DOMTokenList}}
      */
     parseHTML(html, parent_el)
     {
-        parent_el = typeof parent_el !== 'undefined' || !parent_el ? parent_el : this.getIncomingElement();
+        //default to null if not provided
+        parent_el = typeof parent_el === 'undefined' ? null : parent_el;
 
-        if( typeof parent_el !== 'string' ) throw `Provided parent_el (${parent_el}) is not a string`;
+        //must be a string or null
+        if( typeof parent_el !== 'string' && parent_el !== null ) throw `Provided parent_el (${parent_el}) is not a string or null`;
 
         //parse the incoming dom
         var parser = new DOMParser();
@@ -268,9 +272,19 @@ export const navigation = {
         //get body classes
         var body_classes = doc.body.classList;
 
-        //get the new parent_el
-        var new_content = doc.querySelector(parent_el);
-        new_content = new_content ? new_content.outerHTML : null;
+        //default to the incoming HTML
+        var new_html = html;
+
+        //if a parent element was provided, find it
+        if( parent_el ){
+            var sel = doc.querySelector(parent_el);
+            //if couldn't find the element
+            if( !sel ){
+                throw `Could not find parent selector ${parent_el}`;
+            }
+            //grab the outerHTML
+            new_html = sel.outerHTML;
+        }
 
         //get the new page's route from the meta tag (if it exists)
         var route = navigation.getRouteFromMeta(doc);
