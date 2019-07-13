@@ -276,8 +276,8 @@ export const form = {
          */
         this.setSubmitURL = function(url){
             if( typeof url !== "string"
-                && typeof method !== "function"
-                && method !== null ) throw `${method} is not a string, function, or null`;
+                && typeof url !== "function"
+                && url !== null ) throw `${url} is not a string, function, or null`;
 
             this._submitURL = url;
             return this;
