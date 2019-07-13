@@ -149,50 +149,6 @@ export const form = {
         };
 
         /**
-         * Allows you to insert the form wherever you want on the page
-         *  Override this method to customize where the form is inserted
-         *  (maybe you want to open a modal first and place it there?)
-         *
-         *  parsed_content.html will always be the HTML
-         *
-         *  parsed_content may contain other data like route and title if the form was pulled out of
-         *     a full HTML page which contains those items
-         *
-         *  response is the full server response (html string or object from JSON - not provided if the response is only the form's HTML)
-         *
-         *  form is provided if this is after the form was submitted and HTML was returned form the server
-         *
-         *  @param parsed_content
-         *  @param response
-         *  @param form
-         *  @returns {*|Element|HTMLDocument}
-         */
-        this.insertForm = function(parsed_content, response, form) {
-            //selector for where the form will go
-            let el = this.getInsertIntoElement();
-
-            //if not provided
-            if( el === null ) throw 'Cannot determine where to insert form. Overwrite insertForm() or provide insertIntoElement';
-
-            //get the container element - error if not found
-            el = dom.getElement(el, true);
-
-            //put the form in the container element
-            el.innerHTML = parsed_content.html;
-
-            //find the newly added form
-            form = el.querySelector('form');
-
-            //attach an on-submit listener to send the form's values via XHR
-            this.attachSubmitHandler(form);
-
-            //run the onload callback now that the form is there
-            this.triggerOnload()();
-
-            return el;
-        };
-
-        /**
          * Use this method to modify the form immediately after it's displayed
          *
          * You'll likely want to attach plugins for datepickers/dropdowns, or maybe hide a field based on the value of another
@@ -458,4 +414,49 @@ export const form = {
 
         return this;
     }
+};
+
+
+/**
+ * Allows you to insert the form wherever you want on the page
+ *  Override this method to customize where the form is inserted
+ *  (maybe you want to open a modal first and place it there?)
+ *
+ *  parsed_content.html will always be the HTML
+ *
+ *  parsed_content may contain other data like route and title if the form was pulled out of
+ *     a full HTML page which contains those items
+ *
+ *  response is the full server response (html string or object from JSON - not provided if the response is only the form's HTML)
+ *
+ *  form is provided if this is after the form was submitted and HTML was returned form the server
+ *
+ *  @param parsed_content
+ *  @param response
+ *  @param form
+ *  @returns {*|Element|HTMLDocument}
+ */
+form.fromURL.prototype.insertForm = function(parsed_content, response, form) {
+    //selector for where the form will go
+    let el = this.getInsertIntoElement();
+
+    //if not provided
+    if( el === null ) throw 'Cannot determine where to insert form. Overwrite insertForm() or provide insertIntoElement';
+
+    //get the container element - error if not found
+    el = dom.getElement(el, true);
+
+    //put the form in the container element
+    el.innerHTML = parsed_content.html;
+
+    //find the newly added form
+    form = el.querySelector('form');
+
+    //attach an on-submit listener to send the form's values via XHR
+    this.attachSubmitHandler(form);
+
+    //run the onload callback now that the form is there
+    this.triggerOnload()();
+
+    return el;
 };
