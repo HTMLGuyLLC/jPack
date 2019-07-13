@@ -65,7 +65,9 @@ export const events = {
 
         if( !el_array.length ) return el;
 
-        el_array.addEventListener('change', handler);
+        el_array.forEach(function(el){
+            el.addEventListener('change', handler);
+        });
 
         return el_array;
     },
@@ -82,7 +84,9 @@ export const events = {
 
         if( !el_array.length ) return el;
 
-        el_array.removeEventListener('change', handler);
+        el_array.forEach(function(el){
+            el.removeEventListener('change', handler);
+        });
 
         return el_array;
     },
@@ -103,11 +107,14 @@ export const events = {
             return el;
         }
 
-        el_array.addEventListener(event, function(e){
-            e.preventDefault();
-            handler.call(this, [e]);
-            return false;
+        el_array.forEach(function(el){
+            el.addEventListener(event, function(e){
+                e.preventDefault();
+                handler.call(this, [e]);
+                return false;
+            });
         });
+
 
         return el_array;
     },
@@ -128,10 +135,12 @@ export const events = {
             return el;
         }
 
-        el_array.removeEventListener(event, function(e){
-            e.preventDefault();
-            handler.call(this, [e]);
-            return false;
+        el_array.forEach(function(el) {
+            el.removeEventListener(event, function (e) {
+                e.preventDefault();
+                handler.call(this, [e]);
+                return false;
+            });
         });
 
         return el_array;
