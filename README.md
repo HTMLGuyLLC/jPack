@@ -185,8 +185,12 @@ events.onClick('[data-href]', function(){
 
 //you can use the load method at any time to load a new page 
 // the second param is an optional callback that only runs for that page
-navigation.load('/my-page', function(){
+navigation.load('/my-page', function(new_el, new_el_selector, pass_through_params){
     //my page is now loaded
+    //new_el is the new element on the page
+    //new_el_selector is the incomingSelector used for this request
+    //pass_through_data is any data that was set on navigation prior to this request
+    // using setPassthroughData(object)
 });
 
 //if you have a page that isn't structure the same as the rest that you're requesting, 

@@ -140,7 +140,7 @@ export const navigation = {
             if (typeof callback === 'function') {
                 //wait for the onunload callbacks to run and the new content to be put on the page first
                 window.setTimeout(function(){
-                    callback(dom.getDomElement(replace_el));
+                    callback(dom.getDomElement(replace_el), parent_el, navigation.getPassThroughData());
                 }, 105);
             }
         })
