@@ -362,8 +362,7 @@ export const navigation = {
                 navigation.setTitle(parsed.title);
 
                 //replace content on the page
-                var current_el = dom.getDomElement(replace_el);
-                current_el.parentNode.replaceChild(parsed.html, current_el);
+                dom.getDomElement(replace_el).outerHTML = parsed.html;
 
                 //trigger nav complete event
                 //get replace_el again because it was replaced
