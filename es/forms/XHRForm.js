@@ -9,8 +9,11 @@ const XHRFormDefaults = {
     xhrSubmit: true, //submit the form using XHR instead of the default action
     submitURL:null, //will be grabbed from the form's action attribute, or fallback to the URL the form was retrieved from
     submitMethod:null, //will be grabbed from the form's method attribute, or fallback to "POST"
-    onError: function(error, response, form){ }, //called when the form is submitted and fails
-    onSuccess: function(response, form){ }, //called when the form is submitted successfully
+    onError: function(error, response, form){ alert(error); }, //called when the form is submitted and fails
+    onSuccess: function(response, form){ //called when the form is submitted successfully
+        if(typeof response.success === "string"){ alert(response.success); }
+        else{ alert("Your submission has been received"); }
+    },
     //validate the form, display any errors and return false to block submission
     validateForm: function(form){
         //add .was-validated for bootstrap to show errors

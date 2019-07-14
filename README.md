@@ -7,7 +7,7 @@ Many plugins and libraries are too generic, verbose, bulky, lacking, or have a l
 Much of what is included here is stuff that I've written several times, in several different ways, using jQuery in the past (or wrapping other jQuery plugins). 
 The goal of this library is to allow me (and you, now that it's open source) to integrate slim, mostly dependency-free, components as-needed with more specific use-cases than what is currently offered elsewhere.
 
-...where else can you get a component to grab a form from another page and stick it on the current one with XHR and XHR submission in [6 lines of custom JS](#6lineofjs)?   
+...where else can you get a component to grab a form from another page and stick it on the current one with XHR and XHR submission in [3 lines of custom JS](#3lineofjs)?   
 
 <h1 id="whatsincluded">What's Included</h1>
 
@@ -264,8 +264,11 @@ var remote_form = new XHRForm(document.getElementById('my-form'), {
         xhrSubmit: true, //wouldn't make a whole lotta sent to use this if this were false lol, but it's here for extending classes and incase you want to toggle it for whatever reason
         submitURL:null, //when null, the form's action will be used (if explicitly defined), otherwise it falls back to the URL the form was retrieved from
         submitMethod:null, //when null, the form's method will be used (if explicitly defined), otherwise it falls back to POST
-        onError: function(error, response, form){ }, //although you can add more, you can only pass 1 to start with in the constructor
-        onSuccess: function(response, form){ }, //although you can add more, you can only pass 1 to start with in the constructor
+        onError: function(error, response, form){ alert(error); }, //although you can add more, you can only pass 1 to start with in the constructor
+        onSuccess: function(response, form){ //although you can add more, you can only pass 1 to start with in the constructor 
+            if(typeof response.success === "string"){ alert(response.success); }
+            else{ alert("Your submission has been received"); }
+        },
         //validate the form, display any errors and return false to block submission
         validateForm: function(form){
             //add .was-validated for bootstrap to show errors
@@ -319,9 +322,12 @@ var remote_form = new FormFromURL('/my-form', {
         onload: function(form){ return this; }, //although you can add more, you can only pass 1 to start with in the constructor
         xhrSubmit: true, 
         submitURL:null, //when null, the form's action will be used (if explicitly defined), otherwise it falls back to the URL the form was retrieved from
-        submitMethod:null, //when null, the form's method will be used (if explicitly defined), otherwise it falls back to POST
-        onError: function(error, response, form){ }, //although you can add more, you can only pass 1 to start with in the constructor
-        onSuccess: function(response, form){ }, //although you can add more, you can only pass 1 to start with in the constructor
+        submitMethod:null, //when null, the form's method will be used (if explicitly defined), otherwise it falls back to POST        
+        onError: function(error, response, form){ alert(error); }, //although you can add more, you can only pass 1 to start with in the constructor
+        onSuccess: function(response, form){ //although you can add more, you can only pass 1 to start with in the constructor 
+            if(typeof response.success === "string"){ alert(response.success); }
+            else{ alert("Your submission has been received"); }
+        }, 
         //validate the form, display any errors and return false to block submission
         validateForm: function(form){
             //add .was-validated for bootstrap to show errors
@@ -341,26 +347,31 @@ var remote_form = new FormFromURL('/my-form', {
 remote_form.getForm();
 ```
 
-<h4 id="6lineofjs">How to get and submit a form in 6 lines of javascript:</h4>
+<h4 id="3lineofjs">How to get and submit a form in 3 lines of javascript:</h4>
 
-Your javascript
+Your javascript (success/failure messages will be shown in an alert)
 ```javascript
-var email_form = new FormFromURL('/email-form', {
+new FormFromURL('/email-form', {
     insertIntoElement: 'body.form-container',
-    onError: function(error){ alert(error); },
-    onSuccess: function(response, form){ alert(response.success); }
-});
-email_form.getForm();
+}).getForm();
+```
+Your HTML
+```html
+<div class="form-container"></div>
 ```
 Server response when retrieving /email-form
 ```json
 {
- "html": "<form><input name='email' required='required'></form>"
+ "html": "<form><input name='email' required='required'><input type='submit' value='Submit'></form>"
 }
 ``` 
-Server response when submitting to /email-form
+Server response when submitting to /email-form (success)
 ```json
 { "success": "Thank you for submitting, your email has been provided to spammers everywhere" }
+```
+Server response when submitting to /email-form (error)
+```json
+{ "error": "Your email is required/Your email is invalid" }
 ```
 
 #### Extending:
