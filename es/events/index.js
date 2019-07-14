@@ -32,7 +32,7 @@ export const events = {
                 //set them on window so they're available globally
                 //example: events.onClick becomes onClick
                 //usage after running this: onClick('a', function(){ });
-                window[namespace+property] = object[property];
+                window[namespace+property] = self[property];
             }
         }
 
