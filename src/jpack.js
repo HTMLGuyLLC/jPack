@@ -8,6 +8,9 @@ import {strings} from "../es/strings";
 import {type_checks} from "../es/type_checks";
 import {User} from "../es/user";
 
+//create an array of all components
+const components = [dom, events, XHRForm, FormFromURL, navigation, request, Site, strings, type_checks, User];
+
 /**
  * Call this function to tie all jpack components directly to the window for global use
  *
@@ -28,7 +31,7 @@ const setGlobal = function(namespace){
     namespace = typeof namespace === 'string' ? namespace : null;
 
     //loop through components, objects, plugin_wrappers, and utilities
-    [components,objects,plugin_wrappers,utilities].forEach(function(object){
+    components.forEach(function(object){
         //for each component within those
         for (var property in object) {
             //get actual properties
@@ -46,7 +49,8 @@ const setGlobal = function(namespace){
     });
 };
 
-export const jpack = {dom, events, XHRForm, FormFromURL, navigation, request, Site, strings, type_checks, User, setGlobal: setGlobal};
+//extend components to include the setGlobal method
+export const jpack = {...components, ...{setGlobal: setGlobal}};
 
 //set jpack globally so that it can be used anywhere
 global.jpack = jpack;
