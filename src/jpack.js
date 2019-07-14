@@ -8,8 +8,19 @@ import {strings} from "../es/strings";
 import {type_checks} from "../es/type_checks";
 import {User} from "../es/user";
 
-//create an array of all components
-const components = [dom, events, XHRForm, FormFromURL, navigation, request, Site, strings, type_checks, User];
+//create a key:val object of all components
+const components = {
+    dom:dom,
+    events:events,
+    XHRForm:XHRForm,
+    FormFromURL:FormFromURL,
+    navigation:navigation,
+    request:request,
+    Site:Site,
+    strings:strings,
+    type_checks:type_checks,
+    User:User
+};
 
 /**
  * Call this function to tie all jpack components directly to the window for global use
@@ -30,23 +41,16 @@ const components = [dom, events, XHRForm, FormFromURL, navigation, request, Site
 const setGlobal = function(namespace){
     namespace = typeof namespace === 'string' ? namespace : null;
 
-    //loop through components, objects, plugin_wrappers, and utilities
-    components.forEach(function(object){
-        //for each component within those
-        for (var property in object) {
-            //get actual properties
-            if (object.hasOwnProperty(property)) {
-                //set them on window so they're available globally
-                //set them on window so they're available globally
-                if( namespace ){
-                    if( typeof window[namespace] === "undefined" ){ window[namespace] = {}; }
-                    window[namespace][property] = self[property];
-                }else{
-                    window[property] = self[property];
-                }
-            }
+    //for each function within events
+    for (const key in components) {
+        //set them on window so they're available globally
+        if( namespace ){
+            if( typeof window[namespace] === "undefined" ){ window[namespace] = {}; }
+            window[namespace][key] = components[key];
+        }else{
+            window[key] = components[key];
         }
-    });
+    }
 };
 
 //extend components to include the setGlobal method
