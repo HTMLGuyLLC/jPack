@@ -1,5 +1,5 @@
 import {request} from "./request";
-import {site} from "./site";
-import {user} from "./user";
+import {Site} from "./Site";
+import {User} from "./User";
 
-export {request, site, user};
+export {request, User, Site};

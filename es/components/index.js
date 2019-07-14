@@ -1,3 +1,4 @@
 import {navigation} from "./navigation";
+import {XHRForm, FormFromURL} from './form';
 
-export {navigation};
+export {navigation, XHRForm, FormFromURL};

@@ -11,7 +11,7 @@ Each one is detailed further in the documentation below.
 Type | Namespace | Object/Function/Class
 --- | --- | ---
 Components | components | navigation, XHRForm, FormFromURL
-Objects | objects | request, site, user
+Objects | objects | request, Site, User
 Plugin Wrappers | plugin_wrappers | None Yet.
 Utilities | utilities | strings, data_types, dom, events
 
@@ -30,18 +30,18 @@ Don't forget to also include dependencies (listed in package.json).
 window.addEventListener('load', function() {
     
     //now you can take advantage of the jpack library
-    var user_id = jpack.objects.user.getId();
+    var fname = jpack.utilities.strings.ucfirst('bob'); //Bob
     
     //or if you're feeling lazy, you can tie all jpack components to window for shorter use.
     jpack.goGlobal("jp");
     
-    var user_id = jp.user.getId();
+    jp.strings.ucfirst('bob');
     
     //or if you're insanely lazy and want to cross your fingers that nothing conflicts, you can tie 
     // everything to window WITHOUT a namespace
     jpack.goGlobal();
     
-    var user_id = user.getId();
+    strings.ucfirst('bob');
 };
 </script>
 ```
@@ -74,14 +74,15 @@ utilities.strings.ucfirst('bob');
 
 //or a namespaced object containing all
 import {jpack} from '@htmlguyllc/jpack';
-jpack.objects.user.getId();
+jpack.utilities.strings.ucfirst('bob');
 ```
 
 #### CommonJS (Browserify)
 ```javascript
 var jpack = require('@htmlguyllc/jpack');
 
-jpack.objects.user.getId();
+//now use it
+jpack.utilities.strings.ucfirst('bob');
 ```
 
 # Dependencies
@@ -384,9 +385,11 @@ getConfigItem| |mixed|returns an individual item from config
 setConfigItem|key:string,val:mixed|this|sets the value of an individual item in config
 populate|data:object|this|sets provided values all at once (id,name,config)
 
-##### To populate with data:
+##### Instantiation with current site data:
 
-The easy way: Create an object named $site with values from your server (prior to including jpack) 
+The easy way: 
+
+Create an object named $site with values from your server (prior to including jpack) 
 ```html
 <script>
 const $site = {
@@ -397,31 +400,33 @@ const $site = {
 };
 </script>
 ```
-
-The harder way: Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
+Then instantiate the Site class in your JS file somewhere
 ```javascript
-import {site} from '@htmlguyllc/jpack/es/objects';
+const cur_site = new Site($site);
+cur_site.getId();
+```
+
+The harder way: 
+
+Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
+```javascript
+import {Site} from '@htmlguyllc/jpack/es/objects';
  
 //this example uses jQuery's shorthand AJAX call, you can use axios or any request you want
 $.get('/my-site-info-endpoint.php', function(data){
     //don't forget error handling!
-    site.populate(JSON.parse(data));
+    const cur_site = new Site(JSON.parse(data));
 });
 ```
 
-##### To Use:
-
-```javascript
-import {site} from '@htmlguyllc/jpack/es/objects';
-
-var site_id = site.getId();
-```
+Of course you can use this class for any site, not just the current one, but this is the intended usage.
 
 ### -User
-_Designed for sites with user accounts/guest accounts. This object stores a user's details and allows for front-end permission checks._
+_Designed for sites with user accounts/guest accounts. This class stores a user's details and allows for front-end permission checks._
 
 Method/Property | Params | Return | Notes
 --- | --- | --- | ---
+constructor|data:object|self|
 getId| |string/int|
 setId|id:string/int|this|
 getIsGuest| |bool|if your site has users who don't login but still interact and have a user record (like guest checkout)
@@ -450,9 +455,11 @@ getDataItem|key:string|mixed|returns a single value from the additional data obj
 setDataItem|key:string, val:mixed|sets a single value in the additional data array/object
 populate|data:object|this|sets provided values all at once (id, isGuest, isAdmin, etc)
 
-##### To populate with data:
+##### Instantiation with current user data:
 
-The easy way: Create an object named $user with values from your server (prior to including jpack) 
+The easy way: 
+
+Create an object named $user with values from your server 
 ```html
 <script>
 const $user = {
@@ -468,24 +475,25 @@ const $user = {
 };
 </script>
 ```
-
-The harder way: Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
+Then instantiate the User class in your JS file somewhere
 ```javascript
-import {user} from '@htmlguyllc/jpack/es/objects';
+const cur_user = new User($user);
+cur_user.getId();
+```
+
+The harder way: 
+
+Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
+```javascript
+import {User} from '@htmlguyllc/jpack/es/objects';
  
 $.get('/my-user-info-endpoint.php', function(data){
     //don't forget error handling!
-    user.populate(JSON.parse(data));
+    const cur_user = new User(JSON.parse(data));
 });
 ```
 
-##### To use:
-
-```javascript
-import {site} from '@htmlguyllc/jpack/es/objects';
-
-var site_id = site.getId();
-```
+Of course you can use this class for any User not just the current one, but that's the intended usage.
 
 ## - Plugin Wrappers -
 None yet.
