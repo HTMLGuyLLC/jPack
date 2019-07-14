@@ -7,7 +7,7 @@ Many plugins and libraries are too generic, verbose, bulky, lacking, or have a l
 Much of what is included here is stuff that I've written several times, in several different ways, using jQuery in the past (or wrapping other jQuery plugins). 
 The goal of this library is to allow me (and you, now that it's open source) to integrate slim, mostly dependency-free, components as-needed with more specific use-cases than what is currently offered elsewhere.
 
-...where else can you get a component to grab a form from another page and stick it on the current one with XHR and XHR submission in [5 lines of custom JS](#5lineofjs)?   
+...where else can you get a component to grab a form from another page and stick it on the current one with XHR and XHR submission in [6 lines of custom JS](#6lineofjs)?   
 
 <h1 id="whatsincluded">What's Included</h1>
 
@@ -341,15 +341,16 @@ var remote_form = new FormFromURL('/my-form', {
 remote_form.getForm();
 ```
 
-<h4 id="5lineofjs">How to get and submit a form in 5 lines of javascript:</h4>
+<h4 id="6lineofjs">How to get and submit a form in 6 lines of javascript:</h4>
 
-when requesting the form and {success:"Got it!"} on submission - both from the same URL):
+Your javascript
 ```javascript
 var email_form = new FormFromURL('/email-form', {
     insertIntoElement: 'body.form-container',
     onError: function(error){ alert(error); },
     onSuccess: function(response, form){ alert(response.success); }
-})
+});
+email_form.getForm();
 ```
 Server response when retrieving /email-form
 ```json
