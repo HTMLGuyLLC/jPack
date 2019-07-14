@@ -90,7 +90,7 @@ Name | Required by | Link
 --- | --- | ---
 url-search-params-polyfill | request | https://www.npmjs.com/package/url-search-params-polyfill
 axios | navigation | https://www.npmjs.com/package/axios
-formdata-polyfill | form | https://www.npmjs.com/package/formdata-polyfill
+formdata-polyfill | XHRForm (and anything that extends it) | https://www.npmjs.com/package/formdata-polyfill
 
 # Documentation
 
