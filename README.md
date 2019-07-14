@@ -139,15 +139,19 @@ import {navigation} from '@htmlguyllc/jpack/es/navigation';
 navigation.initHistoryHandlers();
 
 //a selector that contains the HTML you'd like to pull from the response
-navigation.setIncomingElement('#main-content');
+//the default is "body"
+//if the response is a JSON object with an "html" key, it'll use the value of that
+navigation.setIncomingElement('#main-content'); 
 
 //a selector that will be replaced with the incoming HTML
-//WARNING: If incoming element does not match, this will be overwritten by the incoming_element after it's replaced 
+//WARNING: If IncomingElement does not match, this will be overwritten by the IncomingElement after it's replaced 
 // (since it presumably no longer exists at that point)
+//by default it'll replace anything in "body"
 navigation.setReplaceElement('#main-content');
 
 //enables a loader to show if a request takes more than 300ms
-//WARNING: No styling is provided at this time. It uses Bootstrap 4's progress-bar classes.
+//WARNING: No styling is provided at this time 
+// It uses Bootstrap 4's progress-bar classes
 navigation.loaderEnabled = true;
 navigation.setLoaderDelay(300);
 
