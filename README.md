@@ -83,19 +83,14 @@ formdata-polyfill | form | https://www.npmjs.com/package/formdata-polyfill
 # What's Included
 
 Four categories of functionality are provided in this library. 
-Each has it's own namespace in parenthesis below.
+Each one is detailed further in the documentation below. 
 
-#### Components (components): 
-navigation, form
-
-#### Objects (objects): 
-request, site, user
-
-#### Plugin Wrappers (plugin_wrappers): 
-None yet.
-
-#### Utilities (utilities): 
-strings, data_types, dom, events
+Type | Namespace | Components
+--- | --- | ---
+Components | components | navigation, form
+Objects | objects | request, site, user
+Plugin Wrappers | plugin_wrappers | None Yet.
+Utilities | utilities | strings, data_types, dom, events
 
 # Documentation
 
