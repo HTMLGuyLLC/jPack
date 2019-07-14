@@ -25,7 +25,7 @@ import {User} from "../es/user";
  *
  */
 const setGlobal = function(namespace){
-    namespace = typeof namespace === 'string' ? namespace+'.' : null;
+    namespace = typeof namespace === 'string' ? namespace : null;
 
     //loop through components, objects, plugin_wrappers, and utilities
     [components,objects,plugin_wrappers,utilities].forEach(function(object){
@@ -34,9 +34,13 @@ const setGlobal = function(namespace){
             //get actual properties
             if (object.hasOwnProperty(property)) {
                 //set them on window so they're available globally
-                //example: objects.user becomes window.user
-                //usage after running this: user.getId()
-                window[namespace+property] = object[property];
+                //set them on window so they're available globally
+                if( namespace ){
+                    if( typeof window[namespace] === "undefined" ){ window[namespace] = {}; }
+                    window[namespace][property] = self[property];
+                }else{
+                    window[property] = self[property];
+                }
             }
         }
     });

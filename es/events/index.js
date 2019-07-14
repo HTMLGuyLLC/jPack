@@ -23,16 +23,19 @@ export const events = {
     setGlobal: function(namespace){
         var self = this;
 
-        namespace = typeof namespace === 'string' ? namespace+'.' : null;
+        namespace = typeof namespace === 'string' ? namespace : null;
 
         //for each function within events
         for (var property in self) {
             //set everything that's a real method in events, except this one
             if (self.hasOwnProperty(property) && property !== 'setGlobal') {
                 //set them on window so they're available globally
-                //example: events.onClick becomes onClick
-                //usage after running this: onClick('a', function(){ });
-                window[namespace+property] = self[property];
+                if( namespace ){
+                    if( typeof window[namespace] === "undefined" ){ window[namespace] = {}; }
+                    window[namespace][property] = self[property];
+                }else{
+                    window[property] = self[property];
+                }
             }
         }
     },
