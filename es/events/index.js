@@ -35,18 +35,6 @@ export const events = {
                 window[namespace+property] = self[property];
             }
         }
-
-        global.onClick = this.onClick;
-        global.offClick = this.offClick;
-        global.onSubmit = this.onSubmit;
-        global.offSubmit = this.offSubmit;
-        global.onChange = this.onChange;
-        global.offChange = this.offChange;
-        global.onEventPreventDefault = this.onEventPreventDefault;
-        global.offEventPreventDefault = this.offEventPreventDefault;
-        global.on = this.on;
-        global.off = this.off;
-        global.trigger = this.trigger;
     },
 
     /**
