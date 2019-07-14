@@ -28,9 +28,7 @@ export class FormModalFromURL extends FormFromURL{
 
         //if options are undefined, set them
         options = typeof options === "undefined" ? {} : options;
-
-        //make sure options is an object (empty or not)
-        type_checks.isDataObject(options, Object.keys(FormModalFromURLDefaults), false, false, true);
+        if( typeof options !== "object" ) throw `${options} is not an object`;
 
         //start by extending modal options so the individual defaults above aren't overwritten, just the ones you pass are
         options.modalOptions = {...FormModalFromURLDefaults.modalOptions, ...options.modalOptions};
