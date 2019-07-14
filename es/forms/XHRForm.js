@@ -314,6 +314,12 @@ export class XHRForm {
      * @returns {form|boolean}
      */
     submitForm(form) {
+        //block multiple form submissions at the same time until this one is complete
+        if( typeof this._processing === "undefined" ) this._processing = false;
+        if( this._processing ) return false;
+
+        this._processing = true;
+
         //cache for use inside other scopes
         const self = this;
 
@@ -332,7 +338,10 @@ export class XHRForm {
         method = !method ? 'post' : method.toLowerCase();
 
         //if not valid, stop here until they resubmit
-        if (!this.validate(form)) return false;
+        if (!this.validate(form)){
+            this._processing = false;
+            return false;
+        }
 
         navigation.showLoader();
 
@@ -348,6 +357,7 @@ export class XHRForm {
             data: form_values,
         }).then(function (response) {
             navigation.hideLoader();
+            this._processing = false;
 
             let data = response.data;
 
@@ -385,10 +395,11 @@ export class XHRForm {
                 return self.triggerOnSuccess(data, form)
             }
         })
-            .catch(function (error) {
-                navigation.hideLoader();
-                throw error;
-            });
+        .catch(function (error) {
+            navigation.hideLoader();
+            this._processing = false;
+            throw error;
+        });
 
         return this;
     }
