@@ -217,6 +217,7 @@ export class XHRForm {
      */
     onSuccess(callback){
         if( typeof callback !== "function" ) throw `${callback} is not a function`;
+        if( typeof this._onSuccess === "undefined" ) this._onError = [];
         this._onSuccess.push(callback);
         return this;
     }
@@ -229,9 +230,6 @@ export class XHRForm {
         return this;
     }
 
-    //stores all onSuccess callbacks
-    _onSuccess = [];
-
     /**
      * Triggers all onSuccess callbacks
      *
@@ -239,6 +237,7 @@ export class XHRForm {
      * @param form
      */
     triggerOnSuccess(response, form){
+        if(typeof this._onSuccess === "undefined" ) return false;
         this._onSuccess.forEach(function(onSuccess){
             onSuccess(response, form);
         });
@@ -253,6 +252,7 @@ export class XHRForm {
      */
     onError(callback){
         if( typeof callback !== "function" ) throw `${callback} is not a function`;
+        if( typeof this._onError === "undefined" ) this._onError = [];
         this._onError.push(callback);
         return this;
     }
@@ -266,9 +266,6 @@ export class XHRForm {
         return this;
     }
 
-    //stores all onError callbacks
-    _onError = [];
-
     /**
      * Triggers the onError callbacks
      *
@@ -278,6 +275,7 @@ export class XHRForm {
      * @returns {XHRForm}
      */
     triggerOnError(error, response, form){
+        if(typeof this._onError === "undefined" ) return false;
         this._onError.forEach(function(onError){
             onError(error, response, form);
         });
@@ -618,6 +616,7 @@ export class FormFromURL extends XHRForm {
      */
     onload(callback){
         if( typeof callback !== 'function' ) throw `${callback} is not a function`;
+        if( typeof this._onload === "undefined" ) this._onload = [];
         this._onload.push(callback);
         return this;
     }
@@ -632,13 +631,12 @@ export class FormFromURL extends XHRForm {
         return this;
     }
 
-    //all onload callbacks
-    _onload = [];
-
     /**
      * @param form
      */
     triggerOnload(form){
+        if(typeof this._onload === "undefined" ) return false;
+
         this._onload.forEach(function(onload){
             onload(form);
         });
