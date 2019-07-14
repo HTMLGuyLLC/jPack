@@ -348,8 +348,11 @@ remote_form.getForm();
 ```
 
 <h4 id="3lineofjs">How to get and submit a form in 3 lines of javascript:</h4>
+<i>
+- Success/failure messages will be shown in an alert
+- HTML5/browser validation is done on the required field prior to submit</i>
 
-Your javascript (success/failure messages will be shown in an alert)
+Your javascript
 ```javascript
 new FormFromURL('/email-form', {
     insertIntoElement: 'body.form-container',
@@ -359,7 +362,7 @@ Your HTML
 ```html
 <div class="form-container"></div>
 ```
-Server response when retrieving /email-form
+Server response when retrieving /email-form (or, just the HTML without the JSON wrapper)
 ```json
 {
  "html": "<form><input name='email' required='required'><input type='submit' value='Submit'></form>"
