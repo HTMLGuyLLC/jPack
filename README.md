@@ -5,14 +5,42 @@ With jPack, you can easily upgrade your server-side rendered application to a ps
 
 # Installation
 
-With NPM or Yarn:
+#### Standard Global
+
+Download the latest release and put it in your website's public folder, then include it in your HTML
+
+```html
+<script href="/@htmlguyllc/jpack/dist/jpack.min.js">
+
+<script>
+//wait for the page to finish loading so we know jpack is ready
+window.addEventListener('load', function() {
+    
+    //now you can take advantage of the jpack library
+    var user_id = jpack.objects.user.getId();
+    
+    //or if you're feeling lazy, you can tie all jpack components to window for shorter use.
+    jpack.goGlobal("jp");
+    
+    var user_id = jp.user.getId();
+    
+    //or if you're insanely lazy and want to cross your fingers that nothing conflicts, you can tie 
+    // everything to window WITHOUT a namespace
+    jpack.goGlobal();
+    
+    var user_id = user.getId();
+};
+</script>
+```
+
+#### With NPM or Yarn:
 ```shell
 npm i @htmlguyllc/jpack;
 //or
 yarn add @htmlguyllc/jpack;
 ```
 
-and then use what you need, where you need it (requires ES6):
+#### ES6 (Babel)
 ```javascript
 //a single component from it's own file
 import {strings} from '@htmlguyllc/jpack/es/utilities/strings';
@@ -36,29 +64,11 @@ import {jpack} from '@htmlguyllc/jpack';
 jpack.objects.user.getId();
 ```
 
-Or you can download the latest release, unzip it, put it in your public folder then include the whole library:
-```html
-<script href="/vendor/htmlguyllc-jpack/dist/jpack.min.js">
+#### CommonJS (Browserify)
+```javascript
+var jpack = require('@htmlguyllc/jpack');
 
-<script>
-//wait for the page to finish loading so we know jpack is ready
-window.addEventListener('load', function() {
-    
-    //now you can take advantage of the jpack library
-    var user_id = jpack.objects.user.getId();
-    
-    //or if you're feeling lazy, you can tie all jpack components to window for shorter use.
-    jpack.goGlobal("jp");
-    
-    var user_id = jp.user.getId();
-    
-    //or if you're insanely lazy and want to cross your fingers that nothing conflicts, you can tie 
-    // everything to window WITHOUT a namespace
-    jpack.goGlobal();
-    
-    var user_id = user.getId();
-};
-</script>
+jpack.objects.user.getId();
 ```
 
 # Dependencies
