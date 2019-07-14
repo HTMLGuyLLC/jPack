@@ -161,8 +161,15 @@ navigation.onLoad(function(e){
     var data = params.data; //or navigation.getPassthroughData()
     //the DOM element that was added to the page replacing the previous
     var el = params.el;
-    //el_selector is the incoming selector that was used for this request
+    //el_selector is the IncomingElement selector that was used for this request
     var el_selector = params.el_selector;
+    
+    //replaced_selector is the ReplaceElement selector that was used for this request
+    //Note: If el_selector does not match replaced_selector, ReplaceElement will be replaced with IncomingElement
+    //It's done right after this callback and because it's assumed the ReplaceElement doesn't exist anymore
+    //If there's a situation where it does and you need it to stay the same, just set it again in here
+    //like this: navigation.setReplaceElement(params.replaced_selector);
+    var replaced_selector = params.replaced_selector;
    
    //if gtag is set (google analytics), push a page view
    if( typeof gtag !== 'undefined' ) {

@@ -382,7 +382,7 @@ export const navigation = {
                 const new_content = dom.replaceElWithHTML(replace_el, parsed.html);
 
                 //trigger nav complete event
-                navigation.triggerOnLoad(new_content, incoming_el, parsed.route);
+                navigation.triggerOnLoad(new_content, incoming_el, replace_el, parsed.route);
 
                 //if the replace_el is the same as getReplaceElement(),
                 // then it should be updated to whatever the incoming_el is because it no longer exists
@@ -486,13 +486,15 @@ export const navigation = {
      *
      * @param el
      * @param el_selector
+     * @param replaced_selector
      * @param route
      */
-    triggerOnLoad: function(el, el_selector, route){
+    triggerOnLoad: function(el, el_selector, replaced_selector, route){
         route = typeof route !== 'undefined' ? route : navigation.getRouteFromMeta();
         events.trigger('body', 'navigation.complete', {
             el:el,
             el_selector:el_selector,
+            replaced_selector: replaced_selector,
             route:route,
             data:this.getPassThroughData()
         });
