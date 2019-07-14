@@ -65,9 +65,6 @@ export class XHRForm {
         this.onError(options.onError);
     }
 
-    //validation callback
-    _validateCallback = null;
-
     /**
      *
      * @param callback
