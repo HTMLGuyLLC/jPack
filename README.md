@@ -629,6 +629,7 @@ type_checks.isDataObject(my_obj, ['id', 'name', 'email'], true, true, true);
 
 Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
+setGlobal|namespace:string/null|self|adds each of the following functions to the global scope, a namespace is optional, but recommended. Use at your own risk! These may cause conflicts!
 onClick|el:mixed, callback:function|array|prevents the browser's default so you can handle link clicks and form submissions with less code
 offClick|el:mixed, callback:function|array|removes the handler you added using onClick
 onSubmit|el:mixed, callback:function|array|same as .onClick() but for submit
@@ -656,4 +657,16 @@ events.onSubmit('form.my-form', function(){
 
 //trigger submit on a form and pass an object as additional data in the event
 events.trigger('.my-form', 'submit', {id:1});
+```
+
+##### Setting with a custom namespace (or no namespace):
+
+```javascript
+import {events} from '@htmlguyllc/jpack/es/events';
+
+events.setGlobal();
+
+onClick('a', function(){
+   //do something - href is prevented! 
+});
 ```

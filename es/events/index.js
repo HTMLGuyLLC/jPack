@@ -6,6 +6,35 @@ import {dom} from "../dom";
 export const events = {
 
     /**
+     * Sets these functions globally so you can use them without a namespace or with a custom one
+     *
+     * Use at your own risk - may cause conflicts!
+     *
+     * Example:
+     *     jpack.events.setGlobal();
+     *     onClick('a', function(){
+     *        //do something (the href is prevented)
+     *     });
+     *
+     *     or
+     *     jpack.events.setGlobal('$');
+     *     $.onClick('a', function(){ });
+     */
+    setGlobal: function(namespace){
+        global.onClick = this.onClick;
+        global.offClick = this.offClick;
+        global.onSubmit = this.onSubmit;
+        global.offSubmit = this.offSubmit;
+        global.onChange = this.onChange;
+        global.offChange = this.offChange;
+        global.onEventPreventDefault = this.onEventPreventDefault;
+        global.offEventPreventDefault = this.offEventPreventDefault;
+        global.on = this.on;
+        global.off = this.off;
+        global.trigger = this.trigger;
+    },
+
+    /**
      * Shorthand on-click handler with preventDefault
      *
      * @param el
@@ -130,7 +159,7 @@ export const events = {
     },
 
     /**
-     * Adds an event listener
+     * Adds an event handler
      *
      * @param el
      * @param event
@@ -150,7 +179,7 @@ export const events = {
     },
 
     /**
-     * Removes an event listener
+     * Removes an event handler
      *
      * @param el
      * @param event
