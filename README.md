@@ -1,5 +1,13 @@
 # jPack
-jPack is a library of components, classes, plugin wrappers, and utilities designed to make building custom websites simpler.  
+jPack is a vanilla javascript library of components, classes, plugin wrappers, and utilities designed to make building custom websites and web applications simpler.
+
+But why?
+
+Many plugins and libraries are too generic, verbose, bulky, lacking, or have a lot of dependencies. 
+Much of what is included here is stuff that I've written several times, in several different ways, using jQuery in the past (or wrapping other jQuery plugins). 
+The goal of this library is to allow me (and you, now that it's open source) to integrate slim, mostly dependency-free, components as-needed with more specific use-cases than what is currently offered elsewhere.
+
+...where else can you get a component to grab a form from another page and stick it on the current one with XHR and XHR submission in [5 lines of custom JS](#5lineofjs)?   
 
 <h1 id="whatsincluded">What's Included</h1>
 
@@ -331,6 +339,27 @@ var remote_form = new FormFromURL('/my-form', {
 
 //grab the form and insert in into the "insertIntoElement"
 remote_form.getForm();
+```
+
+<h4 id="5lineofjs">How to get and submit a form in 5 lines of javascript:</h4>
+
+when requesting the form and {success:"Got it!"} on submission - both from the same URL):
+```javascript
+var email_form = new FormFromURL('/email-form', {
+    insertIntoElement: 'body.form-container',
+    onError: function(error){ alert(error); },
+    onSuccess: function(response, form){ alert(response.success); }
+})
+```
+Server response when retrieving /email-form
+```json
+{
+ "html": "<form><input name='email' required='required'></form>"
+}
+``` 
+Server response when submitting to /email-form
+```json
+{ "success": "Thank you for submitting, your email has been provided to spammers everywhere" }
 ```
 
 #### Extending:
