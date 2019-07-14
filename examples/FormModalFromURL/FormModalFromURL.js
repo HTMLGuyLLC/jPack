@@ -48,7 +48,7 @@ export class FormModalFromURL extends FormFromURL{
      */
     setModalOptions(options){
         //make sure options is an object (empty or not)
-        type_checks.isDataObject(options, Object.keys(FormModalFromURLDefaults), false, false, true);
+        type_checks.isDataObject(options, Object.keys(FormModalFromURLDefaults.modalOptions), false, false, true);
 
         this._modalOptions = options;
         return this;
