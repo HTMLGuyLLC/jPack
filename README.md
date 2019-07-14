@@ -316,7 +316,8 @@ onload|callback:function|self|adds a callback function to be run when the form i
 clearOnloadCallbacks| |self|removes all onload callbacks
 triggerOnload|form:Element|self|runs all onload callbacks and passes the form to them
 
-__There are several methods and properties inherited from XHRForm that are not listed here. Please see XHRForm above for those details__
+__There are several methods and properties inherited from XHRForm that are not listed here. 
+See [XHRForm](#xhrform) above for those details__
 
 ##### To use:
 ```javascript
