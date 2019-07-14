@@ -406,6 +406,9 @@ const cur_site = new Site($site);
 cur_site.getId();
 ```
 
+@see: /examples/CurrentSiteSingleton for a method of instantiating the current site once and using everywhere
+Note: Even though that creates a singleton which is available anywhere, it's still highly recommended that you pass that object to functions and methods where it is used (dependency injection)
+
 The harder way: 
 
 Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
@@ -480,6 +483,8 @@ Then instantiate the User class in your JS file somewhere
 const cur_user = new User($user);
 cur_user.getId();
 ```
+@see: /examples/CurrentUserSingleton for a method of instantiating the current user once and using everywhere
+Note: Even though that creates a singleton which is available anywhere, it's still highly recommended that you pass that object to functions and methods where it is used (dependency injection)
 
 The harder way: 
 
