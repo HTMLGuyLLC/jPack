@@ -3,6 +3,18 @@ jPack is a library of components, objects, plugin wrappers, and utilities design
 
 With jPack, you can easily upgrade your server-side rendered application to a pseudo-SPA using XHR requests for page-loads, get values from the querystring, store and interact with user/multi-tenant website data, and more. 
 
+# What's Included
+
+Four categories of functionality are provided in this library. 
+Each one is detailed further in the documentation below. 
+
+Type | Namespace | Components
+--- | --- | ---
+Components | components | navigation, form
+Objects | objects | request, site, user
+Plugin Wrappers | plugin_wrappers | None Yet.
+Utilities | utilities | strings, data_types, dom, events
+
 # Installation
 
 #### Standard Global
@@ -79,18 +91,6 @@ Name | Required by | Link
 url-search-params-polyfill | request | https://www.npmjs.com/package/url-search-params-polyfill
 axios | navigation | https://www.npmjs.com/package/axios
 formdata-polyfill | form | https://www.npmjs.com/package/formdata-polyfill
-
-# What's Included
-
-Four categories of functionality are provided in this library. 
-Each one is detailed further in the documentation below. 
-
-Type | Namespace | Components
---- | --- | ---
-Components | components | navigation, form
-Objects | objects | request, site, user
-Plugin Wrappers | plugin_wrappers | None Yet.
-Utilities | utilities | strings, data_types, dom, events
 
 # Documentation
 
