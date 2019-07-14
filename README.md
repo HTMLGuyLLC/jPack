@@ -7,7 +7,8 @@ With jPack, you can easily upgrade your server-side rendered application to a ps
 
 #### Standard Global
 
-Download the latest release and put it in your website's public folder, then include it in your HTML
+Download the latest release and put it in your website's public folder, then include it in your HTML.
+Don't forget to also include dependencies (listed in package.json).
 
 ```html
 <script href="/@htmlguyllc/jpack/dist/jpack.min.js">
@@ -73,11 +74,11 @@ jpack.objects.user.getId();
 
 # Dependencies
 
-Name | Required by
---- | --- 
-url-search-params-polyfill | request
-axios | navigation
-formdata-polyfill | form
+Name | Required by | Link
+--- | --- | ---
+url-search-params-polyfill | request | https://www.npmjs.com/package/url-search-params-polyfill
+axios | navigation | https://www.npmjs.com/package/axios
+formdata-polyfill | form | https://www.npmjs.com/package/formdata-polyfill
 
 # What's Included
 
