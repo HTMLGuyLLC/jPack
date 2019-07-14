@@ -55,6 +55,14 @@ export const dom = {
                 el_array = el.toArray();
             }
         }
+        //if it's an array, validate each element
+        else if( Array.isArray(el) ){
+            el.forEach(function(is_el){
+                if( is_el instanceof Element || is_el instanceof HTMLDocument ){
+                    el_array.push(is_el);
+                }
+            });
+        }
         //otherwise, what the heck did you pass? Throw error...
         else {
             throw "Invalid value provided to getElements: "+JSON.stringify(el);
@@ -64,7 +72,6 @@ export const dom = {
             throw "Failed to get array of DOM elements for "+JSON.stringify(el);
         }
 
-        //hopefully it's safe to assume the originally provided el is a singular native DOM object
         return el_array;
     },
 
