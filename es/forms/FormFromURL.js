@@ -78,6 +78,36 @@ export class FormFromURL extends XHRForm {
     }
 
     /**
+     * Overrides XHRForm.getFinalSubmitURL to include the URL the form was requested from as an additional fallback
+     *
+     * @param form
+     * @returns {*|string}
+     */
+    getFinalSubmitURL(form){
+        let url = this.getSubmitURL(form);
+
+        //if a function, run it
+        if( typeof this._submitURL === "function" ) return this._submitURL(form);
+
+        //if url is null, grab from the form, only if explicitly set
+        if( url === null ){
+            if( form.attributes.action ){
+                url = form.action;
+            }
+        }
+
+        //if the URL is still null, grab the URL the form was retrieved from
+        url = !url ? this.getURL() : url;
+
+        //if the url is STILL null, grab the form's default action (current page)
+        if( url === null ){
+            url = form.action;
+        }
+
+        return url;
+    }
+
+    /**
      * If the URL provided returns HTML, this selector will be used to pull the form out
      *
      * If left null, it will assume the entire response is the form's HTML

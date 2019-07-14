@@ -162,14 +162,30 @@ export class XHRForm {
     /**
      * Gets the URL the form will be submitted to
      *
-     * @param form
      * @returns {*|string|*}
      */
-    getSubmitURL(form){
+    getSubmitURL(){
+        return this._submitURL;
+    }
+
+    /**
+     * Gets the actual submit URL after running the function (if it is one), and turning to fallbacks
+     *
+     * @param form
+     * @returns {*|string}
+     */
+    getFinalSubmitURL(form){
+        let url = this.getSubmitURL(form);
+
         //if a function, run it
         if( typeof this._submitURL === "function" ) return this._submitURL(form);
 
-        return this._submitURL;
+        //if the URL is null, grab from the form
+        if( url === null ){
+            return form.action;
+        }
+
+        return url;
     }
 
     /**
@@ -302,15 +318,7 @@ export class XHRForm {
         const self = this;
 
         //get the provided submit URL
-        let url = this.getSubmitURL(form);
-        //if the URL is null, grab from the form
-        if( url === null ){
-            if( form.attributes.action ){ //check that it was set explicitly
-                url = form.action; //grab JUST the value
-            }
-        }
-        //default to the URL used to grab the form if it's not provided
-        url = !url ? this.getURL() : url;
+        let url = this.getFinalSubmitURL(form);
 
         //get the provided submit method
         let method = this.getSubmitMethod();

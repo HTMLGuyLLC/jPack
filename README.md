@@ -250,6 +250,7 @@ setSubmitMethod|method:string|self|override the form and provide a method (GET, 
 getSubmitMethod| |method:string|
 setSubmitURL|url:mixed|self|pass null to use the form's action, function to dynamically generate the URL (receives the form as a param), or string
 getSubmitURL| |url:string|returns whatever was set in the constructor or using setSubmitURL, not the final URL
+getFinalSubmitURL|form:Element|url:string|returns the URL the form will be submitted to after running the function (if it is one) and using all fallbacks
 attachSubmitHandler|form:mixed|self|attaches the event listener to on submit of the passed form
 onSuccess|callback:function|self|adds an onSuccess callback (you can add as many as you'd like)
 clearOnSuccessCallbacks| |self|
@@ -267,7 +268,7 @@ validate|form:Element|bool|passes the form to the validate callback and returns 
 import {XHRForm} from '@htmlguyllc/jpack/es/forms'; 
 
 //shown with defaults
-var remote_form = new XHRForm(document.getElementById('my-form'), {
+var remote_form = new XHRForm('form[name="my_form"]', {
         xhrSubmit: true, //wouldn't make a whole lotta sent to use this if this were false lol, but it's here for extending classes and incase you want to toggle it for whatever reason
         submitURL:null, //when null, the form's action will be used (if explicitly defined), otherwise it falls back to the URL the form was retrieved from
         submitMethod:null, //when null, the form's method will be used (if explicitly defined), otherwise it falls back to POST
