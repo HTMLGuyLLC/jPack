@@ -98,7 +98,7 @@ formdata-polyfill | XHRForm (and anything that extends it) | https://www.npmjs.c
 ---
 <h2 id="navigation">Navigation</h2> 
 [back to top](#whatsincluded) <br><br>
-<i>Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta title swaps, and offers several callbacks</i><br><br>
+<i>Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta and page title swaps, and offers several callbacks</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
