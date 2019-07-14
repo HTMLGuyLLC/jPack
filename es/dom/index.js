@@ -34,28 +34,27 @@ export const dom = {
         //default to empty
         let el_array = [];
 
-        //if not provided or doesn't exist
         if( typeof el === "undefined" || !el ){
             //do nothing, default is empty array
         }
-        //if it's an Element or HTMLDocument (a singular DOM element)
         else if( el instanceof Element || el instanceof HTMLDocument ){
             //add to the array
             el_array.push(el);
         }
-        //if a string was provided
         else if (typeof el === 'string') {
             //convert the NodeList returned by querySelectorAll into an array
             el_array = document.querySelectorAll(el);
             el_array = el_array ? Array.from(el_array) : el_array;
         }
-        //if a jquery object was provided
         else if( el instanceof jQuery ){
             //if it contains anything
             if( el.length ){
                 //get all the elements in an array
                 el_array = el.toArray();
             }
+        }
+        else if( el instanceof NodeList || el instanceof HTMLCollection ){
+            el_array = Array.from(el);
         }
         //if it's an array, validate each element
         else if( Array.isArray(el) ){
