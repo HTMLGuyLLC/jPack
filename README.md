@@ -99,35 +99,35 @@ Utilities | utilities | strings, data_types, dom, events
 ### -Navigation
 _Grabs content from a URL and replaces it on the current page (along with browser history button handling, onload/unload handlers, and much more_
 
-Method/Property | Params | Return | Notes
+Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
-setPassthroughData|mixed|self|set data you want provided in the onload method for the next page
+setPassthroughData|data:mixed|self|set data you want provided in the onload method for the next page
 clearPassthroughData| |self|must be called manually or the data will persist infinitely. you can set an onload callback to clear this every time
 getPassthroughData| |mixed|returns the data you set
-setIncomingElement|string|self|a selector string for the element being retrieved from another page which contains the HTML you want put on the current page
+setIncomingElement|el:string|self|a selector string for the element being retrieved from another page which contains the HTML you want put on the current page
 getIncomingElement| |string|
-setReplaceElement|string|self|a selector string for the element on the current page you want the new HTML to replace
+setReplaceElement|el:string|self|a selector string for the element on the current page you want the new HTML to replace
 getReplaceElement| |string|
-load|string, function/null, string/null, string/null, bool|void|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more
+load|url:string, callback:function/null, incoming_el:string/null, replace_el:string/null, push_state:bool|void|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more
 loaderEnabled|n/a|bool|property to toggle the slow request loader on/off
-setLoaderDelay|int|self|set how long a request should take in ms before the loader displays
+setLoaderDelay|delay:int|self|set how long a request should take in ms before the loader displays
 getLoaderDelay| |self|
 getLoaderEl| |Element|
 showLoader| |self|shows the loader after the delay
 hideLoader| |self|clears the loader timeout and hides it
-parseHTML|string, string|object|parses HTML from the request to get key components like metas and the HTML to be displayed
-getRouteFromMeta|string|string|retrieves the value of a meta tag named "current_route" to be passed in the onload event to help trigger page-specific JS
-replacePageContent|string, string, string, string, bool|self|replaces HTML on the page with the new content, updates metas, runs the unload and load callbacks and more
-reload|function|self|reloads the current page using .load()
+parseHTML|html:string, parent_el:string|object|parses HTML from the request to get key components like metas and the HTML to be displayed
+getRouteFromMeta|html:string|string|retrieves the value of a meta tag named "current_route" to be passed in the onload event to help trigger page-specific JS
+replacePageContent|html:string, url:string, incoming_el:string, replace_el:string, push_state:bool | self|replaces HTML on the page with the new content, updates metas, runs the unload and load callbacks and more
+reload|callback:function|self|reloads the current page using .load()
 fullReload| |void|performs a full browser refresh of the current page
-redirect|string|void|redirects the user to a new page (no XHR request)
-setTitle|string|self|sets the page title
-onLoad|function|self|add an onload callback (runs 100ms after unload)
-onUnload|function|self|add an unload callback
-onNavigationFailure|function|self|add a callback when the load() request fails - the error message is provided in event.detail.error
-triggerOnLoad|mixed, string, string|self|triggers all onload callbacks
-triggerUnload|mixed|self|triggers all unload callbacks
-triggerNavigationFailure|string|self|triggers the nav failure and provides an error message
+redirect|url:string|void|redirects the user to a new page (no XHR request)
+setTitle|title:string|self|sets the page title
+onLoad|callback:function|self|add an onload callback (runs 100ms after unload)
+onUnload|callback:function|self|add an unload callback
+onNavigationFailure|callback:function|self|add a callback when the load() request fails - the error message is provided in event.detail.error
+triggerOnLoad|el:mixed, el_selector:string, route:string|self|triggers all onload callbacks
+triggerUnload|el:mixed, el_selector:string, route:string|self|triggers all unload callbacks
+triggerNavigationFailure|error:string|self|triggers the nav failure and provides an error message
 initHistoryHandlers| |self|sets event listeners to handle back/forward navigation in the user's browser
 
 ##### To use:
@@ -232,9 +232,9 @@ navigation.load('/my-popup', function(new_el, el_sel, data){
 ### -Form
 _Makes dynamic form interactions simpler - currently only supports pulling a form from another page and submitting it using an XHR request_
 
-Method/Property | Params | Return | Notes
+Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
-fromURL|string, object|self|instantiate a new form.fromURL('/my-form-url', options); to grab a form from another page and insert it into the current
+fromURL|url:string, options:object|self|instantiate a new form.fromURL('/my-form-url', options); to grab a form from another page and insert it into the current
 
 ##### To use:
 ```javascript
@@ -345,7 +345,7 @@ var my_form2 = new form.fromURL('/my-form2');
 ### -Request
 _Provides a wrapper for window.location and query string access_
 
-Method/Property | Params | Return | Notes
+Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
 query|n/a|URLSearchParams|see https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams#Methods
 isHttps| |bool|
@@ -354,7 +354,7 @@ getDomainWithProtocol| |string|
 getURI| |string|also known as the path - does not include querystring 
 getURIWithQueryString| |string|full URL after the domain
 getFullURL| |string|
-appendSlash|string|string|adds a slash (if there isn't already one) to the end of a string. 
+appendSlash|string:string|string|adds a slash (if there isn't already one) to the end of a string. 
 
 ##### To use:
 ```javascript
@@ -371,17 +371,17 @@ var full_blog_url = request.appendSlash(request.getDomainWithProtocol())+'blog';
 ### -Site
 _Designed for multi-tenant applications, this object stores a site's id, name, and config object._
 
-Method/Property | Params | Return | Notes
+Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
 getId| |string/int|
-setId|string/int|this|
+setId|id:string/int|this|
 getName| |string|this
-setName|string|this|
+setName|name:string|this|
 getConfig| |object|this
-setConfig|object|this|overwrites all config
+setConfig|config:object|this|overwrites all config
 getConfigItem| |mixed|returns an individual item from config
-setConfigItem|string,mixed|this|sets the value of an individual item in config
-populate|object|this|sets provided values all at once (id,name,config)
+setConfigItem|key:string,val:mixed|this|sets the value of an individual item in config
+populate|data:object|this|sets provided values all at once (id,name,config)
 
 ##### To populate with data:
 
@@ -422,32 +422,32 @@ _Designed for sites with user accounts/guest accounts. This object stores a user
 Method/Property | Params | Return | Notes
 --- | --- | --- | ---
 getId| |string/int|
-setId|string/int|this|
+setId|id:string/int|this|
 getIsGuest| |bool|if your site has users who don't login but still interact and have a user record (like guest checkout)
-setIsGuest|bool|this|
+setIsGuest|is_guest:bool|this|
 setIsAdmin| |bool|if your site has users who have ultimate permissions and you want to do something based on that
-setIsGuest|bool|this|
+setIsGuest|is_admin:bool|this|
 getUsername| |string|
-setUsername|string|this|
+setUsername|username:string|this|
 getFname| |string|
-setFname|string|this|
+setFname|fname:string|this|
 getLname| |string|
-setLname|string|this|
+setLname|lname:string|this|
 getName| |string|returns fname and lname concatenated with a space
 getEmail| |string|
-setEmail|string|this|
+setEmail|email:string|this|
 getPhone| |string|
-setPhone|string|this|
+setPhone|phone:string|this|
 getPermissions| |array|
-setPermissions|array|this|
-addPermission|string/int|this|
-removePermission|string/int|this|
-hasPermission|string/int|bool|
+setPermissions|permissions:array|this|
+addPermission|permission:string/int|this|
+removePermission|permission:string/int|this|
+hasPermission|permission:string/int|bool|
 getAdditionalData| |object|set any additional data about this user that doesn't fit the default getters and setters here (a better idea would be to extend this object with your custom properties/methods)
-setAdditionalData|object|this|
-getDataItem|string|mixed|returns a single value from the additional data object/array
-setDataItem|string, mixed|sets a single value in the additional data array/object
-populate|object|this|sets provided values all at once (id, isGuest, isAdmin, etc)
+setAdditionalData|data:object|this|
+getDataItem|key:string|mixed|returns a single value from the additional data object/array
+setDataItem|key:string, val:mixed|sets a single value in the additional data array/object
+populate|data:object|this|sets provided values all at once (id, isGuest, isAdmin, etc)
 
 ##### To populate with data:
 
@@ -494,11 +494,11 @@ None yet.
 ### -Strings
 _Common string manipulations_
 
-Method/Property | Params | Return | Notes
+Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
-ucfirst|string|string|capitalizes the first letter of a string like ucfirst in PHP
-getter|string|string|creates a getter method name from a string
-setter|string|string|creates a setter method name from a string
+ucfirst|string:string|string|capitalizes the first letter of a string like ucfirst in PHP
+getter|string:string|string|creates a getter method name from a string
+setter|string:string|string|creates a setter method name from a string
 
 ##### To Use:
 
@@ -513,14 +513,14 @@ strings.setter('name'); //returns 'setName';
 ### -DOM
 _HTML DOM helpers_
 
-Method/Property | Params | Return | Notes
+Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
-getElement|mixed, bool, bool|Element/HTMLDocument/null|returns a native DOM element for whatever you provide (selector string, array of elements, single element, jQuery wrapped DOM element, etc)
-getElements|mixed, bool|array|same as getElement, except it returns all matches
-remove|mixed|this|removes elements from the DOM - uses .getElements()
-replaceElWithHTML|mixed,string|Element|replaces an element in the DOM with HTML and returns a reference to the new Element
-exists|mixed|bool|checks to see if it exists in the DOM
-multipleExist|mixed|bool|checks to see if more than 1 instance exists in the DOM
+getElement|el:mixed, error_on_none:bool, error_on_multiple:bool|Element/HTMLDocument/null|returns a native DOM element for whatever you provide (selector string, array of elements, single element, jQuery wrapped DOM element, etc)
+getElements|el:mixed, error_on_none:bool|array|same as getElement, except it returns all matches
+remove|el:mixed|this|removes elements from the DOM - uses .getElements()
+replaceElWithHTML|el:mixed, html:string|Element|replaces an element in the DOM with HTML and returns a reference to the new Element
+exists|el:mixed|bool|checks to see if it exists in the DOM
+multipleExist|el:mixed|bool|checks to see if more than 1 instance exists in the DOM
 
 
 ##### To Use:
@@ -544,9 +544,9 @@ dom.multipleExist('a'); //returns true if more than 1 anchor on the page
 _Check the data type of a value with more specificity than typeof or vanilla JS functions_
 
 
-Method/Property | Params | Return | Notes
+Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
-isDataObject|object, array, bool, bool, bool|bool|validates that an object contains data and not a dom element, array, null or anything else that would normally return true when you call typeof
+isDataObject|value:object, keys:array, require_all_keys:bool, block_other_keys:bool, throw_error:bool|bool|validates that an object contains data and not a dom element, array, null or anything else that would normally return true when you call typeof
 
 ##### To Use:
 
@@ -566,19 +566,19 @@ type_checks.isDataObject(my_obj, ['id', 'name', 'email'], true, true, true);
 _Shorthand event handlers_
 
 
-Method/Property | Params | Return | Notes
+Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
-onClick|mixed, function|array|prevents the browser's default so you can handle link clicks and form submissions with less code
-offClick|mixed, function|array|removes the handler you added using onClick
-onSubmit|mixed, function|array|same as .onClick() but for submit
-offSubmit|mixed, function|array|same as .offClick() but for submit
-onChange|mixed, function|array|adds an on change handler but does NOT preventDefault - mostly exists for consistency
-offChange|mixed, function|array|removes the handler you added using .onChange()
-onEventPreventDefault|mixed, string, function|array|attaches an event handler and prevents the default browser action
-offEventPreventDefault|mixed, string, function|array|removes the handler you attached with .onEventPreventDefault()
-on|mixed, string, function|array|attaches an event listener
-off|mixed, string, function|array|removes an event listener
-trigger|mixed, string, mixed|array|triggers an event on an element/elements - uses .getElements()
+onClick|el:mixed, callback:function|array|prevents the browser's default so you can handle link clicks and form submissions with less code
+offClick|el:mixed, callback:function|array|removes the handler you added using onClick
+onSubmit|el:mixed, callback:function|array|same as .onClick() but for submit
+offSubmit|el:mixed, callback:function|array|same as .offClick() but for submit
+onChange|el:mixed, callback:function|array|adds an on change handler but does NOT preventDefault - mostly exists for consistency
+offChange|el:mixed, callback:function|array|removes the handler you added using .onChange()
+onEventPreventDefault|el:mixed, event:string, callback:function|array|attaches an event handler and prevents the default browser action
+offEventPreventDefault|el:mixed, event:string, callback:function|array|removes the handler you attached with .onEventPreventDefault()
+on|el:mixed, event:string, callback:function|array|attaches an event listener
+off|el:mixed, event:string, callback:function|array|removes an event listener
+trigger|el:mixed, event:string, event_options:mixed|array|triggers an event on an element/elements - uses .getElements()
 
 ##### To Use:
 

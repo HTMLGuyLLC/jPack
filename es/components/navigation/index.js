@@ -350,7 +350,7 @@ export const navigation = {
 
         //trigger nav complete event
         //get replace_el again because it was replaced
-        navigation.triggerUnload(dom.getElement(replace_el), replace_el);
+        navigation.triggerUnload(dom.getElement(replace_el), replace_el, this.getRouteFromMeta());
 
         //very slight 100ms delay to let the on unload handlers run first
         window.setTimeout(function(){
@@ -502,8 +502,8 @@ export const navigation = {
      *
      * @param el
      */
-    triggerUnload: function(el){
-        events.trigger('body', 'navigation.started', {el:el});
+    triggerUnload: function(el, el_selector, route){
+        events.trigger('body', 'navigation.started', {el:el, el_selector:el_selector, route:route});
 
         return this;
     },
