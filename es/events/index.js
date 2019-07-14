@@ -1,9 +1,7 @@
 import {dom} from "../dom";
 
 /**
- * Shorthand/consistent event listener management
- *
- * @type {{onClick: (function(*=, *=): (*|Array|el)), onChange: (function(*=, *=): (*|*|*[])), offChange: (function(*=, *=): (*|*|*[])), offEventPreventDefault: events.offEventPreventDefault, offClick(*=, *=): (Array|el), onSubmit: (function(*=, *=): (*|Array|el)), offSubmit: (function(*=, *=): (*|Array|el)), onEventPreventDefault: events.onEventPreventDefault, trigger: events.trigger, off: events.off, on: events.on}}
+ * Shorthand preventDefault events (and others for consistency)
  */
 export const events = {
 

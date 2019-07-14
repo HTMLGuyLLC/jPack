@@ -2,8 +2,6 @@ require('url-search-params-polyfill');
 
 /**
  * Allows you to get details about the current request easily, including querystring variables
- *
- * @type {{getDomain: (function(): string), getDomainWithProtocol: (function(): string), query: URLSearchParams, isHttps: (function(): boolean), getURI: (function(): string), getFullURL: (function(): string), appendSlash: (function(): string)}}
  */
 export const request = {
     /**

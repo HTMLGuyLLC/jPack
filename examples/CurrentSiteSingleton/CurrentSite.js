@@ -1,4 +1,4 @@
-import {Site} from "@htmlguyllc/jpack/es/objects/site";
+import {Site} from "../../es/site";
 
 //grab $user data set in HTML using variables from your server
 const site_data = typeof $site !== "undefined" ? $site : {};

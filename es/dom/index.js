@@ -1,7 +1,5 @@
 /**
  * HTML DOM helpers
- *
- * @type {{getElements: (function(*=, *=): Array), getElement: dom.getElement, exists: (function(*=): number), multipleExist: (function(*=): number)}}
  */
 export const dom = {
     /**

@@ -1,7 +1,5 @@
 /**
  * Methods for checking data types with more specificity
- *
- * @type {{isDataObject: type_checks.isDataObject}}
  */
 export const type_checks = {
     /**

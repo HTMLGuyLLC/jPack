@@ -1,19 +1,20 @@
 # jPack
-jPack is a library of components, objects, plugin wrappers, and utilities designed to make building custom websites simpler. 
-
-With jPack, you can easily upgrade your server-side rendered application to a pseudo-SPA using XHR requests for page-loads, get values from the querystring, store and interact with user/multi-tenant website data, and more. 
+jPack is a library of components, classes, plugin wrappers, and utilities designed to make building custom websites simpler.  
 
 # What's Included
 
-Four categories of functionality are provided in this library. 
-Each one is detailed further in the documentation below. 
-
-Type | Namespace | Object/Function/Class
---- | --- | ---
-Components | components | navigation, XHRForm, FormFromURL
-Objects | objects | request, Site, User
-Plugin Wrappers | plugin_wrappers | None Yet.
-Utilities | utilities | strings, data_types, dom, events
+Component | Data Type | Singleton? | What it does
+--- | --- | --- | ---
+navigation | object | yes | Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta title swaps, and offers several callbacks
+XHRForm | class | no | Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure
+FormFromURL (extends XHRForm) | class | no | Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form
+request | object | yes | Provides a wrapper for window.location and easy querystring interaction
+Site | class | no | A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed
+User | class | no | A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks
+strings | object | yes | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
+data_types | object | yes | Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define
+dom | object | yes | Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)
+events | object | yes | Includes shorthand methods for preventing the browser's default action onsubmit, onclick. Other methods are included for consistency like onchange (which does not prevent default since that is generally not preferred)  
 
 # Installation
 
@@ -30,16 +31,15 @@ Don't forget to also include dependencies (listed in package.json).
 window.addEventListener('load', function() {
     
     //now you can take advantage of the jpack library
-    var fname = jpack.utilities.strings.ucfirst('bob'); //Bob
+    jpack.strings.ucfirst('bob'); //Bob
     
-    //or if you're feeling lazy, you can tie all jpack components to window for shorter use.
-    jpack.goGlobal("jp");
+    //if you want to change the namespace
+    jpack.setGlobal("$");
     
-    jp.strings.ucfirst('bob');
+    $.strings.ucfirst('bob');
     
-    //or if you're insanely lazy and want to cross your fingers that nothing conflicts, you can tie 
-    // everything to window WITHOUT a namespace
-    jpack.goGlobal();
+    //if you want to make all global without a namespace - do so at your own risk! Things may conflict!
+    jpack.setGlobal();
     
     strings.ucfirst('bob');
 };
@@ -56,25 +56,17 @@ yarn add @htmlguyllc/jpack;
 #### ES6 (Babel)
 ```javascript
 //a single component from it's own file
-import {strings} from '@htmlguyllc/jpack/es/utilities/strings';
+import {strings} from '@htmlguyllc/jpack/es/strings';
 strings.ucfirst('bob');
 
-//or a single component from the collection file
-import {strings} from '@htmlguyllc/jpack/es/utilities';
-strings.ucfirst('bob');
-
-//or multiple components from the collection file
-import {strings, dom} from '@htmlguyllc/jpack/es/utilities';
+//or multiple components from jpack
+import {strings, dom} from '@htmlguyllc/jpack';
 strings.ucfirst('bob');
 dom.exists('a.my-link');
 
 //or a namespaced object containing all components
-import * as utilities from '@htmlguyllc/jpack/es/utilities';
-utilities.strings.ucfirst('bob');
-
-//or a namespaced object containing all
-import {jpack} from '@htmlguyllc/jpack';
-jpack.utilities.strings.ucfirst('bob');
+import * as j from '@htmlguyllc/jpack';
+j.strings.ucfirst('bob');
 ```
 
 #### CommonJS (Browserify)
@@ -82,7 +74,7 @@ jpack.utilities.strings.ucfirst('bob');
 var jpack = require('@htmlguyllc/jpack');
 
 //now use it
-jpack.utilities.strings.ucfirst('bob');
+jpack.strings.ucfirst('bob');
 ```
 
 # Dependencies
@@ -94,8 +86,6 @@ axios | navigation | https://www.npmjs.com/package/axios
 formdata-polyfill | XHRForm (and anything that extends it) | https://www.npmjs.com/package/formdata-polyfill
 
 # Documentation
-
-## - Components -
 
 ### -Navigation
 _Grabs content from a URL and replaces it on the current page (along with browser history button handling, onload/unload handlers, and much more_
@@ -133,7 +123,7 @@ initHistoryHandlers| |self|sets event listeners to handle back/forward navigatio
 
 ##### To use:
 ```javascript
-import {navigation} from '@htmlguyllc/jpack/es/components'; 
+import {navigation} from '@htmlguyllc/jpack/es/navigation'; 
 
 //handles browser back/forward buttons
 navigation.initHistoryHandlers();
@@ -198,7 +188,7 @@ navigation.triggerOnLoad(dom.getElement('body'), 'body', navigation.getRouteFrom
 //now use the plugin to load pages
 //if you're lazy, the fastest way to integrate is to just add data-href to all internal links 
 //and then attach a handler like this:
-import {events} from '@htmlguyllc/jpack/es/utilities';
+import {events} from '@htmlguyllc/jpack/es/events';
 events.onClick('[data-href]', function(){
    navigation.load(this.href); 
 });
@@ -255,7 +245,7 @@ validate|form:Element|bool|passes the form to the validate callback and returns 
 
 ##### To use:
 ```javascript
-import {XHRForm} from '@htmlguyllc/jpack/es/components'; 
+import {XHRForm} from '@htmlguyllc/jpack/es/forms'; 
 
 //shown with defaults
 var remote_form = new XHRForm(document.getElementById('my-form'), {
@@ -305,7 +295,7 @@ __There are several methods and properties inherited from XHRForm that are not l
 
 ##### To use:
 ```javascript
-import {FormFromURL} from '@htmlguyllc/jpack/es/components'; 
+import {FormFromURL} from '@htmlguyllc/jpack/es/forms'; 
 
 //shown with defaults
 var remote_form = new FormFromURL('/my-form', {
@@ -342,8 +332,6 @@ FormFromURL extends XHRForm and either can be extended as you need.
 
 See examples/FormModalFromURL for an example
 
-## - Objects -
-
 ### -Request
 _Provides a wrapper for window.location and query string access_
 
@@ -360,7 +348,7 @@ appendSlash|string:string|string|adds a slash (if there isn't already one) to th
 
 ##### To use:
 ```javascript
-import {request} from '@htmlguyllc/jpack/es/objects'; 
+import {request} from '@htmlguyllc/jpack/es/request'; 
 
 //get product_id from the querystring
 var product_id = request.query.get('product_id');
@@ -413,7 +401,7 @@ The harder way:
 
 Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
 ```javascript
-import {Site} from '@htmlguyllc/jpack/es/objects';
+import {Site} from '@htmlguyllc/jpack/es/site';
  
 //this example uses jQuery's shorthand AJAX call, you can use axios or any request you want
 $.get('/my-site-info-endpoint.php', function(data){
@@ -490,7 +478,7 @@ The harder way:
 
 Perform an XHR request to grab site details via a JSON API, then run the populate method on the site object.
 ```javascript
-import {User} from '@htmlguyllc/jpack/es/objects';
+import {User} from '@htmlguyllc/jpack/es/user';
  
 $.get('/my-user-info-endpoint.php', function(data){
     //don't forget error handling!
@@ -499,11 +487,6 @@ $.get('/my-user-info-endpoint.php', function(data){
 ```
 
 Of course you can use this class for any User not just the current one, but that's the intended usage.
-
-## - Plugin Wrappers -
-None yet.
-
-## - Utilities -
 
 ### -Strings
 _Common string manipulations_
@@ -517,7 +500,7 @@ setter|string:string|string|creates a setter method name from a string
 ##### To Use:
 
 ```javascript
-import {strings} from '@htmlguyllc/jpack/es/utilities';
+import {strings} from '@htmlguyllc/jpack/es/strings';
 
 strings.ucfirst('bob'); //returns 'Bob'
 strings.getter('name'); //returns 'getName';
@@ -540,7 +523,7 @@ multipleExist|el:mixed|bool|checks to see if more than 1 instance exists in the 
 ##### To Use:
 
 ```javascript
-import {dom} from '@htmlguyllc/jpack/es/utilities';
+import {dom} from '@htmlguyllc/jpack/es/dom';
 
 //Dont do this. Most of these are dumb examples.
 dom.getElement('.my-fav-button', true, true); //will throw an error if it doesn't find it, or if it finds more than 1
@@ -565,7 +548,7 @@ isDataObject|value:object, keys:array, require_all_keys:bool, block_other_keys:b
 ##### To Use:
 
 ```javascript
-import {type_checks} from '@htmlguyllc/jpack/es/utilities';
+import {type_checks} from '@htmlguyllc/jpack/es/type_checks';
 
 var my_obj = {id:null, name:'John Doe', email:'john@doe.com'};
 
@@ -597,7 +580,7 @@ trigger|el:mixed, event:string, event_options:mixed|array|triggers an event on a
 ##### To Use:
 
 ```javascript
-import {events} from '@htmlguyllc/jpack/es/utilities';
+import {events} from '@htmlguyllc/jpack/es/events';
 
 events.onClick('a.my-link', function(){
    //do something without the page redirecting to the href 

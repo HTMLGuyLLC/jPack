@@ -1,4 +1,4 @@
-import {CurUser} from "./CurrentUser";
+import {CurSite} from "./CurrentSite";
 
-//now you have access to the current user and their data anywhere
-CurUser.getId();
+//now you have access to the current site and their data anywhere
+CurSite.getId();

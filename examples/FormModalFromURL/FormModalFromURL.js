@@ -1,5 +1,5 @@
-import {FormFromURL} from "@htmlguyllc/jpack/es/components/form";
-import {type_checks} from "../../es/utilities/type_checks";
+import {FormFromURL} from "../../es/forms";
+import {type_checks} from "../../es/type_checks";
 
 //defaults for the FormModalFromURL class
 const FormModalFromURLDefaults = {
@@ -96,7 +96,7 @@ export class FormModalFromURL extends FormFromURL{
      * @param form
      */
     insertForm(parsed_content, response, form){
-        var self = this;
+        const self = this;
 
         //if form is already defined, it was submitted and the response contained HTML, so we need to just replace it ourselves
         if( typeof form !== undefined && form ){

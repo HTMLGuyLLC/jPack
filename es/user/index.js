@@ -1,5 +1,5 @@
-import {type_checks} from "../../utilities/type_checks";
-import {AbstractObject} from "../AbstractObject";
+import {type_checks} from "../type_checks";
+import {AbstractClass} from "../AbstractClass";
 
 //create an object of default values
 const user_defaults = {
@@ -22,7 +22,7 @@ const user_defaults = {
  * Class for storing and interacting with a user and their permissions
  *
  */
-export class User extends AbstractObject{
+export class User extends AbstractClass{
     constructor(data) {
         super();
         

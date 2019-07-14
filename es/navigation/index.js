@@ -1,7 +1,7 @@
 import axios from 'axios';
-import {dom} from "../../utilities/dom";
-import {request} from "../../objects/request";
-import {events} from "../../utilities/events";
+import {dom} from "../dom";
+import {request} from "../request";
+import {events} from "../events";
 
 /**
  * Allows you to simulate a page change by using an XHR request to grab content and replace it on the current page
@@ -10,8 +10,6 @@ import {events} from "../../utilities/events";
  *
  * Use onLoad and onUnload hooks to add additional logic for things like triggering a google analytics page view
  *  or scrolling to the top of the new page
- *
- * @type {{triggerOnLoad: (function(*=, *=): navigation), setPassthroughData: (function(*): navigation), _incomingElementSelector: string, setLoaderDelay: (function(*=): navigation), fullReload: navigation.fullReload, triggerUnload: (function(*=): navigation), reload: (function(*=): navigation), load: navigation.load, clearPassthroughData: (function(): navigation), replacePageContent(*=, *=, *=, *=, *=): *, hideLoader: (function(): navigation), loaderEnabled: boolean, showLoader: (function(): navigation), setReplaceElement: navigation.setReplaceElement, _loaderDelay: number, getReplaceElement: (function(): string), redirect: navigation.redirect, getLoaderDelay: (function(): number), onUnload: (function(*=): navigation), initHistoryHandlers: (function(): navigation), _passthroughData: null, setIncomingElement: navigation.setIncomingElement, parseHTML(*=, *=): {metas: HTMLCollectionOf<HTMLElementTagNameMap, string[]>, route: (*|any|Element), links: HTMLCollectionOf<HTMLElementTagNameMap, string[]>, html: string, title: string, body_classes: DOMTokenList}, setTitle: (function(*): navigation), getPassThroughData: (function(*): null), onNavigationFailure: (function(*=): navigation), _replaceElementSelector: string, getRouteFromMeta: (function(*=): (any | Element)), getLoaderEl: navigation.getLoaderEl, onLoad: (function(*=): navigation), triggerNavigationFailure: (function(*=): navigation), getIncomingElement: (function(): string)}}
  */
 export const navigation = {
 

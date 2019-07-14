@@ -1,7 +1,6 @@
 /**
  * Methods for performing common string manipulations
  *
- * @type {{getter: (function(*=): string), ucfirst: (function(*=): (*|string)), setter: (function(*=): string)}}
  */
 export const strings = {
     /**

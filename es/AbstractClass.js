@@ -1,6 +1,7 @@
-import {type_checks, strings} from "../utilities";
+import {type_checks} from "./type_checks";
+import {strings} from "./strings";
 
-export class AbstractObject{
+export class AbstractClass{
     constructor(){
     }
 

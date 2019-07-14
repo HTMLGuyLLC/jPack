@@ -1,5 +1,5 @@
-import {type_checks} from "../../utilities/type_checks";
-import {AbstractObject} from "../AbstractObject";
+import {type_checks} from "../type_checks";
+import {AbstractClass} from "../AbstractClass";
 
 //create an object of default values
 const site_defaults = {
@@ -15,7 +15,7 @@ const site_defaults = {
  * Class for storing and interacting with the current website's id, name, and config options
  *
  */
-export class Site extends AbstractObject {
+export class Site extends AbstractClass {
     constructor(data){
         super();
 
