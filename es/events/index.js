@@ -21,6 +21,20 @@ export const events = {
      *     $.onClick('a', function(){ });
      */
     setGlobal: function(namespace){
+
+        namespace = typeof namespace === 'string' ? namespace+'.' : null;
+
+        //for each function within events
+        for (var property in this) {
+            //set everything that's a real method in events, except this one
+            if (this.hasOwnProperty(property) && property !== 'setGlobal') {
+                //set them on window so they're available globally
+                //example: events.onClick becomes onClick
+                //usage after running this: onClick('a', function(){ });
+                window[namespace+property] = object[property];
+            }
+        }
+
         global.onClick = this.onClick;
         global.offClick = this.offClick;
         global.onSubmit = this.onSubmit;
