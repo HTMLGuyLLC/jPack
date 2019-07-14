@@ -357,7 +357,7 @@ export class XHRForm {
             data: form_values,
         }).then(function (response) {
             navigation.hideLoader();
-            this._processing = false;
+            self._processing = false;
 
             let data = response.data;
 
@@ -397,7 +397,7 @@ export class XHRForm {
         })
         .catch(function (error) {
             navigation.hideLoader();
-            this._processing = false;
+            self._processing = false;
             throw error;
         });
 
