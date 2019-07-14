@@ -296,7 +296,8 @@ remote_form.attachSubmitHandler();
 ```
 
 ---
-<h2 id="formfromurl">FormFromURL</h2> 
+<h2 id="formfromurl">FormFromURL</h2>
+FormFromURL extends [XHRForm](#xhrform)<br><br> 
 [back to top](#whatsincluded) <br><br>
 
 <i>Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form</i><br>
