@@ -7,7 +7,7 @@ With jPack, you can easily upgrade your server-side rendered application to a ps
 
 #### Standard Global
 
-Download the latest release and put it in your website's public folder, then include it in your HTML.
+Download the latest release, unzip and move it in your website's public folder, then include it in your HTML.
 Don't forget to also include dependencies (listed in package.json).
 
 ```html
