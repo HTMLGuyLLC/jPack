@@ -5,16 +5,16 @@ jPack is a library of components, classes, plugin wrappers, and utilities design
 
 Component | Data Type | Singleton? | What it does
 --- | --- | --- | ---
-navigation | object | yes | Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta title swaps, and offers several callbacks
-XHRForm | class | no | Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure
-FormFromURL (extends XHRForm) | class | no | Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form
-request | object | yes | Provides a wrapper for window.location and easy querystring interaction
-Site | class | no | A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed
-User | class | no | A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks
-strings | object | yes | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
-data_types | object | yes | Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define
-dom | object | yes | Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)
-events | object | yes | Includes shorthand methods for preventing the browser's default action onsubmit, onclick. Other methods are included for consistency like onchange (which does not prevent default since that is generally not preferred)  
+[navigation](#navigation) | object | yes | Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta title swaps, and offers several callbacks
+[XHRForm](#xhrform) | class | no | Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure
+[FormFromURL](#formfromurl) (extends XHRForm) | class | no | Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form
+[request](#request) | object | yes | Provides a wrapper for window.location and easy querystring interaction
+[Site](#site) | class | no | A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed
+[User](#user) | class | no | A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks
+[strings](#strings) | object | yes | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
+[type_checks](#typechecks) | object | yes | Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define
+[dom](#dom) | object | yes | Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)
+[events](#events) | object | yes | Includes shorthand methods for preventing the browser's default action onsubmit, onclick. Other methods are included for consistency like onchange (which does not prevent default since that is generally not preferred)  
 
 # Installation
 
@@ -87,7 +87,8 @@ formdata-polyfill | XHRForm (and anything that extends it) | https://www.npmjs.c
 
 # Documentation
 
-### -Navigation
+---
+<h2 id="navigation">Navigation</h2>
 _Grabs content from a URL and replaces it on the current page (along with browser history button handling, onload/unload handlers, and much more_
 
 Method/Property | Params (name:type) | Return | Notes
@@ -220,7 +221,8 @@ navigation.load('/my-popup', function(new_el, el_sel, data){
 }, '.popup-content', '.current-popup');
 ```
 
-### -XHRForm
+---
+<h2 id="xhrform">XHRForm</h2>
 _Submits a form using XHR_
 
 Method/Property | Params (name:type) | Return | Notes
@@ -273,7 +275,8 @@ var remote_form = new XHRForm(document.getElementById('my-form'), {
 remote_form.attachSubmitHandler();
 ```
 
-### -FormFromURL
+---
+<h2 id="formfromurl">FormFromURL</h2>
 _Allows you to pull a form from a URL and insert it into the current page very easily including optional XHR form submission!_
 
 Method/Property | Params (name:type) | Return | Notes
@@ -332,7 +335,8 @@ FormFromURL extends XHRForm and either can be extended as you need.
 
 See examples/FormModalFromURL for an example
 
-### -Request
+---
+<h2 id="request">Request</h2>
 _Provides a wrapper for window.location and query string access_
 
 Method/Property | Params (name:type) | Return | Notes
@@ -358,7 +362,8 @@ var current_full_url = request.getFullURL();
 var full_blog_url = request.appendSlash(request.getDomainWithProtocol())+'blog'; //https://my-domain.com/blog
 ```
 
-### -Site
+---
+<h2 id="site">Site</h2>
 _Designed for multi-tenant applications, this object stores a site's id, name, and config object._
 
 Method/Property | Params (name:type) | Return | Notes
@@ -412,7 +417,8 @@ $.get('/my-site-info-endpoint.php', function(data){
 
 Of course you can use this class for any site, not just the current one, but this is the intended usage.
 
-### -User
+---
+<h2 id="user">User</h2>
 _Designed for sites with user accounts/guest accounts. This class stores a user's details and allows for front-end permission checks._
 
 Method/Property | Params | Return | Notes
@@ -488,7 +494,8 @@ $.get('/my-user-info-endpoint.php', function(data){
 
 Of course you can use this class for any User not just the current one, but that's the intended usage.
 
-### -Strings
+---
+<h2 id="strings">Strings</h2>
 _Common string manipulations_
 
 Method/Property | Params (name:type) | Return | Notes
@@ -507,7 +514,8 @@ strings.getter('name'); //returns 'getName';
 strings.setter('name'); //returns 'setName';
 ```
 
-### -DOM
+---
+<h2 id="dom">DOM</h2>
 _HTML DOM helpers_
 
 Method/Property | Params (name:type) | Return | Notes
@@ -537,7 +545,8 @@ dom.exists('a'); //returns true if there is an anchor on the page
 dom.multipleExist('a'); //returns true if more than 1 anchor on the page
 ```
 
-### -Type Checks
+---
+<h2 id="typechecks">Type Checks</h2>
 _Check the data type of a value with more specificity than typeof or vanilla JS functions_
 
 
@@ -559,7 +568,8 @@ var my_obj = {id:null, name:'John Doe', email:'john@doe.com'};
 type_checks.isDataObject(my_obj, ['id', 'name', 'email'], true, true, true);
 ```
 
-### -Events
+---
+<h2 id="events">Events</h2>
 _Shorthand event handlers_
 
 
