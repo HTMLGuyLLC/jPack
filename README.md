@@ -89,7 +89,7 @@ formdata-polyfill | XHRForm (and anything that extends it) | https://www.npmjs.c
 
 ---
 <h2 id="navigation">Navigation</h2> 
-[back to top](#whatsincluded)<br><br>
+[back to top](#whatsincluded) <br><br>
 <i>Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta title swaps, and offers several callbacks</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
@@ -224,7 +224,7 @@ navigation.load('/my-popup', function(new_el, el_sel, data){
 
 ---
 <h2 id="xhrform">XHRForm</h2> 
-[back to top](#whatsincluded)<br><br>
+[back to top](#whatsincluded) <br><br>
 <i>Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
@@ -279,7 +279,7 @@ remote_form.attachSubmitHandler();
 
 ---
 <h2 id="formfromurl">FormFromURL</h2> 
-[back to top](#whatsincluded)<br><br>
+[back to top](#whatsincluded) <br><br>
 
 <i>Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form</i><br>
 
@@ -341,7 +341,7 @@ See examples/FormModalFromURL for an example
 
 ---
 <h2 id="request">Request</h2> 
-[back to top](#whatsincluded)<br><br>
+[back to top](#whatsincluded) <br><br>
 <i>Provides a wrapper for window.location and easy querystring interaction</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
@@ -369,7 +369,7 @@ var full_blog_url = request.appendSlash(request.getDomainWithProtocol())+'blog';
 
 ---
 <h2 id="site">Site</h2> 
-[back to top](#whatsincluded)<br><br>
+[back to top](#whatsincluded) <br><br>
 <i>A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
@@ -425,7 +425,7 @@ Of course you can use this class for any site, not just the current one, but thi
 
 ---
 <h2 id="user">User</h2> 
-[back to top](#whatsincluded)<br><br>
+[back to top](#whatsincluded) <br><br>
 <i>A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks</i><br><br>
 
 Method/Property | Params | Return | Notes
@@ -503,7 +503,7 @@ Of course you can use this class for any User not just the current one, but that
 
 ---
 <h2 id="strings">Strings</h2> 
-[back to top](#whatsincluded)<br><br>
+[back to top](#whatsincluded) <br><br>
 <i>Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
@@ -524,7 +524,7 @@ strings.setter('name'); //returns 'setName';
 
 ---
 <h2 id="dom">DOM</h2> 
-[back to top](#whatsincluded)<br><br>
+[back to top](#whatsincluded) <br><br>
 <i>Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
@@ -556,7 +556,7 @@ dom.multipleExist('a'); //returns true if more than 1 anchor on the page
 
 ---
 <h2 id="typechecks">Type Checks</h2> 
-[back to top](#whatsincluded)<br><br>
+[back to top](#whatsincluded) <br><br>
 <i>Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define</i><br><br>
 
 
@@ -580,7 +580,7 @@ type_checks.isDataObject(my_obj, ['id', 'name', 'email'], true, true, true);
 
 ---
 <h2 id="events">Events</h2> 
-[back to top](#whatsincluded)<br><br>
+[back to top](#whatsincluded) <br><br>
 <i>Includes shorthand methods for preventing the browser's default action onsubmit, onclick. Other methods are included for consistency like onchange (which does not prevent default since that is generally not preferred)</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
