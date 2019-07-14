@@ -8,9 +8,9 @@ With jPack, you can easily upgrade your server-side rendered application to a ps
 Four categories of functionality are provided in this library. 
 Each one is detailed further in the documentation below. 
 
-Type | Namespace | Components
+Type | Namespace | Object/Function/Class
 --- | --- | ---
-Components | components | navigation, form
+Components | components | navigation, XHRForm, FormFromURL
 Objects | objects | request, site, user
 Plugin Wrappers | plugin_wrappers | None Yet.
 Utilities | utilities | strings, data_types, dom, events
