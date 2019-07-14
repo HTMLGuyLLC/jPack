@@ -382,8 +382,13 @@ export const navigation = {
                 const new_content = dom.replaceElWithHTML(replace_el, parsed.html);
 
                 //trigger nav complete event
-                //get replace_el again because it was replaced
                 navigation.triggerOnLoad(new_content, incoming_el, parsed.route);
+
+                //if the replace_el is the same as getReplaceElement(),
+                // then it should be updated to whatever the incoming_el is because it no longer exists
+                if( this.getReplaceElement() === replace_el ){
+                    this.setReplaceElement(incoming_el);
+                }
             }
         }, 100);
 

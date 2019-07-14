@@ -142,6 +142,8 @@ navigation.initHistoryHandlers();
 navigation.setIncomingElement('#main-content');
 
 //a selector that will be replaced with the incoming HTML
+//WARNING: If incoming element does not match, this will be overwritten by the incoming_element after it's replaced 
+// (since it presumably no longer exists at that point)
 navigation.setReplaceElement('#main-content');
 
 //enables a loader to show if a request takes more than 300ms
@@ -159,13 +161,7 @@ navigation.onLoad(function(e){
     var data = params.data; //or navigation.getPassthroughData()
     //the DOM element that was added to the page replacing the previous
     var el = params.el;
-    
     //el_selector is the incoming selector that was used for this request
-    //WARNING: If you change the incomingElement for a single request
-    //and the replaceElement is not the same, future requests will not work
-    //because the replaceElement no longer exists in the DOM
-    //in this case you'll want to run navigation.setReplaceElement(params.el_selector);
-    //now future requests will replace the new element on the page
     var el_selector = params.el_selector;
    
    //if gtag is set (google analytics), push a page view
