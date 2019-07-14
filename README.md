@@ -350,7 +350,7 @@ remote_form.getForm();
 <h4 id="3lineofjs">How to get and submit a form in 3 lines of javascript:</h4>
 <i>
 - Success/failure messages will be shown in an alert
-- HTML5/browser validation is done on the required field prior to submit</i>
+- HTML5/browser validation is done on the required field prior to submit
 
 Your javascript
 ```javascript
