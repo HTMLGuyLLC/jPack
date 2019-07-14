@@ -217,7 +217,7 @@ export class XHRForm {
      */
     onSuccess(callback){
         if( typeof callback !== "function" ) throw `${callback} is not a function`;
-        if( typeof this._onSuccess === "undefined" ) this._onError = [];
+        if( typeof this._onSuccess === "undefined" ) this._onSuccess = [];
         this._onSuccess.push(callback);
         return this;
     }
