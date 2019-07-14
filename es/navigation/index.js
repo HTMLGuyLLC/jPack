@@ -337,6 +337,8 @@ export const navigation = {
      */
     replacePageContent(html, url, incoming_el, replace_el, push_state)
     {
+        var self = this;
+
         push_state = typeof push_state === 'undefined' ? true : push_state;
 
         incoming_el = typeof incoming_el === 'undefined' || !incoming_el ? this.getIncomingElement() : incoming_el;
@@ -386,8 +388,8 @@ export const navigation = {
 
                 //if the replace_el is the same as getReplaceElement(),
                 // then it should be updated to whatever the incoming_el is because it no longer exists
-                if( this.getReplaceElement() === replace_el ){
-                    this.setReplaceElement(incoming_el);
+                if( self.getReplaceElement() !== replace_el ){
+                    self.setReplaceElement(incoming_el);
                 }
             }
         }, 100);
