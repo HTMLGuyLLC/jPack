@@ -229,116 +229,117 @@ navigation.load('/my-popup', function(new_el, el_sel, data){
 }, '.popup-content', '.current-popup');
 ```
 
-### -Form
-_Makes dynamic form interactions simpler - currently only supports pulling a form from another page and submitting it using an XHR request_
+### -XHRForm
+_Submits a form using XHR_
 
 Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
-fromURL|url:string, options:object|self|instantiate a new form.fromURL('/my-form-url', options); to grab a form from another page and insert it into the current
+constructor|form:Element,options:object |self|
+setXHRSubmit|enabled:bool|self|enable/disable the XHR submission of the form
+setSubmitMethod|method:string|self|override the form and provide a method (GET, POST, PATCH)
+getSubmitMethod| |method:string|
+setSubmitURL|url:mixed|self|pass null to use the form's action, function to dynamically generate the URL (receives the form as a param), or string
+getSubmitURL| |url:string|returns whatever was set in the constructor or using setSubmitURL, not the final URL
+attachSubmitHandler|form:mixed|self|attaches the event listener to on submit of the passed form
+onSuccess|callback:function|self|adds an onSuccess callback (you can add as many as you'd like)
+clearOnSuccessCallbacks| |self|
+triggerOnSuccess|response:mixed, form:Element|self|runs all onSuccess callbacks and passes the server's response and the form element
+onError|callback:function|self|adds an onError callback (you can add as many as you'd like)
+clearOnErrorCallbacks| |self|
+triggerOnError|error:string, response:mixed, form:Element|self|triggers all onError callbacks and passes the error string, server response, and form Element
+submitForm|form:Element|self|gets URL and method, checks form validity using .validate(), gets values, submits, and kicks off callbacks
+getFormValues|form:Element|self|returns data from the form to be submitted - override this if you want to manipulate it first
+setValidateCallback|callback:function|is_valid:bool|pass a function to validate the form and return true if it's valid, false if it's not. False prevents form submission so you must display errors for the user within here. The default callback uses Bootstrap 4's "was-validated" class to show errors and HTML5's :invalid attribute to validate
+validate|form:Element|bool|passes the form to the validate callback and returns the response
 
 ##### To use:
 ```javascript
-import {form} from '@htmlguyllc/jpack/es/components'; 
+import {XHRForm} from '@htmlguyllc/jpack/es/components'; 
 
-var remote_form = new form.fromURL('/my-form', {
-        incomingElementSelector: null, //the form element or wrapper that you want to retrieve from the URL
-        insertIntoElement: null, //what element to put the form into
-        onload: function(form){ return this; }, //once the form is loaded onto the page
-        xhrSubmit: true, //submit the form using XHR instead of the default action
-        submitURL:null, //will be grabbed from the form's action attribute, or fallback to the URL the form was retrieved from
-        submitMethod:null, //will be grabbed from the form's method attribute, or fallback to "POST"
-        onError: function(error, response, form){ }, //called when the form is submitted and fails
-        onSuccess: function(response, form){ }, //called when the form is submitted successfully
+//shown with defaults
+var remote_form = new XHRForm(document.getElementById('my-form'), {
+        xhrSubmit: true, //wouldn't make a whole lotta sent to use this if this were false lol, but it's here for extending classes and incase you want to toggle it for whatever reason
+        submitURL:null, //when null, the form's action will be used (if explicitly defined), otherwise it falls back to the URL the form was retrieved from
+        submitMethod:null, //when null, the form's method will be used (if explicitly defined), otherwise it falls back to POST
+        onError: function(error, response, form){ }, //although you can add more, you can only pass 1 to start with in the constructor
+        onSuccess: function(response, form){ }, //although you can add more, you can only pass 1 to start with in the constructor
+        //validate the form, display any errors and return false to block submission
+        validateForm: function(form){
+            //add .was-validated for bootstrap to show errors
+            form.classList.add('was-validated');
+    
+            //if there are any :invalid elements, the form is not valid
+            const is_valid = !form.querySelector(':invalid');
+    
+            //if it's valid, clear the validation indicators
+            if( is_valid ) form.classList.remove('was-validated');
+    
+            return is_valid;
+        }
+});
+
+//attach the submission handler
+remote_form.attachSubmitHandler();
+```
+
+### -FormFromURL
+_Allows you to pull a form from a URL and insert it into the current page very easily including optional XHR form submission!_
+
+Method/Property | Params (name:type) | Return | Notes
+--- | --- | --- | ---
+constructor | url:string, options:object |self|
+setURL|url:string|self|set the URL to pull the form from
+getURL| |url:string|
+setIncomingElementSelector|selector:string|self|set a selector for the form element or it's parent that is returned by the URL
+getIncomingElementSelector| |selector:string|
+setInsertIntoElement|element:mixed|self|set the element that the form should be inserted into
+getInsertIntoElement| |element:mixed| 
+getForm| |void|pulls the form from the URL and runs the insertForm method
+insertForm|parsed_content:object, response:mixed, form:Element/null|el:Element|inserts the form into the parent element, attaches the submit handler, triggers onload, and returns the parent element
+onload|callback:function|self|adds a callback function to be run when the form is loaded on the page
+clearOnloadCallbacks| |self|removes all onload callbacks
+triggerOnload|form:Element|self|runs all onload callbacks and passes the form to them
+
+__There are several methods and properties inherited from XHRForm that are not listed here. Please see XHRForm above for those details__
+
+##### To use:
+```javascript
+import {FormFromURL} from '@htmlguyllc/jpack/es/components'; 
+
+//shown with defaults
+var remote_form = new FormFromURL('/my-form', {
+        incomingElementSelector: null, //when null, it assumes the entire response is the form's HTML
+        insertIntoElement: null, //error on null, must provide this
+        onload: function(form){ return this; }, //although you can add more, you can only pass 1 to start with in the constructor
+        xhrSubmit: true, 
+        submitURL:null, //when null, the form's action will be used (if explicitly defined), otherwise it falls back to the URL the form was retrieved from
+        submitMethod:null, //when null, the form's method will be used (if explicitly defined), otherwise it falls back to POST
+        onError: function(error, response, form){ }, //although you can add more, you can only pass 1 to start with in the constructor
+        onSuccess: function(response, form){ }, //although you can add more, you can only pass 1 to start with in the constructor
+        //validate the form, display any errors and return false to block submission
+        validateForm: function(form){
+            //add .was-validated for bootstrap to show errors
+            form.classList.add('was-validated');
+    
+            //if there are any :invalid elements, the form is not valid
+            const is_valid = !form.querySelector(':invalid');
+    
+            //if it's valid, clear the validation indicators
+            if( is_valid ) form.classList.remove('was-validated');
+    
+            return is_valid;
+        }
 });
 
 //grab the form and insert in into the "insertIntoElement"
 remote_form.getForm();
-
-//let's say you want to show it in a modal, here's what you would need to do:
-
-var modal_form = new form.fromURL('/my-form-popup', {
-        incomingElementSelector: 'form',
-        onload: function(form){
-            //attach plugins or do something with the form now that it's showing in the modal
-            return this; 
-        },
-        onError: function(error, response, form){
-            $.jAlert({
-                title:'Error',
-                theme:'red',
-                content:error
-            });
-        }, 
-        onSuccess: function(response, form){ 
-            form.parents('.jAlert').closeAlert();
-            //do something else
-        },
-});
-
-//override the insertForm method to use a modal
-modal_form.insertForm = function(parsed_content, response, form){
-    var self = this;
-    
-    //if form is already defined, it was submitted and the response contained HTML, so we need to just replace it ourselves
-    if( form ){
-        
-        //replace and reassign
-        form = dom.replaceElWithHTML(form, parsed_content.html);
-        
-        //attach submit handler
-        self.attachSubmitHandler(form);
-        
-        //trigger onload again (you can pas a param to say it's the second time if you want
-        self.triggerOnload(form);
-        
-        return;
-    }
-    
-    //using jAlert as an example (https://htmlguyllc.github.io/jAlert/)
-    $.jAlert({
-        title:'My Form',
-        theme:'blue',
-        size: '1000px',
-        content: parsed_content.html,
-        onOpen: function(alert){
-            //find my form in there
-            form = alert[0].querySelector(self.getIncomingElementSelector());
-            
-            //attach an on-submit listener to send the form's values via XHR
-            self.attachSubmitHandler(form);
-    
-            //run the onload callback now that the form is there
-            self.triggerOnload(form);
-        }
-    });
-};
-
-//show the form in a modal
-modal_form.getForm();
 ```
 
-#### Prototyping:
+#### Extending:
 
-You can use prototypes to globally overwrite 3 methods in form.fromURL (isValid, insertForm, and submitForm).
+FormFromURL extends XHRForm and either can be extended as you need.
 
-```javascript
-import {form} from '@htmlguyllc/jpack/es/components'; 
-
-form.fromURL.prototype.insertForm = function(parsed_content, response, form) {
-    //this is useful if you always want to show your form in a modal like shown in the example above
-};
-
-form.fromURL.prototype.isValid = function(form){
-    //perform validation on the form and return a bool
-    //false prevents form submission so make sure you display any errors for the user
-};
-
-//now create a new form and both methods above will be used
-var my_form = new form.fromURL('/my-form');
-
-//no matter how many you create, they all share the same logic now
-var my_form2 = new form.fromURL('/my-form2');
-``` 
+See examples/FormModalFromURL for an example
 
 ## - Objects -
 
