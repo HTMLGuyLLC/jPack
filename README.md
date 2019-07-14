@@ -240,7 +240,7 @@ navigation.load('/my-popup', function(new_el, el_sel, data){
 ---
 <h2 id="xhrform">XHRForm</h2> 
 [back to top](#whatsincluded) <br><br>
-<i>Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure</i><br><br>
+<i>Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure. Automatically prevents the user from submitting the form several times at once. It must finish processing before it can be submitted again.</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
