@@ -15,6 +15,8 @@ export const dom = {
 
         if( el.length > 1 && error_on_multiple ) throw "Too many DOM elements found in getElement for "+JSON.stringify(el);
 
+        if( !el ) return null;
+
         return el[0];
     },
 
@@ -57,10 +59,9 @@ export const dom = {
         }
         //if it's an array, validate each element
         else if( Array.isArray(el) ){
-            el.forEach(function(is_el){
-                if( is_el instanceof Element || is_el instanceof HTMLDocument ){
-                    el_array.push(is_el);
-                }
+            el.forEach(function(this_el){
+                this_el = dom.getElement(this_el);
+                if( this_el ) el_array.push(this_el);
             });
         }
         //otherwise, what the heck did you pass? Throw error...
