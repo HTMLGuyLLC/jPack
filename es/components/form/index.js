@@ -49,9 +49,7 @@ export class XHRForm {
 
         //if options are undefined, set them
         options = typeof options === "undefined" ? {} : options;
-
-        //make sure options is an object (empty or not)
-        type_checks.isDataObject(options, Object.keys(XHRFormDefaults), false, false, true);
+        if( typeof options !== "object" ) throw `${options} is not an object`;
 
         //extend defaults with provided options
         options = {...XHRFormDefaults, ...options};
@@ -421,9 +419,7 @@ export class FormFromURL extends XHRForm {
 
         //if options are undefined, set them
         options = typeof options === "undefined" ? {} : options;
-
-        //make sure options is an object (empty or not)
-        type_checks.isDataObject(options, Object.keys(FormFromURLDefaults), false, false, true);
+        if( typeof options !== "object" ) throw `${options} is not an object`;
 
         //extend defaults with provided options
         options = {...FormFromURLDefaults, ...options};
