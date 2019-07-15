@@ -13,7 +13,7 @@ export const dom = {
     getElement: function(el, error_on_none, error_on_multiple){
         el = this.getElements(el, error_on_none);
 
-        if( el.length > 1 && error_on_multiple ) throw "Too many DOM elements found in getElement for "+JSON.stringify(el);
+        if( el.length > 1 && error_on_multiple ) throw `More than 1 result found for "${el}"`;
 
         if( !el ) return null;
 
@@ -65,12 +65,10 @@ export const dom = {
         }
         //otherwise, what the heck did you pass? Throw error...
         else {
-            throw "Invalid value provided to getElements: "+JSON.stringify(el);
+            throw `Invalid value: "${el}"`;
         }
 
-        if( !el_array.length && error_on_none ){
-            throw "Failed to get array of DOM elements for "+JSON.stringify(el);
-        }
+        if( !el_array.length && error_on_none ) throw `Failed to find "${el}"`;
 
         return el_array;
     },
