@@ -86,7 +86,7 @@ export class User extends AbstractClass{
 
     //quick way to get fname and lname
     getName(){
-        return `${user.getFname()} ${user.getLname()}`;
+        return `${User.getFname()} ${User.getLname()}`;
     }
 
     getEmail(){

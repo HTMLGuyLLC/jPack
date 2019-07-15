@@ -483,7 +483,7 @@ Of course you can use this class for any site, not just the current one, but thi
 
 ---
 <h2 id="user">User</h2> 
-[back to top](#whatsincluded) <br><br>
+[demo](https://jsfiddle.net/HTMLGuyLLC/Lzp5w3rg) | [back to top](#whatsincluded) <br><br>
 <i>A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks</i><br><br>
 
 Method/Property | Params | Return | Notes
