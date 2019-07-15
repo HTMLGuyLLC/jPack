@@ -22,17 +22,20 @@ Component | Data Type | Singleton? | What it does
 [strings](#strings) | object | yes | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
 [type_checks](#typechecks) | object | yes | Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define
 [dom](#dom) | object | yes | Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)
-[events](#events) | object | yes | Includes shorthand methods for preventing the browser's default action onsubmit, onclick. Other methods are included for consistency like onchange (which does not prevent default since that is generally not preferred)  
+[events](#events) | object | yes | Includes shorthand methods for preventing the browser's default action onsubmit, onclick. Other methods are included for consistency like onchange (which does not prevent default since that is generally not preferred)
+[ToggleOnMobile](#toggleonmobile) | class | no | Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.  
 
 # Installation
 
 #### Standard Global
 
 Download the latest release, unzip and move it in your website's public folder, then include it in your HTML.
-Don't forget to also include dependencies (listed in package.json).
+
+Use either jpack.min.js or jpack.bundled.min.js, __BUT NOT BOTH__. The bundled file includes the dependencies and you don't need them if you already have them in your project.
 
 ```html
-<script href="/@htmlguyllc/jpack/dist/jpack.min.js">
+<script href="/@htmlguyllc/jpack/dist/jpack.bundled.min.js">
+<!-- <script href="/@htmlguyllc/jpack/dist/jpack.min.js"> -->
 
 <script>
 //wait for the page to finish loading so we know jpack is ready
@@ -681,4 +684,72 @@ events.setGlobal();
 onClick('a', function(){
    //do something - href is prevented! 
 });
+```
+
+---
+<h2 id="toggleonmobile">ToggleOnMobile</h2> 
+[back to top](#whatsincluded) <br><br>
+<i>Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.</i><br><br>
+
+Method/Property | Params (name:type) | Return | Notes
+--- | --- | --- | ---
+constructor|btn:mixed, toggle_el:mixed, toggle_class:string, hide_on_outside_click:bool|self|
+init| |self|attaches event handlers and immediately adjusts the visibility
+destroy| |self|removes event handlers - does not change the class
+
+##### To Use:
+
+If you want a sidebar to be visible on desktop, but toggle above your content on mobile, you can use this example:
+
+Javascript:
+```javascript
+import {ToggleOnMobile} from '@htmlguyllc/jpack/es/toggle';
+
+const toggle = new ToggleOnMobile('.toggle-sidebar-btn', '.sidebar', 'visible', true);
+
+toggle.init();
+
+//and later if you want to, toggle.destroy();
+```
+
+HTML:
+```html
+<a href="#" class="toggle-sidebar-btn">Toggle</a>
+<div class="flex-row">
+    <div class="sidebar">This is my sidebar</div>
+    <div class="rest-of-content"></div>
+</div>
+```
+
+CSS:
+```css
+.flex-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.sidebar{
+    width: 200px;
+}
+
+.rest-of-content{
+    flex: 1;
+}
+
+@media only screen and (max-width: 800px){
+    .sidebar{
+        display: none;
+        position: absolute;
+        left: 5px;
+        top: 50px;
+        background: white;
+        z-index: 2;
+    }
+    .sidebar.visible{
+        display: block;
+    }
+    .toggle-sidebar-btn{
+        display: none;
+    }
+}
 ```

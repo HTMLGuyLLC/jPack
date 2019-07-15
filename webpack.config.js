@@ -40,4 +40,29 @@ const production = {
     }
 };
 
-module.exports = [development, production];
+//the production file will be in dist/jpack.min.js
+const prod_with_dependencies = {
+    entry: './src/jpack.js',
+    mode: 'production',
+    output: {
+        filename: 'jpack.bundled.min.js',
+        path: path.resolve(__dirname, 'dist')
+    },
+    module: {
+        rules: [
+            {
+                loader:'babel-loader',
+                test: /\.js$/,
+                exclude:  /node_modules/
+            }
+        ]
+    },
+    resolve: {
+        extensions: ['.js']
+    },
+    optimization: {
+        minimize: true
+    }
+};
+
+module.exports = [development, production, prod_with_dependencies];

@@ -7,6 +7,7 @@ import {Site} from "../es/site";
 import {strings} from "../es/strings";
 import {type_checks} from "../es/type_checks";
 import {User} from "../es/user";
+import {ToggleOnMobile} from "../es/toggle/ToggleOnMobile";
 
 //create a key:val object of all components
 const components = {
@@ -19,7 +20,8 @@ const components = {
     Site:Site,
     strings:strings,
     type_checks:type_checks,
-    User:User
+    User:User,
+    ToggleOnMobile:ToggleOnMobile
 };
 
 /**
