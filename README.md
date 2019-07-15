@@ -198,8 +198,8 @@ navigation.onUnload(function(){
 
 //things to do when a page fails to load
 navigation.onNavigationFailure(function(e){
-    var error_msg = e.details.error;
-    var axios_error = e.details.axios_error;
+    var error_msg = e.detail.error;
+    var axios_error = e.detail.axios_error;
     //.. do something...like show an error popup for the user or log the issue
 });
 
