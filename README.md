@@ -590,6 +590,7 @@ remove|el:mixed|this|removes elements from the DOM - uses .getElements()
 replaceElWithHTML|el:mixed, html:string|Element|replaces an element in the DOM with HTML and returns a reference to the new Element
 exists|el:mixed|bool|checks to see if it exists in the DOM
 multipleExist|el:mixed|bool|checks to see if more than 1 instance exists in the DOM
+isVisible|el:mixed|bool|checks to see if the provided element is visible
 
 
 ##### To Use:

@@ -117,6 +117,71 @@ export const dom = {
     },
 
     /**
+     * Determines if an element is visible or not
+     *
+     * @param el
+     * @returns {boolean}
+     */
+    isVisible(el) {
+        el = this.getElement(el, true, true);
+
+        const style = getComputedStyle(el);
+
+        //check display, visibiliity, and opacity first since they're the most common
+        if (style.display === 'none') return false;
+        if (style.visibility !== 'visible') return false;
+        if (style.opacity === 0) return false;
+
+        //see if the element has a size
+        if(el.offsetWidth + el.offsetHeight + el.getBoundingClientRect().height + el.getBoundingClientRect().width === 0) return false;
+
+        //get the outside corners of the element
+        const elRect = el.getBoundingClientRect();
+        const el_bounds = {
+            'top-left': {
+                x: elRect.left,
+                y: elRect.top
+            },
+            'top-right': {
+                x: elRect.right,
+                y: elRect.top
+            },
+            'bottom-left': {
+                x: elRect.left,
+                y: elRect.bottom
+            },
+            'bottom-right': {
+                x: elRect.right,
+                y: elRect.bottom
+            },
+            'center': {
+                x: elRect.left + el.offsetWidth / 2,
+                y: elRect.top + el.offsetHeight / 2
+            }
+        };
+
+        //make sure the element is inside the viewport
+        for(key in el_bounds) {
+
+            var point = el_bounds[key];
+
+            if (point.x < 0) return false;
+            if (point.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
+            if (point.y < 0) return false;
+            if (point.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
+
+            let pointEl = document.elementFromPoint(point.x, point.y);
+            if (pointEl !== null) {
+                do {
+                    if (pointEl === el) return true;
+                } while (pointEl = pointEl.parentNode);
+            }
+        }
+
+        return false;
+    },
+
+    /**
      * Returns true if the provided element exists
      *
      * Pass anything you want, it uses getElements
