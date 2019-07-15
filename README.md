@@ -645,9 +645,9 @@ type_checks.isDataObject(my_obj, ['id', 'name', 'email'], true, true, true);
 Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
 setGlobal|namespace:string/null|self|adds each of the following functions to the global scope, a namespace is optional, but recommended. Use at your own risk! These may cause conflicts!
-onClick|el:mixed, callback:function|handler:function|prevents the browser's default so you can handle link clicks and form submissions with less code
-onSubmit|el:mixed, callback:function|handler:function|same as .onClick() but for submit
-onEventPreventDefault|el:mixed, event:string, callback:function|callback:function|generates and attaches a handler which prevents the default action then returns that handler in case you need to remove it later
+onClick|el:mixed, callback:function|handler:function|prevents the browser's default so you can handle link clicks and form submissions with less code - returns an updated handler in case you need to remove it later
+onSubmit|el:mixed, callback:function|handler:function|same as .onClick() but for submit  - returns an updated handler in case you need to remove it later
+onEventPreventDefault|el:mixed, event:string, callback:function|callback:function|generates and attaches a handler which prevents the default action - returns the updated handler in case you need to remove it later
 on|el:mixed, event:string, callback:function|array|attaches an event listener
 off|el:mixed, event:string, callback:function|array|removes an event listener
 trigger|el:mixed, event:string, event_options:mixed|array|triggers an event on an element/elements - uses .getElements()
