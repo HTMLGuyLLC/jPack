@@ -561,7 +561,7 @@ Of course you can use this class for any User not just the current one, but that
 
 ---
 <h2 id="strings">Strings</h2> 
-[back to top](#whatsincluded) <br><br>
+[demo](https://jsfiddle.net/HTMLGuyLLC/ebof3hm4/) | [back to top](#whatsincluded) <br><br>
 <i>Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
