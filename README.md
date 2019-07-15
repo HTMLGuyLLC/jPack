@@ -639,7 +639,7 @@ type_checks.isDataObject(my_obj, ['id', 'name', 'email'], true, true, true);
 
 ---
 <h2 id="events">Events</h2> 
-[back to top](#whatsincluded) <br><br>
+[demo](https://jsfiddle.net/HTMLGuyLLC/wv2hkzp5/) | [back to top](#whatsincluded) <br><br>
 <i>Includes methods for attaching event handlers including shorthand methods which create handlers that prevent the browser's default action (onclick, onsubmit)</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
@@ -685,7 +685,7 @@ onClick('a', function(){
 
 ---
 <h2 id="toggleonmobile">ToggleOnMobile</h2> 
-[Demo](https://jsfiddle.net/HTMLGuyLLC/68og394L)  | [back to top](#whatsincluded) <br><br>
+[demo](https://jsfiddle.net/HTMLGuyLLC/68og394L)  | [back to top](#whatsincluded) <br><br>
 <i>Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
