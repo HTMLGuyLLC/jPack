@@ -160,14 +160,15 @@ export const dom = {
             }
         };
 
+        let inside_viewport = true;
         //make sure the element is inside the viewport
         Object.keys(el_bounds).forEach(function(key){
             var point = el_bounds[key];
 
-            if (point.x < 0) return false;
-            if (point.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
-            if (point.y < 0) return false;
-            if (point.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
+            if (point.x < 0) inside_viewport = false; return false;
+            if (point.x > (document.documentElement.clientWidth || window.innerWidth)) inside_viewport = false; return false;
+            if (point.y < 0) inside_viewport = false; return false;
+            if (point.y > (document.documentElement.clientHeight || window.innerHeight)) inside_viewport = false; return false;
 
             let pointEl = document.elementFromPoint(point.x, point.y);
             if (pointEl !== null) {
@@ -177,7 +178,7 @@ export const dom = {
             }
         });
 
-        return false;
+        return inside_viewport;
     },
 
     /**
