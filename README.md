@@ -16,7 +16,7 @@ Component | Demo | Data Type | Singleton? | What it does
 [navigation](#navigation) | | object | yes | Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta title swaps, and offers several callbacks
 [XHRForm](#xhrform) | | class | no | Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure
 [FormFromURL](#formfromurl) (extends XHRForm) | | class | no | Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form
-[request](#request) | | object | yes | Provides a wrapper for window.location and easy querystring interaction
+[request](#request) | [demo](https://jsfiddle.net/HTMLGuyLLC/73b2kotL/) | object | yes | Provides a wrapper for window.location and easy querystring interaction
 [Site](#site) | [demo](https://jsfiddle.net/HTMLGuyLLC/L6brcvo3/) | class | no | A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed
 [User](#user) | [demo](https://jsfiddle.net/HTMLGuyLLC/Lzp5w3rg) | class | no | A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks
 [strings](#strings) | [demo](https://jsfiddle.net/HTMLGuyLLC/ebof3hm4/) | object | yes | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
@@ -399,7 +399,7 @@ See examples/FormModalFromURL for an example
 
 ---
 <h2 id="request">Request</h2> 
-[back to top](#whatsincluded) <br><br>
+[demo](https://jsfiddle.net/HTMLGuyLLC/73b2kotL/) | [back to top](#whatsincluded) <br><br>
 <i>Provides a wrapper for window.location and easy querystring interaction</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
