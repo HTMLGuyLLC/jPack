@@ -17,7 +17,7 @@ Component | Demo | Data Type | Singleton? | What it does
 [XHRForm](#xhrform) | | class | no | Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure
 [FormFromURL](#formfromurl) (extends XHRForm) | | class | no | Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form
 [request](#request) | | object | yes | Provides a wrapper for window.location and easy querystring interaction
-[Site](#site) | | class | no | A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed
+[Site](#site) | [demo](https://jsfiddle.net/HTMLGuyLLC/L6brcvo3/) | class | no | A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed
 [User](#user) | [demo](https://jsfiddle.net/HTMLGuyLLC/Lzp5w3rg) | class | no | A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks
 [strings](#strings) | [demo](https://jsfiddle.net/HTMLGuyLLC/ebof3hm4/) | object | yes | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
 [type_checks](#typechecks) | [demo](https://jsfiddle.net/HTMLGuyLLC/5p9q1ofj/) | object | yes | Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define
@@ -427,7 +427,7 @@ var full_blog_url = request.appendSlash(request.getDomainWithProtocol())+'blog';
 
 ---
 <h2 id="site">Site</h2> 
-[back to top](#whatsincluded) <br><br>
+[demo](https://jsfiddle.net/HTMLGuyLLC/L6brcvo3/) | [back to top](#whatsincluded) <br><br>
 <i>A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
