@@ -582,7 +582,7 @@ strings.setter('name'); //returns 'setName';
 
 ---
 <h2 id="dom">DOM</h2> 
-[back to top](#whatsincluded) <br><br>
+[demo](https://jsfiddle.net/HTMLGuyLLC/et42sLbm/) | [back to top](#whatsincluded) <br><br>
 <i>Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
@@ -685,7 +685,7 @@ onClick('a', function(){
 
 ---
 <h2 id="toggleonmobile">ToggleOnMobile</h2> 
-[demo](https://jsfiddle.net/HTMLGuyLLC/68og394L)  | [back to top](#whatsincluded) <br><br>
+[demo](https://jsfiddle.net/HTMLGuyLLC/68og394L/)  | [back to top](#whatsincluded) <br><br>
 <i>Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
