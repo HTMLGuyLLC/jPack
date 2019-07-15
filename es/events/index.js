@@ -76,17 +76,17 @@ export const events = {
             return el;
         }
 
-        handler = function(e){
+        const preventedHandler = function(e){
             e.preventDefault();
             handler.call(this, [e]);
             return false;
         };
 
         el_array.forEach(function(el){
-            el.addEventListener(event, handler);
+            el.addEventListener(event, preventedHandler);
         });
 
-        return handler;
+        return preventedHandler;
     },
 
     /**
