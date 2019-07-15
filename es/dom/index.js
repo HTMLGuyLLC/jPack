@@ -11,13 +11,13 @@ export const dom = {
      * @returns Element|HTMLDocument|null
      */
     getElement: function(el, error_on_none, error_on_multiple){
-        el = this.getElements(el, error_on_none);
+        const foundEl = this.getElements(el, error_on_none);
 
-        if( el.length > 1 && error_on_multiple ) throw `More than 1 result found for "${el}"`;
+        if( foundEl.length > 1 && error_on_multiple ) throw `More than 1 result found for "${el}"`;
 
-        if( !el ) return null;
+        if( !foundEl ) return null;
 
-        return el[0];
+        return foundEl[0];
     },
 
     /**
