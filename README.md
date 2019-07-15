@@ -687,7 +687,7 @@ onClick('a', function(){
 ```
 
 ---
-<h2 id="toggleonmobile">ToggleOnMobile</h2> 
+<h2 id="toggleonmobile">ToggleOnMobile - [Demo](https://jsfiddle.net/HTMLGuyLLC/68og394L/53/)</h2> 
 [back to top](#whatsincluded) <br><br>
 <i>Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.</i><br><br>
 
@@ -699,9 +699,6 @@ destroy| |self|removes event handlers - does not change the class
 
 ##### To Use:
 
-If you want a sidebar to be visible on desktop, but toggle above your content on mobile, you can use this example:
-
-Javascript:
 ```javascript
 import {ToggleOnMobile} from '@htmlguyllc/jpack/es/toggle';
 
@@ -710,46 +707,4 @@ const toggle = new ToggleOnMobile('.toggle-sidebar-btn', '.sidebar', 'visible', 
 toggle.init();
 
 //and later if you want to, toggle.destroy();
-```
-
-HTML:
-```html
-<a href="#" class="toggle-sidebar-btn">Toggle</a>
-<div class="flex-row">
-    <div class="sidebar">This is my sidebar</div>
-    <div class="rest-of-content"></div>
-</div>
-```
-
-CSS:
-```css
-.flex-row{
-    display: flex;
-    flex-direction: row;
-}
-
-.sidebar{
-    width: 200px;
-}
-
-.rest-of-content{
-    flex: 1;
-}
-
-@media only screen and (max-width: 800px){
-    .sidebar{
-        display: none;
-        position: absolute;
-        left: 5px;
-        top: 50px;
-        background: white;
-        z-index: 2;
-    }
-    .sidebar.visible{
-        display: block;
-    }
-    .toggle-sidebar-btn{
-        display: none;
-    }
-}
 ```
