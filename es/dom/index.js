@@ -161,8 +161,7 @@ export const dom = {
         };
 
         //make sure the element is inside the viewport
-        for(key in el_bounds) {
-
+        Object.keys(el_bounds).forEach(function(key){
             var point = el_bounds[key];
 
             if (point.x < 0) return false;
@@ -176,7 +175,7 @@ export const dom = {
                     if (pointEl === el) return true;
                 } while (pointEl = pointEl.parentNode);
             }
-        }
+        });
 
         return false;
     },
