@@ -44,7 +44,7 @@ export const events = {
      * @returns array|el
      */
     onClick: function(el, handler){
-        return this.onEventPreventDefault(el, 'click', handler);
+        return events.onEventPreventDefault(el, 'click', handler);
     },
 
     /**
@@ -55,7 +55,7 @@ export const events = {
      * @returns array|el
      */
     onSubmit: function(el, handler){
-        return this.onEventPreventDefault(el, 'submit', handler);
+        return events.onEventPreventDefault(el, 'submit', handler);
     },
 
     /**

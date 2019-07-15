@@ -534,13 +534,11 @@ export const navigation = {
     initHistoryHandlers: function(){
         //forward button
         window.onpushstate = function(e) {
-            console.log(e);
             navigation.load(request.getURIWithQueryString());
         };
 
         //back button
         window.onpopstate = function(e) {
-            console.log(e);
             navigation.load(request.getURIWithQueryString(), null, null, null, false);
         };
 
