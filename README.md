@@ -11,19 +11,19 @@ The goal of this library is to allow me (and you, now that it's open source) to 
 
 <h1 id="whatsincluded">What's Included</h1>
 
-Component | Data Type | Singleton? | What it does
---- | --- | --- | ---
-[navigation](#navigation) | object | yes | Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta title swaps, and offers several callbacks
-[XHRForm](#xhrform) | class | no | Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure
-[FormFromURL](#formfromurl) (extends XHRForm) | class | no | Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form
-[request](#request) | object | yes | Provides a wrapper for window.location and easy querystring interaction
-[Site](#site) | class | no | A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed
-[User](#user) | class | no | A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks
-[strings](#strings) | object | yes | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
-[type_checks](#typechecks) | object | yes | Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define
-[dom](#dom) | object | yes | Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)
-[events](#events) | object | yes | Includes methods for attaching event handlers including shorthand methods which create handlers that prevent the browser's default action (onclick, onsubmit)
-[ToggleOnMobile](#toggleonmobile) | class | no | Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.  
+Component | Demo | Data Type | Singleton? | What it does
+--- | --- | --- | --- | ---
+[navigation](#navigation) | | object | yes | Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta title swaps, and offers several callbacks
+[XHRForm](#xhrform) | | class | no | Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure
+[FormFromURL](#formfromurl) (extends XHRForm) | | class | no | Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form
+[request](#request) | | object | yes | Provides a wrapper for window.location and easy querystring interaction
+[Site](#site) | | class | no | A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed
+[User](#user) | [demo](https://jsfiddle.net/HTMLGuyLLC/Lzp5w3rg) | class | no | A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks
+[strings](#strings) | [demo](https://jsfiddle.net/HTMLGuyLLC/ebof3hm4/) | object | yes | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
+[type_checks](#typechecks) | [demo](https://jsfiddle.net/HTMLGuyLLC/5p9q1ofj/) | object | yes | Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define
+[dom](#dom) | [demo](https://jsfiddle.net/HTMLGuyLLC/et42sLbm/) | object | yes | Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)
+[events](#events) | [demo](https://jsfiddle.net/HTMLGuyLLC/wv2hkzp5/) | object | yes | Includes methods for attaching event handlers including shorthand methods which create handlers that prevent the browser's default action (onclick, onsubmit)
+[ToggleOnMobile](#toggleonmobile) | [demo](https://jsfiddle.net/HTMLGuyLLC/68og394L/) | class | no | Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.  
 
 # Installation
 
