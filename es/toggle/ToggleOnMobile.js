@@ -58,8 +58,7 @@ export class ToggleOnMobile{
         };
 
         if( this.hide_on_outside_click ) {
-            //onClick returns the new handler
-            this.onClickOutside = events.onClick('body', function (e) {
+            this.onClickOutside = function (e) {
                 let target_el = e.target;
 
                 //do nothing if the click was on the button
@@ -82,7 +81,9 @@ export class ToggleOnMobile{
 
                 //otherwise hide it
                 self.toggle_el.classList.remove(self.toggle_class);
-            });
+            };
+
+            events.on('body', 'click', this.onClickOutside);
         }
 
         this.onClickToggleBtn = events.onClick(this.btn, function(){
