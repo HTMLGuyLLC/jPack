@@ -77,6 +77,9 @@ export const events = {
         }
 
         const preventedHandler = function(e){
+            //Need to understand this better, but it appears when tied to the body element this function
+            // receives an array of events with a single item in it?
+            if( Array.isArray(e) ) e = e[0];
             e.preventDefault();
             handler.call(this, [e]);
             return false;

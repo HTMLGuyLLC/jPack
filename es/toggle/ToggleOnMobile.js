@@ -60,7 +60,7 @@ export class ToggleOnMobile{
         if( this.hide_on_outside_click ) {
             //onClick returns the new handler
             this.onClickOutside = events.onClick('body', function (e) {
-                let target_el = e[0].target;
+                let target_el = e.target;
 
                 //do nothing if the click was on the button
                 if (target_el === self.btn) return false;
@@ -70,7 +70,7 @@ export class ToggleOnMobile{
                     if (self.btn === target_el) return false;
                 } while (target_el = target_el.parentNode);
 
-                target_el = e[0].target;
+                target_el = e.target;
 
                 //do nothing if the click was on the element we are toggling
                 if (target_el === self.toggle_el) return false;
