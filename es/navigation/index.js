@@ -26,8 +26,7 @@ export const navigation = {
      * @param data
      * @returns {navigation}
      */
-    setPassthroughData: function(data)
-    {
+    setPassthroughData: function (data) {
         this._passthroughData = data;
         return this;
     },
@@ -37,8 +36,7 @@ export const navigation = {
      *
      * @returns {navigation}
      */
-    clearPassthroughData: function()
-    {
+    clearPassthroughData: function () {
         this.setPassthroughData(null);
         return this;
     },
@@ -49,7 +47,7 @@ export const navigation = {
      * @param data
      * @returns {null}
      */
-    getPassThroughData: function(data){
+    getPassThroughData: function (data) {
         return this._passthroughData;
     },
 
@@ -63,8 +61,8 @@ export const navigation = {
      *
      * @param selector_string
      */
-    setIncomingElement: function(selector_string){
-        if( typeof selector_string !== 'string' ) throw `${selector_string} is not a string`;
+    setIncomingElement: function (selector_string) {
+        if (typeof selector_string !== 'string') throw `${selector_string} is not a string`;
         this._incomingElementSelector = selector_string;
     },
 
@@ -73,7 +71,7 @@ export const navigation = {
      *
      * @returns {string}
      */
-    getIncomingElement: function(){
+    getIncomingElement: function () {
         return this._incomingElementSelector;
     },
 
@@ -87,8 +85,8 @@ export const navigation = {
      *
      * @param selector_string
      */
-    setReplaceElement: function(selector_string){
-        if( typeof selector_string !== 'string' ) throw `${selector_string} is not a string`;
+    setReplaceElement: function (selector_string) {
+        if (typeof selector_string !== 'string') throw `${selector_string} is not a string`;
         this._replaceElementSelector = selector_string;
     },
 
@@ -97,7 +95,7 @@ export const navigation = {
      *
      * @returns {string}
      */
-    getReplaceElement: function(){
+    getReplaceElement: function () {
         return this._replaceElementSelector;
     },
 
@@ -117,15 +115,15 @@ export const navigation = {
      * @param replace_el
      * @param push_state
      */
-    load: function(url, callback, incoming_el, replace_el, push_state){
-        if( typeof url !== 'string' ) throw `Provided URL (${url}) is not a string`;
+    load: function (url, callback, incoming_el, replace_el, push_state) {
+        if (typeof url !== 'string') throw `Provided URL (${url}) is not a string`;
 
         incoming_el = typeof incoming_el == 'undefined' || !incoming_el ? this.getIncomingElement() : incoming_el;
         replace_el = typeof replace_el === 'undefined' || !replace_el ? this.getReplaceElement() : replace_el;
         push_state = typeof push_state === 'undefined' ? true : push_state;
 
-        if( typeof incoming_el !== 'string' ) throw `Provided incoming_el (${incoming_el}) is not a string`;
-        if( typeof replace_el !== 'string' ) throw `Provided replace_el (${replace_el}) is not a string`;
+        if (typeof incoming_el !== 'string') throw `Provided incoming_el (${incoming_el}) is not a string`;
+        if (typeof replace_el !== 'string') throw `Provided replace_el (${replace_el}) is not a string`;
 
         navigation.showLoader();
 
@@ -137,15 +135,14 @@ export const navigation = {
             //if a callback was provided, run it and provide the parent element
             if (typeof callback === 'function') {
                 //wait for the onunload callbacks to run and the new content to be put on the page first
-                window.setTimeout(function(){
+                window.setTimeout(function () {
                     callback(dom.getElement(replace_el), incoming_el, navigation.getPassThroughData());
                 }, 105);
             }
-        })
-        .catch(function (axios_error) {
+        }).catch(function (axios_error) {
             navigation.hideLoader();
             navigation.triggerNavigationFailure(axios_error.response.statusText, axios_error);
-            throw error;
+            throw axios_error.response.statusText;
         });
     },
 
@@ -165,8 +162,8 @@ export const navigation = {
      * @param delay_in_ms
      * @returns {navigation}
      */
-    setLoaderDelay: function(delay_in_ms){
-        if( typeof delay_in_ms !== "number" ) throw `${delay_in_ms} is not an integer`;
+    setLoaderDelay: function (delay_in_ms) {
+        if (typeof delay_in_ms !== "number") throw `${delay_in_ms} is not an integer`;
         this._loaderDelay = delay_in_ms;
         return this;
     },
@@ -176,7 +173,7 @@ export const navigation = {
      *
      * @returns {number}
      */
-    getLoaderDelay: function(){
+    getLoaderDelay: function () {
         return this._loaderDelay;
     },
 
@@ -192,9 +189,9 @@ export const navigation = {
      *
      * @returns Element
      */
-    getLoaderEl: function(){
-        if( !this.loaderEnabled ) return;
-        if( navigation.navLoaderCached ) return navigation.navLoaderCached;
+    getLoaderEl: function () {
+        if (!this.loaderEnabled) return;
+        if (navigation.navLoaderCached) return navigation.navLoaderCached;
 
         //prepend the loader elements
         let div = document.createElement('div');
@@ -213,10 +210,10 @@ export const navigation = {
     /**
      * Shows a loader at the top of the page if the request takes more than the delay set above to complete
      */
-    showLoader: function(){
-        if( !this.loaderEnabled ) return;
+    showLoader: function () {
+        if (!this.loaderEnabled) return;
 
-        navigation.loader_timeout = window.setTimeout(function(){
+        navigation.loader_timeout = window.setTimeout(function () {
             navigation.getLoaderEl().classList.add('active');
         }, this.getLoaderDelay());
 
@@ -226,8 +223,8 @@ export const navigation = {
     /**
      * Hides the loader at the top of the page
      */
-    hideLoader: function(){
-        if( !this.loaderEnabled ) return;
+    hideLoader: function () {
+        if (!this.loaderEnabled) return;
 
         //if the loader still hasn't shown yet, prevent it because the request was very fast
         window.clearTimeout(navigation.loader_timeout);
@@ -247,13 +244,12 @@ export const navigation = {
      * @param parent_el
      * @returns {{metas: HTMLCollectionOf<HTMLElementTagNameMap[string]>, route: (*|any|Element), links: HTMLCollectionOf<HTMLElementTagNameMap[string]>, html: string, title: string, body_classes: DOMTokenList}}
      */
-    parseHTML(html, parent_el)
-    {
+    parseHTML(html, parent_el) {
         //default to null if not provided
         parent_el = typeof parent_el === 'undefined' ? null : parent_el;
 
         //must be a string or null
-        if( typeof parent_el !== 'string' && parent_el !== null ) throw `Provided parent_el (${parent_el}) is not a string or null`;
+        if (typeof parent_el !== 'string' && parent_el !== null) throw `Provided parent_el (${parent_el}) is not a string or null`;
 
         //parse the incoming dom
         var parser = new DOMParser();
@@ -274,10 +270,10 @@ export const navigation = {
         var new_html = html;
 
         //if a parent element was provided, find it
-        if( parent_el ){
+        if (parent_el) {
             var sel = doc.querySelector(parent_el);
             //if couldn't find the element
-            if( !sel ){
+            if (!sel) {
                 throw `Could not find parent selector ${parent_el}`;
             }
             //grab the outerHTML
@@ -291,12 +287,12 @@ export const navigation = {
         parser = doc = null;
 
         return {
-            title:title,
+            title: title,
             route: route,
-            metas:metas,
-            links:links,
-            body_classes:body_classes,
-            html:new_html
+            metas: metas,
+            links: links,
+            body_classes: body_classes,
+            html: new_html
         };
     },
 
@@ -308,7 +304,7 @@ export const navigation = {
      * @param html
      * @returns {any | Element}
      */
-    getRouteFromMeta: function(html){
+    getRouteFromMeta: function (html) {
         html = typeof html === 'undefined' ? document.head : html;
         var route = html.querySelector('[name="current_route"]');
         route = route ? route.content : null;
@@ -335,8 +331,7 @@ export const navigation = {
      * @param replace_el
      * @param push_state
      */
-    replacePageContent(html, url, incoming_el, replace_el, push_state)
-    {
+    replacePageContent(html, url, incoming_el, replace_el, push_state) {
         var self = this;
 
         push_state = typeof push_state === 'undefined' ? true : push_state;
@@ -344,20 +339,20 @@ export const navigation = {
         incoming_el = typeof incoming_el === 'undefined' || !incoming_el ? this.getIncomingElement() : incoming_el;
         replace_el = typeof replace_el === 'undefined' || !replace_el ? this.getReplaceElement() : replace_el;
 
-        if( typeof url !== 'string' ) throw `Provided url (${url}) is not a string`;
-        if( typeof incoming_el !== 'string' ) throw `Provided incoming_el (${incoming_el}) is not a string`;
-        if( typeof replace_el !== 'string' ) throw `Provided replace_el (${replace_el}) is not a string`;
+        if (typeof url !== 'string') throw `Provided url (${url}) is not a string`;
+        if (typeof incoming_el !== 'string') throw `Provided incoming_el (${incoming_el}) is not a string`;
+        if (typeof replace_el !== 'string') throw `Provided replace_el (${replace_el}) is not a string`;
 
         //trigger nav complete event
         //get replace_el again because it was replaced
         navigation.triggerUnload(dom.getElement(replace_el), replace_el, this.getRouteFromMeta());
 
         //very slight 100ms delay to let the on unload handlers run first
-        window.setTimeout(function(){
+        window.setTimeout(function () {
             var parsed = navigation.parseHTML(html, incoming_el);
 
             //if there is HTML to put on the page
-            if( parsed.html.length ) {
+            if (parsed.html.length) {
 
                 //remove all meta tags and replace from new page
                 dom.remove('meta');
@@ -367,7 +362,7 @@ export const navigation = {
                 // - possibly other tags will need to be whitelisted in the future.
                 // - the main concern is not putting JS/CSS into the current page that shouldn't be
                 dom.remove('[rel="canonical"]');
-                Array.from(parsed.links).forEach(function(link){
+                Array.from(parsed.links).forEach(function (link) {
                     document.head.append(link);
                 });
 
@@ -388,7 +383,7 @@ export const navigation = {
 
                 //if the replace_el is the same as getReplaceElement(),
                 // then it should be updated to whatever the incoming_el is because it no longer exists
-                if( self.getReplaceElement() !== replace_el ){
+                if (self.getReplaceElement() !== replace_el) {
                     self.setReplaceElement(incoming_el);
                 }
             }
@@ -402,7 +397,7 @@ export const navigation = {
      *
      * @returns {navigation}
      */
-    reload: function(callback){
+    reload: function (callback) {
         callback = typeof callback !== 'function' ? null : callback;
         navigation.load(request.getFullURL(), callback);
         return this;
@@ -413,7 +408,7 @@ export const navigation = {
      *
      * @returns {navigation}
      */
-    fullReload: function(){
+    fullReload: function () {
         navigation.showLoader();
         window.location.reload();
     },
@@ -423,7 +418,7 @@ export const navigation = {
      *
      * @param url
      */
-    redirect: function(url){
+    redirect: function (url) {
         navigation.showLoader();
         window.location.href = url;
     },
@@ -434,7 +429,7 @@ export const navigation = {
      * @param title
      * @returns {navigation}
      */
-    setTitle: function(title){
+    setTitle: function (title) {
         document.title = title;
         return this;
     },
@@ -451,8 +446,7 @@ export const navigation = {
      * @param callback
      * @returns {navigation}
      */
-    onLoad: function(callback)
-    {
+    onLoad: function (callback) {
         events.on('body', 'navigation.complete', callback);
         return this;
     },
@@ -463,8 +457,7 @@ export const navigation = {
      * @param callback
      * @returns {navigation}
      */
-    onUnload: function(callback)
-    {
+    onUnload: function (callback) {
         events.on('body', 'navigation.started', callback);
         return this;
     },
@@ -475,8 +468,7 @@ export const navigation = {
      * @param callback
      * @returns {navigation}
      */
-    onNavigationFailure: function(callback)
-    {
+    onNavigationFailure: function (callback) {
         events.on('body', 'navigation.failed', callback);
         return this;
     },
@@ -491,14 +483,14 @@ export const navigation = {
      * @param replaced_selector
      * @param route
      */
-    triggerOnLoad: function(el, el_selector, replaced_selector, route){
+    triggerOnLoad: function (el, el_selector, replaced_selector, route) {
         route = typeof route !== 'undefined' ? route : navigation.getRouteFromMeta();
         events.trigger('body', 'navigation.complete', {
-            el:el,
-            el_selector:el_selector,
+            el: el,
+            el_selector: el_selector,
             replaced_selector: replaced_selector,
-            route:route,
-            data:this.getPassThroughData()
+            route: route,
+            data: this.getPassThroughData()
         });
 
         return this;
@@ -511,9 +503,8 @@ export const navigation = {
      * @param el_selector
      * @param route
      */
-    triggerUnload: function(el, el_selector, route){
-        events.trigger('body', 'navigation.started', {el:el, el_selector:el_selector, route:route});
-
+    triggerUnload: function (el, el_selector, route) {
+        events.trigger('body', 'navigation.started', {el: el, el_selector: el_selector, route: route});
         return this;
     },
 
@@ -523,9 +514,8 @@ export const navigation = {
      * @param error
      * @param axios_error
      */
-    triggerNavigationFailure: function(error, axios_error){
-        events.trigger('body', 'navigation.failed', {error:error, axios_error:axios_error});
-
+    triggerNavigationFailure: function (error, axios_error) {
+        events.trigger('body', 'navigation.failed', {error: error, axios_error: axios_error});
         return this;
     },
 
@@ -534,14 +524,14 @@ export const navigation = {
      *
      * @todo: Investigate possible issue with chrome caching back button contents and not loading the entire page
      */
-    initHistoryHandlers: function(){
+    initHistoryHandlers: function () {
         //forward button
-        window.onpushstate = function(e) {
+        window.onpushstate = function (e) {
             navigation.load(request.getURIWithQueryString());
         };
 
         //back button
-        window.onpopstate = function(e) {
+        window.onpopstate = function (e) {
             navigation.load(request.getURIWithQueryString(), null, null, null, false);
         };
 
