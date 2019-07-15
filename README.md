@@ -615,7 +615,7 @@ dom.multipleExist('a'); //returns true if more than 1 anchor on the page
 
 ---
 <h2 id="typechecks">Type Checks</h2> 
-[back to top](#whatsincluded) <br><br>
+[demo](https://jsfiddle.net/HTMLGuyLLC/5p9q1ofj/) | [back to top](#whatsincluded) <br><br>
 <i>Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define</i><br><br>
 
 
