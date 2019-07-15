@@ -81,7 +81,7 @@ export const events = {
             // receives an array of events with a single item in it?
             if( Array.isArray(e) ) e = e[0];
             e.preventDefault();
-            handler.call(this, [e]);
+            handler.call(this, e);
             return false;
         };
 
