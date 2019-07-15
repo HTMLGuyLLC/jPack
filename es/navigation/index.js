@@ -142,9 +142,9 @@ export const navigation = {
                 }, 105);
             }
         })
-        .catch(function (error) {
+        .catch(function (axios_error) {
             navigation.hideLoader();
-            navigation.triggerNavigationFailure(error);
+            navigation.triggerNavigationFailure(axios_error.response.statusText, axios_error);
             throw error;
         });
     },
@@ -508,6 +508,8 @@ export const navigation = {
      * We're leaving the last page, tell the world.
      *
      * @param el
+     * @param el_selector
+     * @param route
      */
     triggerUnload: function(el, el_selector, route){
         events.trigger('body', 'navigation.started', {el:el, el_selector:el_selector, route:route});
@@ -519,9 +521,10 @@ export const navigation = {
      * Navigation failed, tell the world.
      *
      * @param error
+     * @param axios_error
      */
-    triggerNavigationFailure: function(error){
-        events.trigger('body', 'navigation.failed', {error:error});
+    triggerNavigationFailure: function(error, axios_error){
+        events.trigger('body', 'navigation.failed', {error:error, axios_error:axios_error});
 
         return this;
     },

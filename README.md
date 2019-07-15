@@ -128,10 +128,10 @@ redirect|url:string|void|redirects the user to a new page (no XHR request)
 setTitle|title:string|self|sets the page title
 onLoad|callback:function|self|add an onload callback (runs 100ms after unload)
 onUnload|callback:function|self|add an unload callback
-onNavigationFailure|callback:function|self|add a callback when the load() request fails - the error message is provided in event.detail.error
+onNavigationFailure|callback:function|self|add a callback when the load() request fails - receives 2 params (error:string, axios_error:object)
 triggerOnLoad|el:mixed, el_selector:string, route:string|self|triggers all onload callbacks
 triggerUnload|el:mixed, el_selector:string, route:string|self|triggers all unload callbacks
-triggerNavigationFailure|error:string|self|triggers the nav failure and provides an error message
+triggerNavigationFailure|error:string, axios_error:object|self|triggers the nav failure and provides an error message
 initHistoryHandlers| |self|sets event listeners to handle back/forward navigation in the user's browser
 
 ##### To use:
@@ -197,8 +197,7 @@ navigation.onUnload(function(){
 });
 
 //things to do when a page fails to load
-navigation.onNavigationFailure(function(e){
-    var error = e.detail.error;
+navigation.onNavigationFailure(function(error, axios_error){
     //.. do something...like show an error popup for the user or log the issue
 });
 
