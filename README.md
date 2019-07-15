@@ -687,7 +687,7 @@ onClick('a', function(){
 ```
 
 ---
-<h2 id="toggleonmobile">ToggleOnMobile - [Demo](https://jsfiddle.net/HTMLGuyLLC/68og394L/109/)</h2> 
+<h2 id="toggleonmobile">ToggleOnMobile - [Demo](https://jsfiddle.net/HTMLGuyLLC/68og394L/112/)</h2> 
 [back to top](#whatsincluded) <br><br>
 <i>Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.</i><br><br>
 
