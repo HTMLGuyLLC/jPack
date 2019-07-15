@@ -77,10 +77,15 @@ export const dom = {
      * Quick method for removing elements from the DOM
      *
      * @param el
+     * @param error_if_not_found
      * @returns {dom}
      */
-    remove: function(el){
+    remove: function(el, error_if_not_found){
         let el_array = this.getElements(el);
+        if( !el_array.length ){
+            if( error_if_not_found ) throw `Could not find "${el}"`;
+            return this;
+        }
         el_array.forEach(function(el){
             el.parentNode.removeChild(el);
         });
@@ -94,34 +99,47 @@ export const dom = {
      *
      * @param el
      * @param html
-     * @returns {ChildNode}
+     * @param error_if_not_found
+     * @returns {ChildNode}|null
      */
-    replaceElWithHTML: function(el, html){
+    replaceElWithHTML: function(el, html, error_if_not_found){
         if( typeof html !== 'string' ) throw `${html} is not a string`;
 
-        el = this.getElement(el);
+        const foundEl = this.getElement(el);
+
+        if( !el ){
+            if( error_if_not_found ) throw `Could not find "${el}"`;
+            return null;
+        }
 
         //create element from HTML
-        let new_el = (new DOMParser()).parseFromString(html, "text/html");
+        let newEl = (new DOMParser()).parseFromString(html, "text/html");
 
         //insert the new element before the current
-        new_el = el.parentNode.insertBefore(new_el.documentElement.querySelector('body').childNodes[0], el);
+        newEl = foundEl.parentNode.insertBefore(newEl.documentElement.querySelector('body').childNodes[0], foundEl);
 
         //remove original element
-        el.remove();
+        foundEl.remove();
 
         //return the new one
-        return new_el;
+        return newEl;
     },
 
     /**
      * Determines if an element is visible or not
      *
      * @param el
+     * @param error_if_not_found
+     * @throw_error_if_not_found
      * @returns {boolean}
      */
-    isVisible(el) {
+    isVisible(el, error_if_not_found) {
         el = this.getElement(el, true, true);
+
+        if( !el ){
+            if( error_if_not_found ) throw `Could not find "${el}"`;
+            return false;
+        }
 
         const style = getComputedStyle(el);
 

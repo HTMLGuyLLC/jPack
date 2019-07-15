@@ -589,11 +589,11 @@ Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
 getElement|el:mixed, error_on_none:bool, error_on_multiple:bool|Element/HTMLDocument/null|returns a native DOM element for whatever you provide (selector string, array of elements, single element, jQuery wrapped DOM element, etc)
 getElements|el:mixed, error_on_none:bool|array|same as getElement, except it returns all matches
-remove|el:mixed|this|removes elements from the DOM - uses .getElements()
-replaceElWithHTML|el:mixed, html:string|Element|replaces an element in the DOM with HTML and returns a reference to the new Element
+remove|el:mixed, error_if_not_found:bool|this|removes elements from the DOM - uses .getElements()
+replaceElWithHTML|el:mixed, html:string, error_if_not_found:bool|Element|replaces an element in the DOM with HTML and returns a reference to the new Element
 exists|el:mixed|bool|checks to see if it exists in the DOM
 multipleExist|el:mixed|bool|checks to see if more than 1 instance exists in the DOM
-isVisible|el:mixed|bool|checks to see if the provided element is visible
+isVisible|el:mixed, error_if_not_found:bool|bool|checks to see if the provided element is visible
 
 
 ##### To Use:
