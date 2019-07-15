@@ -86,7 +86,7 @@ export const events = {
             el.addEventListener(event, handler);
         });
 
-        return el_array;
+        return handler;
     },
 
     /**
