@@ -22,7 +22,7 @@ Component | Data Type | Singleton? | What it does
 [strings](#strings) | object | yes | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
 [type_checks](#typechecks) | object | yes | Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define
 [dom](#dom) | object | yes | Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)
-[events](#events) | object | yes | Includes shorthand methods for preventing the browser's default action onsubmit, onclick. Other methods are included for consistency like onchange (which does not prevent default since that is generally not preferred)
+[events](#events) | object | yes | Includes methods for attaching event handlers including shorthand methods which create handlers that prevent the browser's default action (onclick, onsubmit)
 [ToggleOnMobile](#toggleonmobile) | class | no | Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.  
 
 # Installation
@@ -640,19 +640,14 @@ type_checks.isDataObject(my_obj, ['id', 'name', 'email'], true, true, true);
 ---
 <h2 id="events">Events</h2> 
 [back to top](#whatsincluded) <br><br>
-<i>Includes shorthand methods for preventing the browser's default action onsubmit, onclick. Other methods are included for consistency like onchange (which does not prevent default since that is generally not preferred)</i><br><br>
+<i>Includes methods for attaching event handlers including shorthand methods which create handlers that prevent the browser's default action (onclick, onsubmit)</i><br><br>
 
 Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
 setGlobal|namespace:string/null|self|adds each of the following functions to the global scope, a namespace is optional, but recommended. Use at your own risk! These may cause conflicts!
-onClick|el:mixed, callback:function|array|prevents the browser's default so you can handle link clicks and form submissions with less code
-offClick|el:mixed, callback:function|array|removes the handler you added using onClick
-onSubmit|el:mixed, callback:function|array|same as .onClick() but for submit
-offSubmit|el:mixed, callback:function|array|same as .offClick() but for submit
-onChange|el:mixed, callback:function|array|adds an on change handler but does NOT preventDefault - mostly exists for consistency
-offChange|el:mixed, callback:function|array|removes the handler you added using .onChange()
-onEventPreventDefault|el:mixed, event:string, callback:function|array|attaches an event handler and prevents the default browser action
-offEventPreventDefault|el:mixed, event:string, callback:function|array|removes the handler you attached with .onEventPreventDefault()
+onClick|el:mixed, callback:function|handler:function|prevents the browser's default so you can handle link clicks and form submissions with less code
+onSubmit|el:mixed, callback:function|handler:function|same as .onClick() but for submit
+onEventPreventDefault|el:mixed, event:string, callback:function|callback:function|generates and attaches a handler which prevents the default action then returns that handler in case you need to remove it later
 on|el:mixed, event:string, callback:function|array|attaches an event listener
 off|el:mixed, event:string, callback:function|array|removes an event listener
 trigger|el:mixed, event:string, event_options:mixed|array|triggers an event on an element/elements - uses .getElements()
@@ -662,11 +657,13 @@ trigger|el:mixed, event:string, event_options:mixed|array|triggers an event on a
 ```javascript
 import {events} from '@htmlguyllc/jpack/es/events';
 
-events.onClick('a.my-link', function(){
+var preventedHandler = events.onClick('a.my-link', function(){
    //do something without the page redirecting to the href 
 });
+//now remove that handler
+events.off('a.my-link', 'click', preventedHandler);
 
-events.onSubmit('form.my-form', function(){
+var handler = events.onSubmit('form.my-form', function(){
    //do something and submit the form using XHR 
 });
 

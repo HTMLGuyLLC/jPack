@@ -44,10 +44,6 @@ export class ToggleOnMobile{
         //to be used inside the event handlers
         const self = this;
 
-        this.onClickToggleBtn = function(){
-            self.toggle_el.classList.toggle(self.toggle_class);
-        };
-
         //create a throttled window resize handler
         let throttle;
         this.onWindowResize = function(){
@@ -62,7 +58,8 @@ export class ToggleOnMobile{
         };
 
         if( this.hide_on_outside_click ) {
-            this.onClickOutside = function (e) {
+            //onClick returns the new handler
+            this.onClickOutside = events.onClick('body', function (e) {
                 let target_el = e[0].target;
 
                 //do nothing if the click was on the button
@@ -85,11 +82,13 @@ export class ToggleOnMobile{
 
                 //otherwise hide it
                 self.toggle_el.classList.remove(self.toggle_class);
-            };
-            events.onClick('body', this.onClickOutside);
+            });
         }
 
-        events.onClick(this.btn, this.onClickToggleBtn);
+        this.onClickToggleBtn = events.onClick(this.btn, function(){
+            self.toggle_el.classList.toggle(self.toggle_class);
+        });
+
         window.addEventListener('resize', this.onWindowResize);
 
         this.onWindowResize();
@@ -102,9 +101,9 @@ export class ToggleOnMobile{
      */
     destroy(){
         if( this.hide_on_outside_click ) {
-            events.offClick('body', this.onClickOutside);
+            events.off('body', 'click', this.onClickOutside);
         }
-        events.offClick(this.btn, this.onClickToggleBtn);
+        events.off(this.btn, 'click', this.onClickToggleBtn);
         window.removeEventListener('resize', this.onWindowResize);
     }
 }

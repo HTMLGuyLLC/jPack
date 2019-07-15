@@ -15,10 +15,6 @@ export const events = {
      *     onClick('a', function(){
      *        //do something (the href is prevented)
      *     });
-     *
-     *     or
-     *     jpack.events.setGlobal('$');
-     *     $.onClick('a', function(){ });
      */
     setGlobal: function(namespace){
         var self = this;
@@ -52,17 +48,6 @@ export const events = {
     },
 
     /**
-     * Removes an on-click handler with preventDefault
-     *
-     * @param el
-     * @param handler
-     * @returns array|el
-     */
-    offClick(el, handler){
-        return this.offEventPreventDefault(el, 'click', handler);
-    },
-
-    /**
      * Shorthand on-submit handler with preventDefault
      *
      * @param el
@@ -74,49 +59,15 @@ export const events = {
     },
 
     /**
-     * Removes an on-submit handler with preventDefault
-     *
-     * @param el
-     * @param handler
-     * @returns array|el
-     */
-    offSubmit: function(el, handler){
-        return this.offEventPreventDefault(el, 'submit', handler);
-    },
-
-    /**
-     * Mainly here for consistency
-     *
-     * Shorthand on-change handler
-     * DOES NOT preventDefault because that's usually not desired
-     *
-     * @param el
-     * @param handler
-     * @returns array|el
-     */
-    onChange: function(el, handler){
-        return this.on(el, 'change', handler);
-    },
-
-    /**
-     * Removes an on-change handler
-     *
-     * @param el
-     * @param handler
-     * @returns array|el
-     */
-    offChange: function(el, handler){
-        return this.off(el, 'change', handler);
-    },
-
-    /**
      * Attaches an event handler and prevents the default events from occurring
      *  (like forms submitting or a link bringing you to another page)
+     *
+     *  Returns the generated handler for future removal
      *
      * @param el
      * @param event
      * @param handler
-     * @returns array|el
+     * @returns function
      */
     onEventPreventDefault: function(el, event, handler) {
         const el_array = dom.getElements(el);
@@ -125,40 +76,14 @@ export const events = {
             return el;
         }
 
+        handler = function(e){
+            e.preventDefault();
+            handler.call(this, [e]);
+            return false;
+        };
+
         el_array.forEach(function(el){
-            el.addEventListener(event, function(e){
-                e.preventDefault();
-                handler.call(this, [e]);
-                return false;
-            });
-        });
-
-
-        return el_array;
-    },
-
-    /**
-     * Removes an event handler with preventDefault
-     *
-     * @param el
-     * @param event
-     * @param handler
-     * @returns array|el
-     */
-    offEventPreventDefault: function(el, event, handler){
-
-        const el_array = dom.getElements(el);
-
-        if( !el_array.length ){
-            return el;
-        }
-
-        el_array.forEach(function(el) {
-            el.removeEventListener(event, function (e) {
-                e.preventDefault();
-                handler.call(this, [e]);
-                return false;
-            });
+            el.addEventListener(event, handler);
         });
 
         return el_array;
