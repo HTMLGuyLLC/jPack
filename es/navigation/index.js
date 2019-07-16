@@ -116,23 +116,25 @@ export const navigation = {
      * @param push_state
      */
     load: function (url, callback, incoming_el, replace_el, push_state) {
+        const self = this;
+
         if (typeof url !== 'string') throw `Provided URL (${url}) is not a string`;
 
-        incoming_el = typeof incoming_el == 'undefined' || !incoming_el ? this.getIncomingElement() : incoming_el;
-        replace_el = typeof replace_el === 'undefined' || !replace_el ? this.getReplaceElement() : replace_el;
+        incoming_el = typeof incoming_el == 'undefined' || !incoming_el ? self.getIncomingElement() : incoming_el;
+        replace_el = typeof replace_el === 'undefined' || !replace_el ? self.getReplaceElement() : replace_el;
         push_state = typeof push_state === 'undefined' ? true : push_state;
 
         if (typeof incoming_el !== 'string') throw `Provided incoming_el (${incoming_el}) is not a string`;
         if (typeof replace_el !== 'string') throw `Provided replace_el (${replace_el}) is not a string`;
 
-        navigation.showLoader();
+        self.showLoader();
 
         axios.get(url).then(function (response) {
-            navigation.hideLoader();
+            self.hideLoader();
 
-            const data = this.getPassThroughData();
+            const data = self.getPassThroughData();
 
-            navigation.replacePageContent(response.data, url, incoming_el, replace_el, push_state, data);
+            self.replacePageContent(response.data, url, incoming_el, replace_el, push_state, data);
 
             //if a callback was provided, run it and provide the parent element
             if (typeof callback === 'function') {
@@ -142,14 +144,14 @@ export const navigation = {
                 }, 105);
             }
         }).catch(function (error) {
-            navigation.hideLoader();
+            self.hideLoader();
 
             //at this point, it can only be a string error message or an axios error object
             //so set both values accordingly
             const axios_error = typeof error === "object" && error.isAxiosError ? error : null;
             error = typeof error === "object" && error.isAxiosError ? error.response.statusText : error;
 
-            navigation.triggerNavigationFailure(error, axios_error);
+            self.triggerNavigationFailure(error, axios_error);
             throw error;
         });
     },
@@ -198,32 +200,36 @@ export const navigation = {
      * @returns Element
      */
     getLoaderEl: function () {
-        if (!this.loaderEnabled) return;
-        if (navigation.navLoaderCached) return navigation.navLoaderCached;
+        const self = this;
+
+        if (!self.loaderEnabled) return;
+        if (self.navLoaderCached) return self.navLoaderCached;
 
         //prepend the loader elements
         let div = document.createElement('div');
-        div.classList = this._loaderClasses;
+        div.classList = self._loaderClasses;
         let inner_div = document.createElement('div');
-        inner_div.classList = this._loaderInnerDivClasses;
+        inner_div.classList = self._loaderInnerDivClasses;
         div.append(inner_div);
         document.body.prepend(div);
 
         //get and cache a reference to it for future requests
-        navigation.navLoaderCached = dom.getElement('.page-navigation-loader');
+        self.navLoaderCached = dom.getElement('.page-navigation-loader');
 
-        return navigation.navLoaderCached;
+        return self.navLoaderCached;
     },
 
     /**
      * Shows a loader at the top of the page if the request takes more than the delay set above to complete
      */
     showLoader: function () {
-        if (!this.loaderEnabled) return;
+        const self = this;
 
-        navigation.loader_timeout = window.setTimeout(function () {
-            navigation.getLoaderEl().classList.add('active');
-        }, this.getLoaderDelay());
+        if (!self.loaderEnabled) return;
+
+        self.loader_timeout = window.setTimeout(function () {
+            self.getLoaderEl().classList.add('active');
+        }, self.getLoaderDelay());
 
         return this;
     },
@@ -232,13 +238,15 @@ export const navigation = {
      * Hides the loader at the top of the page
      */
     hideLoader: function () {
-        if (!this.loaderEnabled) return;
+        var self = this;
+
+        if (!self.loaderEnabled) return;
 
         //if the loader still hasn't shown yet, prevent it because the request was very fast
-        window.clearTimeout(navigation.loader_timeout);
+        window.clearTimeout(self.loader_timeout);
 
         //hide the loader
-        navigation.getLoaderEl().classList.remove('active');
+        self.getLoaderEl().classList.remove('active');
 
         return this;
     },
@@ -253,6 +261,8 @@ export const navigation = {
      * @returns {{metas: HTMLCollectionOf<HTMLElementTagNameMap[string]>, route: (*|any|Element), links: HTMLCollectionOf<HTMLElementTagNameMap[string]>, html: string, title: string, body_classes: DOMTokenList}}
      */
     parseHTML(html, parent_el) {
+        var self = this;
+
         //default to null if not provided
         parent_el = typeof parent_el === 'undefined' ? null : parent_el;
 
@@ -289,7 +299,7 @@ export const navigation = {
         }
 
         //get the new page's route from the meta tag (if it exists)
-        var route = navigation.getRouteFromMeta(doc);
+        var route = self.getRouteFromMeta(doc);
 
         // Garbage collection, you don't need this anymore.
         parser = doc = null;
@@ -345,8 +355,8 @@ export const navigation = {
 
         push_state = typeof push_state === 'undefined' ? true : push_state;
 
-        incoming_el = typeof incoming_el === 'undefined' || !incoming_el ? this.getIncomingElement() : incoming_el;
-        replace_el = typeof replace_el === 'undefined' || !replace_el ? this.getReplaceElement() : replace_el;
+        incoming_el = typeof incoming_el === 'undefined' || !incoming_el ? self.getIncomingElement() : incoming_el;
+        replace_el = typeof replace_el === 'undefined' || !replace_el ? self.getReplaceElement() : replace_el;
 
         if (typeof url !== 'string') throw `Provided url (${url}) is not a string`;
         if (typeof incoming_el !== 'string') throw `Provided incoming_el (${incoming_el}) is not a string`;
@@ -354,11 +364,11 @@ export const navigation = {
 
         //trigger nav complete event
         //get replace_el again because it was replaced
-        navigation.triggerUnload(dom.getElement(replace_el), replace_el, this.getRouteFromMeta(), data);
+        self.triggerUnload(dom.getElement(replace_el), replace_el, self.getRouteFromMeta(), data);
 
         //very slight 100ms delay to let the on unload handlers run first
         window.setTimeout(function () {
-            var parsed = navigation.parseHTML(html, incoming_el);
+            var parsed = self.parseHTML(html, incoming_el);
 
             //if there is HTML to put on the page
             if (parsed.html.length) {
@@ -382,13 +392,13 @@ export const navigation = {
                 push_state && history.pushState({url: url}, parsed.title, url);
 
                 //update the tab/page title
-                navigation.setTitle(parsed.title);
+                self.setTitle(parsed.title);
 
                 //replace content on the page
                 const new_content = dom.replaceElWithHTML(replace_el, parsed.html);
 
                 //trigger nav complete event
-                navigation.triggerOnLoad(new_content, incoming_el, replace_el, parsed.route, data);
+                self.triggerOnLoad(new_content, incoming_el, replace_el, parsed.route, data);
 
                 //if the replace_el is the same as getReplaceElement(),
                 // then it should be updated to whatever the incoming_el is because it no longer exists
@@ -408,7 +418,7 @@ export const navigation = {
      */
     reload: function (callback) {
         callback = typeof callback !== 'function' ? null : callback;
-        navigation.load(request.getFullURL(), callback);
+        this.load(request.getFullURL(), callback);
         return this;
     },
 
@@ -418,7 +428,7 @@ export const navigation = {
      * @returns {navigation}
      */
     fullReload: function () {
-        navigation.showLoader();
+        this.showLoader();
         window.location.reload();
     },
 
@@ -428,7 +438,7 @@ export const navigation = {
      * @param url
      */
     redirect: function (url) {
-        navigation.showLoader();
+        this.showLoader();
         window.location.href = url;
     },
 
@@ -494,7 +504,7 @@ export const navigation = {
      * @param data
      */
     triggerOnLoad: function (el, el_selector, replaced_selector, route, data) {
-        route = typeof route !== 'undefined' ? route : navigation.getRouteFromMeta();
+        route = typeof route !== 'undefined' ? route : this.getRouteFromMeta();
         events.trigger('body', 'navigation.complete', {
             el: el,
             el_selector: el_selector,
@@ -531,7 +541,10 @@ export const navigation = {
      * @param axios_error
      */
     triggerNavigationFailure: function (error, axios_error) {
-        events.trigger('body', 'navigation.failed', {error: error, axios_error: axios_error});
+        events.trigger('body', 'navigation.failed', {
+            error: error,
+            axios_error: axios_error
+        });
         return this;
     },
 
@@ -541,14 +554,16 @@ export const navigation = {
      * @todo: Investigate possible issue with chrome caching back button contents and not loading the entire page
      */
     initHistoryHandlers: function () {
+        var self = this;
+
         //forward button
         window.onpushstate = function (e) {
-            navigation.load(request.getURIWithQueryString());
+            self.load(request.getURIWithQueryString());
         };
 
         //back button
         window.onpopstate = function (e) {
-            navigation.load(request.getURIWithQueryString(), null, null, null, false);
+            self.load(request.getURIWithQueryString(), null, null, null, false);
         };
 
         return this;
