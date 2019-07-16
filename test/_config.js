@@ -1,7 +1,7 @@
 //get the path to the test HTML file
 const path = require('path');
 const curDir = path.resolve(__dirname);
-export const test_file = 'file://'+curDir+'/index.html';
+export const test_file = 'file://'+curDir+'/_index.html';
 
 //define the default height/width of the page
 export const page_height = 1080;

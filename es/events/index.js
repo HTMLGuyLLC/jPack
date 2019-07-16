@@ -86,7 +86,7 @@ export const events = {
         };
 
         el_array.forEach(function(el){
-            el.addEventListener(event, preventedHandler);
+            el.addEventListener(event, preventedHandler, false);
         });
 
         return preventedHandler;
@@ -137,20 +137,24 @@ export const events = {
      *
      * @param el
      * @param event
+     * @param data_to_pass
      * @param event_options
      * @returns {*|*[]|*}
      */
-    trigger: function(el, event, event_options){
+    trigger: function(el, event, data_to_pass, event_options){
         const el_array = dom.getElements(el);
 
         if( !el_array.length ){
             return el;
         }
 
-        event_options = typeof event_options === "undefined" ? null : event_options;
+        event_options = typeof event_options === "undefined" ? {} : event_options;
+        data_to_pass = typeof data_to_pass === "undefined" ? null : data_to_pass;
+
+        event_options.detail = data_to_pass;
 
         //create the event
-        event = new CustomEvent(event, { detail: event_options });
+        event = new CustomEvent(event, event_options);
 
         el_array.forEach(function(el){
             el.dispatchEvent(event);

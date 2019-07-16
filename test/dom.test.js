@@ -1,6 +1,6 @@
 //get our headless browser and config
 import puppeteer from "puppeteer";
-import {config, test_file, viewport} from './config';
+import {config, test_file, viewport} from './_config';
 
 let page, browser;
 
@@ -26,6 +26,9 @@ describe('dom', function() {
         expect(title).toBe(
             "Test"
         );
+        await page.evaluate(function(){
+            if( typeof jpack === "undefined" ) throw `jpack is not defined`;
+        });
     }, 16000);
 
     //start testing this component's functionality, each method gets it's own test
