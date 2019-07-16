@@ -149,7 +149,7 @@ export const navigation = {
             const axios_error = typeof error === "object" && error.isAxiosError ? error : null;
             error = typeof error === "object" && error.isAxiosError ? error.response.statusText : error;
 
-            navigation.triggerNavigationFailure(axios_error.response.statusText, axios_error);
+            navigation.triggerNavigationFailure(error, axios_error);
             throw error;
         });
     },
