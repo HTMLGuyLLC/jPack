@@ -1,6 +1,6 @@
 {
   "name": "@htmlguyllc/jpack",
-  "version": "8.1.0",
+  "version": "8.1.3",
   "description": "Core Javascript Library of Everyday Objects, Events, and Utilities",
   "keywords": [
     "javascript",
@@ -64,7 +64,7 @@
     "prebuild": "echo nok > .buildstatus",
     "postbuild": "echo ok > .buildstatus",
     "make-badges": "node_modules/.bin/jest-badges-readme",
-    "add-changes": "git add 'README.md' '.buildstatus' './dist/jpack.min.js' './dist/jpack.bundled.min.js' './test/jpack.bundled.js'",
+    "add-changes": "git add 'README.md' './dist/jpack.min.js' './dist/jpack.bundled.min.js' './test/_jpack.bundled.js'",
     "bump-patch-version": "npm version --no-git-tag-version patch",
     "npm-publish": "npm publish"
   },

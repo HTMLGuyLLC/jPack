@@ -8,7 +8,7 @@ const test = {
     mode: 'development',
     devtool: 'inline-source-map',
     output: {
-        filename: 'jpack.bundled.js',
+        filename: '_jpack.bundled.js',
         path: path.resolve(__dirname, 'test')
     }
 };
