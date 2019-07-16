@@ -62,7 +62,7 @@
     "build": "webpack",
     "test": "jest",
     "make-badges": "node_modules/.bin/jest-badges-readme",
-    "add-changes": "git add -A",
+    "add-changes": "git add 'README.md' && git add './dist/jpack.min.js' && git add './dist/jpack.bundled.min.js' && git add './test/jpack.bundled.js'",
     "bump-patch-version": "npm version --no-git-tag-version patch",
     "npm-publish": "npm publish"
   },
