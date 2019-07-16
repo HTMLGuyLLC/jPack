@@ -141,10 +141,16 @@ export const navigation = {
                     callback(dom.getElement(replace_el), incoming_el, data);
                 }, 105);
             }
-        }).catch(function (axios_error) {
+        }).catch(function (error) {
             navigation.hideLoader();
+
+            //at this point, it can only be a string error message or an axios error object
+            //so set both values accordingly
+            const axios_error = typeof error === "object" && error.isAxiosError ? error : null;
+            error = typeof error === "object" && error.isAxiosError ? error.response.statusText : error;
+
             navigation.triggerNavigationFailure(axios_error.response.statusText, axios_error);
-            throw axios_error.response.statusText;
+            throw error;
         });
     },
 
