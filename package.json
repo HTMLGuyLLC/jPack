@@ -1,6 +1,6 @@
 {
   "name": "@htmlguyllc/jpack",
-  "version": "7.0.4",
+  "version": "7.0.5",
   "description": "Core Javascript Library of Everyday Objects, Events, and Utilities",
   "keywords": [
     "javascript",
@@ -41,19 +41,25 @@
     "@babel/preset-env": "^7.5.4",
     "@babel/register": "^7.4.4",
     "babel-loader": "^8.0.6",
+    "faker": "^4.1.0",
+    "jest": "^24.8.0",
+    "parallel-webpack": "^2.4.0",
     "pre-commit": "^1.2.2",
+    "puppeteer": "^1.18.1",
     "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.5"
+    "webpack-cli": "^3.3.6"
   },
   "license": "MIT",
   "scripts": {
     "build": "webpack",
+    "test": "jest",
     "addCompiledFiles": "git add -A",
     "bumpPatchVersion": "npm version --no-git-tag-version patch",
     "npmPublish": "npm publish"
   },
   "pre-commit": [
     "build",
+    "test",
     "bumpPatchVersion",
     "addCompiledFiles",
     "npmPublish"

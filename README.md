@@ -29,7 +29,7 @@ Component | Demo | Data Type | Singleton? | What it does
 
 #### Standard Global
 
-Download the latest release, unzip and move it in your website's public folder, then include it in your HTML.
+Download the latest release, unzip and move it into your website's public folder, then include it in your HTML.
 
 Use either jpack.min.js or jpack.bundled.min.js, __BUT NOT BOTH__. The bundled file includes the dependencies and you don't need them if you already have them in your project.
 
