@@ -130,13 +130,15 @@ export const navigation = {
         axios.get(url).then(function (response) {
             navigation.hideLoader();
 
-            navigation.replacePageContent(response.data, url, incoming_el, replace_el, push_state);
+            const data = this.getPassThroughData();
+
+            navigation.replacePageContent(response.data, url, incoming_el, replace_el, push_state, data);
 
             //if a callback was provided, run it and provide the parent element
             if (typeof callback === 'function') {
                 //wait for the onunload callbacks to run and the new content to be put on the page first
                 window.setTimeout(function () {
-                    callback(dom.getElement(replace_el), incoming_el, navigation.getPassThroughData());
+                    callback(dom.getElement(replace_el), incoming_el, data);
                 }, 105);
             }
         }).catch(function (axios_error) {
@@ -330,8 +332,9 @@ export const navigation = {
      * @param incoming_el
      * @param replace_el
      * @param push_state
+     * @param data
      */
-    replacePageContent(html, url, incoming_el, replace_el, push_state) {
+    replacePageContent(html, url, incoming_el, replace_el, push_state, data) {
         var self = this;
 
         push_state = typeof push_state === 'undefined' ? true : push_state;
@@ -345,7 +348,7 @@ export const navigation = {
 
         //trigger nav complete event
         //get replace_el again because it was replaced
-        navigation.triggerUnload(dom.getElement(replace_el), replace_el, this.getRouteFromMeta());
+        navigation.triggerUnload(dom.getElement(replace_el), replace_el, this.getRouteFromMeta(), data);
 
         //very slight 100ms delay to let the on unload handlers run first
         window.setTimeout(function () {
@@ -379,7 +382,7 @@ export const navigation = {
                 const new_content = dom.replaceElWithHTML(replace_el, parsed.html);
 
                 //trigger nav complete event
-                navigation.triggerOnLoad(new_content, incoming_el, replace_el, parsed.route);
+                navigation.triggerOnLoad(new_content, incoming_el, replace_el, parsed.route, data);
 
                 //if the replace_el is the same as getReplaceElement(),
                 // then it should be updated to whatever the incoming_el is because it no longer exists
@@ -482,15 +485,16 @@ export const navigation = {
      * @param el_selector
      * @param replaced_selector
      * @param route
+     * @param data
      */
-    triggerOnLoad: function (el, el_selector, replaced_selector, route) {
+    triggerOnLoad: function (el, el_selector, replaced_selector, route, data) {
         route = typeof route !== 'undefined' ? route : navigation.getRouteFromMeta();
         events.trigger('body', 'navigation.complete', {
             el: el,
             el_selector: el_selector,
             replaced_selector: replaced_selector,
             route: route,
-            data: this.getPassThroughData()
+            data: data
         });
 
         return this;
@@ -502,9 +506,15 @@ export const navigation = {
      * @param el
      * @param el_selector
      * @param route
+     * @param data
      */
-    triggerUnload: function (el, el_selector, route) {
-        events.trigger('body', 'navigation.started', {el: el, el_selector: el_selector, route: route});
+    triggerUnload: function (el, el_selector, route, data) {
+        events.trigger('body', 'navigation.started', {
+            el: el,
+            el_selector: el_selector,
+            route: route,
+            data: data
+        });
         return this;
     },
 
