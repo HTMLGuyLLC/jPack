@@ -1,3 +1,8 @@
+Build Status
+---
+![BuildStatus](#buildstatus# "Building Status")
+
+
 # jPack
 jPack is a vanilla javascript library of components, classes, plugin wrappers, and utilities designed to make building custom websites and web applications simpler.
 
