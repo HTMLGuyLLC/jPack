@@ -1,6 +1,6 @@
 Build Status
 ---
-![BuildStatus](#buildstatus# "Building Status")
+![BuildStatus](https://img.shields.io/badge/Build-Passing-brightgreen.svg "Building Status")
 
 
 # jPack
