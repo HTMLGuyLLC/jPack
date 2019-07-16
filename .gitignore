@@ -2,6 +2,5 @@
 .idea
 .vagrant
 .buildstatus
-.README-template.md
 /coverage
 /node_modules
