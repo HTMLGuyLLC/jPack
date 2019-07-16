@@ -15,7 +15,7 @@ export const dom = {
 
         if( foundEl.length > 1 && error_on_multiple ) throw `More than 1 result found for "${el}"`;
 
-        if( !foundEl ) return null;
+        if( !foundEl.length ) return null;
 
         return foundEl[0];
     },
@@ -130,20 +130,20 @@ export const dom = {
      *
      * @param el
      * @param error_if_not_found
-     * @throw_error_if_not_found
+     * @param error_on_multiple
      * @returns {boolean}
      */
-    isVisible(el, error_if_not_found) {
-        el = this.getElement(el, true, true);
+    isVisible(el, error_if_not_found, error_on_multiple) {
+        el = this.getElement(el, error_if_not_found, error_on_multiple);
 
-        if( !el ){
+        if( el === null ){
             if( error_if_not_found ) throw `Could not find "${el}"`;
             return false;
         }
 
         const style = getComputedStyle(el);
 
-        //check display, visibiliity, and opacity first since they're the most common
+        //check display, visibility, and opacity first since they're the most common
         if (style.display === 'none') return false;
         if (style.visibility !== 'visible') return false;
         if (style.opacity === 0) return false;
