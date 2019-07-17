@@ -37,10 +37,10 @@ export const type_checks = {
         }
 
         //determine if it is an object
-        const is_object = typeof value === "object";
+        const is_object = typeof value === "object" && value !== null;
 
-        //if not an object, null, or an array
-        if( !is_object || value === null || Array.isArray(value) ){
+        //if not an object or an array
+        if( !is_object || Array.isArray(value) ){
             if( throw_error ) throw error_msg;
             return false;
         }

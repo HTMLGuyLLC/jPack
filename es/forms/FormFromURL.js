@@ -32,7 +32,7 @@ export class FormFromURL extends XHRForm {
 
         //if options are undefined, set them
         options = typeof options === "undefined" ? {} : options;
-        if( typeof options !== "object" ) throw `${options} is not an object`;
+        if( typeof options !== "object" || options === null ) throw `${options} is not an object`;
 
         //extend defaults with provided options
         options = {...FormFromURLDefaults, ...options};
@@ -186,7 +186,7 @@ export class FormFromURL extends XHRForm {
                 return self.insertForm({html:data});
             }
             //if the response is an object (probably JSON)
-            else if( typeof data === 'object' ){
+            else if( typeof data === 'object' && data !== null ){
                 //if HTML was provided in the object
                 if( typeof data.html !== "undefined" ){
                     return self.insertForm({html:data.html}, data);

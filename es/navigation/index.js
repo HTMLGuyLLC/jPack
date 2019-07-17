@@ -47,7 +47,7 @@ export const navigation = {
      * @returns {navigation}
      */
     setData: function (data) {
-        if( typeof data !== 'object' ) throw `${data} is not an object`;
+        if( typeof data !== 'object' && data !== null ) throw `${data} is not an object`;
         this._data = data;
         return this;
     },
@@ -180,8 +180,8 @@ export const navigation = {
 
             //at this point, it can only be a string error message or an axios error object
             //so set both values accordingly
-            const axios_error = typeof error === "object" && error.isAxiosError ? error : null;
-            error = typeof error === "object" && error.isAxiosError ? error.response.statusText : error;
+            const axios_error = typeof error === "object" && error !== null && error.isAxiosError ? error : null;
+            error = axios_error !== null ? axios_error.response.statusText : error;
 
             self._triggerFail(error, url, data, axios_error);
             throw error;
@@ -500,7 +500,7 @@ export const navigation = {
         if (typeof parent_el !== 'string' && parent_el !== null) throw `Provided parent_el (${parent_el}) is not a string or null`;
 
         route = null;
-        if( typeof html === "object" ){
+        if( typeof html === "object" && html !== null ){
             if( html.html ){
                 if( html.route ){
                     route = html.route;

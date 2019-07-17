@@ -46,7 +46,7 @@ export class XHRForm {
 
         //if options are undefined, set them
         options = typeof options === "undefined" ? {} : options;
-        if( typeof options !== "object" ) throw `${options} is not an object`;
+        if( typeof options !== "object" || options === null ) throw `${options} is not an object`;
 
         //extend defaults with provided options
         options = {...XHRFormDefaults, ...options};
@@ -380,7 +380,7 @@ export class XHRForm {
                 return self.insertForm({html:data}, data, form);
             }
             //if the response is an object, it's probably JSON
-            else if( typeof data === 'object' ){
+            else if( typeof data === 'object' && data !== null ){
                 //if it contains the HTML, just pop it back on the page
                 if( data.html ){
                     return self.insertForm({html:data.html}, data, form);
