@@ -110,6 +110,9 @@ formdata-polyfill | XHRForm (and anything that extends it) | https://www.npmjs.c
 
 Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
+storeHistory|n/a| |bool property that enables tracking history each time .load is called (right after onload callbacks are executed the history is updated, so if you grab the last history record from within your onload function, you will receive the one prior to that) - defaults to true
+getHistory| |array|returns an array of objects containing "url" and "route" starting with the first load and ending with the latest
+getLastHistoryRecord| |object|returns an object containing "url" and "route" for the last page grabbed by .load()
 setData|data:mixed|self|set data you want provided in the onload method for the next page
 setDataItem|key:string, val:mixed|self|set a single item in your data object
 getDataItem|key:string|self|returns a single item from your data object, or null if the key doesn't exist
@@ -177,6 +180,13 @@ navigation.onload(function(el, el_selector, replaced_selector, route, data){
        gtag('config', 'GA_MEASUREMENT_ID', {
            page_path: request.getURIWithQueryString()
        });
+   }
+   
+   //you can grab the last page that was loaded (prior to this one) like this:
+   var last_history = navigation.getLastHistoryRecord();
+   if( last_history ){
+       const last_url = last_history.url;
+       const last_route = last_history.route;
    }
    
    //scroll to the top of the page

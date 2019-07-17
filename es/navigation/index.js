@@ -11,6 +11,32 @@ import {request} from "../request";
  *  or scrolling to the top of the new page
  */
 export const navigation = {
+    /**
+     * Whether or not to keep track of the pages that were loaded in an array
+     */
+    storeHistory: true,
+    /**
+     * Grabs all pages that were loaded previously (does not persist if the page is reloaded)
+     *
+     * @returns {*}
+     */
+    getHistory: function(){
+        return this._history;
+    },
+    /**
+     * Gets the last page's url and route
+     *
+     * @returns {T}
+     */
+    getLastHistoryRecord(){
+        return this._history.pop();
+    },
+    _addHistoryItem(url, route){
+        if( !this_.storeHistory ) return false;
+        this._history.push({'url':url, 'route':route});
+        return this;
+    },
+    _history: [],
 
     /**
      * Sets data to be provided to the next page's onload callback
@@ -148,15 +174,7 @@ export const navigation = {
         axios.get(url).then(function (response) {
             self.hideLoader();
 
-            self._replacePageContent(response.data, url, incoming_el, replace_el, push_state, current_route, data);
-
-            //if a callback was provided, run it and provide the parent element
-            if (typeof callback === 'function') {
-                //wait for the onunload callbacks to run and the new content to be put on the page first
-                window.setTimeout(function () {
-                    callback(dom.getElement(replace_el), incoming_el, replace_el, current_route, data);
-                }, 105);
-            }
+            self._replacePageContent(response.data, url, incoming_el, replace_el, push_state, current_route, data, callback);
         }).catch(function (error) {
             self.hideLoader();
 
@@ -396,8 +414,9 @@ export const navigation = {
      * @param push_state
      * @param current_route
      * @param data
+     * @param one_time_callback
      */
-    _replacePageContent(html, url, incoming_el, replace_el, push_state, current_route, data) {
+    _replacePageContent(html, url, incoming_el, replace_el, push_state, current_route, data, one_time_callback) {
         const self = this;
 
         push_state = typeof push_state === 'undefined' ? true : push_state;
@@ -442,6 +461,14 @@ export const navigation = {
 
             //trigger nav complete event
             self._triggerOnload(new_content, incoming_el, replace_el, parsed.route, data);
+
+            //if a callback was provided, run it and provide the parent element
+            if (typeof one_time_callback === 'function') {
+                one_time_callback(new_content, incoming_el, replace_el, current_route, data);
+            }
+
+            //add to history (if enabled)
+            this._addHistoryItem(url, parsed.route);
 
             //if the replace_el is the same as getReplaceElement(),
             // then it should be updated to whatever the incoming_el is because it no longer exists
