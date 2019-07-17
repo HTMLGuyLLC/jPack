@@ -56,10 +56,9 @@ export const navigation = {
     /**
      * Gets all data
      *
-     * @param data
      * @returns {null}
      */
-    getData: function (data) {
+    getData: function () {
         return this._data;
     },
     _data: {},

@@ -185,8 +185,15 @@ navigation.onload(function(el, el_selector, replaced_selector, route, data){
    //.. do something...like init tooltip plugins
 });
 
-//things to do when leaving a page
-navigation.onUnload(function(){
+/**
+* Just before content is swapped for a new page, the unload callbacks are executed
+* 
+* el is the current element on the page that will be replaced
+* el_selector is the selector used to grab that element
+* route is the current route
+* data is any data you set to pass on (for the new request, not when this page was originally loaded)
+*/
+navigation.onUnload(function(el, el_selector, route, data){
    //.. do something...like remove generic event handlers or destroy plugins 
 });
 
