@@ -42,11 +42,10 @@ export class XHRForm {
      * @param form
      * @param options
      */
-    constructor(form, options){
+    constructor(form, options = {}){
 
         //if options are undefined, set them
-        options = typeof options === "undefined" ? {} : options;
-        if( typeof options !== "object" || options === null ) throw `${options} is not an object`;
+        if( typeof options !== "object" || options === null ) throw `${options} must be an object`;
 
         //extend defaults with provided options
         options = {...XHRFormDefaults, ...options};
@@ -66,7 +65,7 @@ export class XHRForm {
      * @returns {XHRForm}
      */
     setValidateCallback(callback){
-        if( typeof callback !== "function" ) throw `${callback} is not a function`;
+        if( typeof callback !== "function" ) throw `${callback} must be a function`;
         this._validateCallback = callback;
         return this;
     }
@@ -125,7 +124,7 @@ export class XHRForm {
      * @returns {form}
      */
     setSubmitMethod(method){
-        if( typeof method !== "string" && method !== null ) throw `${method} is not a string or null`;
+        if( typeof method !== "string" && method !== null ) throw `${method} must be a string or null`;
         this._submitMethod = method;
         return this;
     }
@@ -153,7 +152,7 @@ export class XHRForm {
     setSubmitURL(url){
         if( typeof url !== "string"
             && typeof url !== "function"
-            && url !== null ) throw `${url} is not a string, function, or null`;
+            && url !== null ) throw `${url} must be a string, function, or null`;
 
         this._submitURL = url;
         return this;
@@ -227,7 +226,7 @@ export class XHRForm {
      * @returns {form}
      */
     onSuccess(callback){
-        if( typeof callback !== "function" ) throw `${callback} is not a function`;
+        if( typeof callback !== "function" ) throw `${callback} must be a function`;
         if( typeof this._onSuccess === "undefined" ) this._onSuccess = [];
         this._onSuccess.push(callback);
         return this;
@@ -262,7 +261,7 @@ export class XHRForm {
      * @returns {FormFromURL}
      */
     onError(callback){
-        if( typeof callback !== "function" ) throw `${callback} is not a function`;
+        if( typeof callback !== "function" ) throw `${callback} must be a function`;
         if( typeof this._onError === "undefined" ) this._onError = [];
         this._onError.push(callback);
         return this;

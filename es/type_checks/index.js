@@ -17,18 +17,12 @@ export const type_checks = {
      * @param throw_error - default: false
      * @returns {boolean}
      */
-    isDataObject: function(value, keys, require_all_keys, block_other_keys, throw_error){
-        //default for throw_error is false
-        throw_error = typeof throw_error !== "undefined" ? throw_error : false;
-
-        //default for require_all_keys is false
-        require_all_keys = typeof require_all_keys !== "undefined" ? require_all_keys : false;
-
+    isDataObject: function(value, keys, require_all_keys = false, block_other_keys = false, throw_error = false){
         //for error messages
         var stringified_val = JSON.stringify(value);
 
         //default error_msg
-        const error_msg = `${stringified_val} is not an object`;
+        const error_msg = `${stringified_val} must be an object`;
 
         //if not provided
         if( typeof value === "undefined" ){

@@ -141,15 +141,12 @@ export const events = {
      * @param event_options
      * @returns {*|*[]|*}
      */
-    trigger: function(el, event, data_to_pass, event_options){
+    trigger: function(el, event, data_to_pass = {}, event_options = {}){
         const el_array = dom.getElements(el);
 
         if( !el_array.length ){
             return el;
         }
-
-        event_options = typeof event_options === "undefined" ? {} : event_options;
-        data_to_pass = typeof data_to_pass === "undefined" ? null : data_to_pass;
 
         event_options.detail = data_to_pass;
 

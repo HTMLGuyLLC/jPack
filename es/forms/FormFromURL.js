@@ -25,14 +25,14 @@ export class FormFromURL extends XHRForm {
      * @param url - string
      * @param options - object{incomingElementSelector,insertIntoElement, onload}
      */
-    constructor(url, options){
+    constructor(url, options = {}){
         super(null, options);
 
-        if( typeof url !== "string" ) throw `${url} is not a string`;
+        if( typeof url !== "string" ) throw `${url} must be a string`;
 
         //if options are undefined, set them
         options = typeof options === "undefined" ? {} : options;
-        if( typeof options !== "object" || options === null ) throw `${options} is not an object`;
+        if( typeof options !== "object" || options === null ) throw `${options} must be an object`;
 
         //extend defaults with provided options
         options = {...FormFromURLDefaults, ...options};
@@ -63,7 +63,7 @@ export class FormFromURL extends XHRForm {
      * @returns {form}
      */
     setURL(url){
-        if( typeof url !== 'string' ) throw `${url} is not a string`;
+        if( typeof url !== 'string' ) throw `${url} must be a string`;
         this._url = url;
         return this;
     }
@@ -116,7 +116,7 @@ export class FormFromURL extends XHRForm {
      * @returns {form}
      */
     setIncomingElementSelector(selector){
-        if( selector !== null && typeof selector !== 'string' ) throw `${selector} is not a string or null value`;
+        if( selector !== null && typeof selector !== 'string' ) throw `${selector} must be a string or null value`;
         this._incomingElementSelector = selector;
         return this;
     }
@@ -254,7 +254,7 @@ export class FormFromURL extends XHRForm {
      * @returns {form}
      */
     onload(callback){
-        if( typeof callback !== 'function' ) throw `${callback} is not a function`;
+        if( typeof callback !== 'function' ) throw `${callback} must be a function`;
         if( typeof this._onload === "undefined" ) this._onload = [];
         this._onload.push(callback);
         return this;

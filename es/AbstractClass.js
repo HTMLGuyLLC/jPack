@@ -10,7 +10,7 @@ export class AbstractClass{
      *
      * @param data
      */
-    populate(data){
+    populate(data = {}){
         const self = this;
 
         if( typeof this._keys === "undefined" ) throw `Cannot populate object if _keys property is not set`;

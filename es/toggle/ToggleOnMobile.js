@@ -25,16 +25,10 @@ export class ToggleOnMobile{
      * @param toggle_class
      * @param hide_on_outside_click
      */
-    constructor(btn, toggle_el, toggle_class, hide_on_outside_click){
+    constructor(btn, toggle_el, toggle_class = 'visible', hide_on_outside_click = true){
         //set the elements
         this.btn = dom.getElement(btn, true, true);
         this.toggle_el = dom.getElement(toggle_el, true, true);
-
-        //default to true
-        this.hide_on_outside_click = typeof hide_on_outside_click !== "boolean" ? true : hide_on_outside_click;
-
-        //if not a string, default to "visible"
-        this.toggle_class = typeof toggle_class !== 'string' ? 'visible' : toggle_class;
     }
 
     /**

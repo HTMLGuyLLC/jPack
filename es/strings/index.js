@@ -11,7 +11,7 @@ export const strings = {
      * @param string
      * @returns {string}
      */
-    getter: function(string){
+    getter: function(string = ''){
         return 'get'+this.ucfirst(string);
     },
 
@@ -23,7 +23,7 @@ export const strings = {
      * @param string
      * @returns {string}
      */
-    setter: function(string){
+    setter: function(string = ''){
         return 'set'+this.ucfirst(string);
     },
 
@@ -33,7 +33,7 @@ export const strings = {
      * @param string
      * @returns {*|string}
      */
-    ucfirst: function(string){
+    ucfirst: function(string = ''){
         return string && string[0].toUpperCase()+string.slice(1);
     }
 };

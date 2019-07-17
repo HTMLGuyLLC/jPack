@@ -84,7 +84,7 @@ export const request = {
      * @param url
      * @returns {string}
      */
-    appendSlash: function(url){
+    appendSlash: function(url = ''){
         return url[url.length-1] !== '/' ? url+'/' : url;
     },
 };

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {dom} from "../dom";
 import {request} from "../request";
+import {clone} from "../clone";
 
 /**
  * Allows you to simulate a page change by using an XHR request to grab content and replace it on the current page
@@ -21,7 +22,7 @@ export const navigation = {
      * @returns {*}
      */
     getHistory: function(){
-        return this._history;
+        return clone.getValueOrClone(this._history);
     },
     /**
      * Gets the last page's url and route
@@ -31,8 +32,9 @@ export const navigation = {
     getLastHistoryRecord(){
         return this._history.pop();
     },
-    _addHistoryItem(url, route){
-        if( !this._storeHistory ) return false;
+    _addHistoryItem(url, route = this.getRouteFromMeta()){
+        if( !this.storeHistory ) return false;
+        if( typeof url !== 'string' ) throw `${url} must be a string`;
         this._history.push({'url':url, 'route':route});
         return this;
     },
@@ -46,18 +48,18 @@ export const navigation = {
      * @param data
      * @returns {navigation}
      */
-    setData: function (data) {
-        if( typeof data !== 'object' || data === null ) throw `${data} is not an object`;
-        this._data = data;
+    setData: function (data = {}) {
+        if( typeof data !== 'object' || data === null ) throw `${data} must be an object`;
+        this._data = clone.getValueOrClone(data);
         return this;
     },
     /**
      * Gets all data
      *
-     * @returns {null}
+     * @returns object
      */
     getData: function () {
-        return this._data;
+        return clone.getValueOrClone(this._data);
     },
     /**
      * Sets a single value in your data object
@@ -66,18 +68,21 @@ export const navigation = {
      * @param val
      */
     setDataItem: function(key, val){
-        if( typeof key !== 'string' ) throw `${key} is not a string`;
-        this._data[key] = val;
+        if( typeof key !== 'string' ) throw `${key} must be a string`;
+        this._data[key] = clone.getValueOrClone(val);
         return this;
     },
     /**
      * Gets a single value from your data object or if it doesn't exist it'll return null
      *
      * @param key
-     * @returns {null}
+     * @returns mixed
      */
     getDataItem: function(key){
-        return typeof this._data[key] !== 'undefined' ? this._data[key] : null;
+        if( typeof key !== 'string' ) throw `${key} must be a string`;
+        //if not defined or null, return null
+        if( typeof this._data[key] === 'undefined' || this._data[key] === null ) return null;
+        return clone.getValueOrClone(this._data[key]);
     },
     /**
      * Remove all data
@@ -95,7 +100,7 @@ export const navigation = {
      * @returns {navigation}
      */
     clearDataItem: function(key){
-        if( typeof key !== 'string' ) throw `${key} is not a string`;
+        if( typeof key !== 'string' ) throw `${key} must be a string`;
         if( typeof this._data[key] !== 'undefined' ){
             delete this._data[key];
         }
@@ -109,7 +114,7 @@ export const navigation = {
      * @param selector_string
      */
     setIncomingElement: function (selector_string) {
-        if (typeof selector_string !== 'string') throw `${selector_string} is not a string`;
+        if (typeof selector_string !== 'string') throw `${selector_string} must be a string`;
         this._incomingElementSelector = selector_string;
     },
     _incomingElementSelector: 'body',
@@ -126,7 +131,7 @@ export const navigation = {
      * @param selector_string
      */
     setReplaceElement: function (selector_string) {
-        if (typeof selector_string !== 'string') throw `${selector_string} is not a string`;
+        if (typeof selector_string !== 'string') throw `${selector_string} must be a string`;
         this._replaceElementSelector = selector_string;
     },
     _replaceElementSelector: 'body',
@@ -153,19 +158,15 @@ export const navigation = {
      * @param replace_el
      * @param push_state
      */
-    load: function (url, callback, incoming_el, replace_el, push_state) {
+    load: function (url, callback, incoming_el = this.getIncomingElement(), replace_el = this.getReplaceElement(), push_state = true) {
         const self = this;
 
-        if (typeof url !== 'string') throw `Provided URL (${url}) is not a string`;
+        if (typeof url !== 'string') throw `Provided URL (${url}) must be a string`;
 
-        incoming_el = typeof incoming_el == 'undefined' || !incoming_el ? self.getIncomingElement() : incoming_el;
-        replace_el = typeof replace_el === 'undefined' || !replace_el ? self.getReplaceElement() : replace_el;
-        push_state = typeof push_state === 'undefined' ? true : push_state;
+        if (typeof incoming_el !== 'string') throw `incoming_el (${incoming_el}) must be a string`;
+        if (typeof replace_el !== 'string') throw `replace_el (${replace_el}) must be a string`;
 
-        if (typeof incoming_el !== 'string') throw `Provided incoming_el (${incoming_el}) is not a string`;
-        if (typeof replace_el !== 'string') throw `Provided replace_el (${replace_el}) is not a string`;
-
-        //cache in case it changes during this process
+        //cache in case it changes during this process because axios is async
         const data = self.getData();
         const current_route = this.getRouteFromMeta();
 
@@ -173,7 +174,6 @@ export const navigation = {
 
         axios.get(url).then(function (response) {
             self.hideLoader();
-
             self._replacePageContent(response.data, url, incoming_el, replace_el, push_state, current_route, data, callback);
         }).catch(function (error) {
             self.hideLoader();
@@ -201,8 +201,8 @@ export const navigation = {
      * @param delay_in_ms
      * @returns {navigation}
      */
-    setLoaderDelay: function (delay_in_ms) {
-        if (typeof delay_in_ms !== "number") throw `${delay_in_ms} is not an integer`;
+    setLoaderDelay: function (delay_in_ms = 300) {
+        if (typeof delay_in_ms !== "number") throw `${delay_in_ms} must be an integer`;
         this._loaderDelay = delay_in_ms;
         return this;
     },
@@ -283,8 +283,7 @@ export const navigation = {
      * @param html
      * @returns {any | Element}
      */
-    getRouteFromMeta: function (html) {
-        html = typeof html === 'undefined' ? document.head : html;
+    getRouteFromMeta: function (html = document.head) {
         var route = html.querySelector('[name="current_route"]');
         route = route ? route.content : null;
         return route;
@@ -416,17 +415,14 @@ export const navigation = {
      * @param data
      * @param one_time_callback
      */
-    _replacePageContent(html, url, incoming_el, replace_el, push_state, current_route, data, one_time_callback) {
+    _replacePageContent(html, url, incoming_el = this.getIncomingElement(), replace_el = this.getReplaceElement(), push_state = true, current_route = null, data = {}, one_time_callback = null) {
         const self = this;
 
-        push_state = typeof push_state === 'undefined' ? true : push_state;
-
-        incoming_el = typeof incoming_el === 'undefined' || !incoming_el ? self.getIncomingElement() : incoming_el;
         replace_el = typeof replace_el === 'undefined' || !replace_el ? self.getReplaceElement() : replace_el;
 
-        if (typeof url !== 'string') throw `Provided url (${url}) is not a string`;
-        if (typeof incoming_el !== 'string') throw `Provided incoming_el (${incoming_el}) is not a string`;
-        if (typeof replace_el !== 'string') throw `Provided replace_el (${replace_el}) is not a string`;
+        if (typeof url !== 'string') throw `Provided url (${url}) must be a string`;
+        if (typeof incoming_el !== 'string') throw `incoming_el (${incoming_el}) must be a string`;
+        if (typeof replace_el !== 'string') throw `replace_el (${replace_el}) must be a string`;
 
         self._triggerUnload(dom.getElement(replace_el), replace_el, current_route, data);
 
@@ -490,14 +486,11 @@ export const navigation = {
      * @returns {{metas: HTMLCollectionOf<HTMLElementTagNameMap[string]>, route: (*|any|Element), links: NodeListOf<Element>, html: HtmlOptions | string, title: any | HTMLTitleElement, body_classes: DOMTokenList}}
      * @private
      */
-    _parseHTML(html, parent_el) {
+    _parseHTML(html, parent_el = null) {
         var self = this;
 
-        //default to null if not provided
-        parent_el = typeof parent_el === 'undefined' ? null : parent_el;
-
         //must be a string or null
-        if (typeof parent_el !== 'string' && parent_el !== null) throw `Provided parent_el (${parent_el}) is not a string or null`;
+        if (typeof parent_el !== 'string' && parent_el !== null) throw `Provided parent_el (${parent_el}) must be a string or null`;
 
         route = null;
         if( typeof html === "object" && html !== null ){
@@ -595,7 +588,6 @@ export const navigation = {
      * @param error
      * @param url
      * @param data
-     * @param route
      * @param axios_error
      * @returns {navigation}
      */

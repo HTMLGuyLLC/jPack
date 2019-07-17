@@ -10,7 +10,7 @@ export const dom = {
      * @param error_on_multiple - throw an error if more than 1 exists
      * @returns Element|HTMLDocument|null
      */
-    getElement: function(el, error_on_none, error_on_multiple){
+    getElement: function(el, error_on_none = false, error_on_multiple = false){
         const foundEl = this.getElements(el, error_on_none);
 
         if( foundEl.length > 1 && error_on_multiple ) throw `More than 1 result found for "${el}"`;
@@ -27,10 +27,7 @@ export const dom = {
      * @param error_on_none - throw an error if no elements were found, default: false
      * @returns []
      */
-    getElements: function(el, error_on_none){
-        //default to false
-        error_on_none = typeof error_on_none === "undefined" ? false : error_on_none;
-
+    getElements: function(el, error_on_none = false){
         //default to empty
         let el_array = [];
 
@@ -80,7 +77,7 @@ export const dom = {
      * @param error_if_not_found
      * @returns {dom}
      */
-    remove: function(el, error_if_not_found){
+    remove: function(el, error_if_not_found = false){
         let el_array = this.getElements(el);
         if( !el_array.length ){
             if( error_if_not_found ) throw `Could not find "${el}"`;
@@ -102,8 +99,8 @@ export const dom = {
      * @param error_if_not_found
      * @returns {ChildNode}|null
      */
-    replaceElWithHTML: function(el, html, error_if_not_found){
-        if( typeof html !== 'string' ) throw `${html} is not a string`;
+    replaceElWithHTML: function(el, html, error_if_not_found = false){
+        if( typeof html !== 'string' ) throw `${html} must be a string`;
 
         const foundEl = this.getElement(el);
 
@@ -133,7 +130,7 @@ export const dom = {
      * @param error_on_multiple
      * @returns {boolean}
      */
-    isVisible(el, error_if_not_found, error_on_multiple) {
+    isVisible(el, error_if_not_found = false, error_on_multiple = false) {
         el = this.getElement(el, error_if_not_found, error_on_multiple);
 
         if( el === null ){
