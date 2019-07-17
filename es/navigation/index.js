@@ -32,7 +32,7 @@ export const navigation = {
         return this._history.pop();
     },
     _addHistoryItem(url, route){
-        if( !this_.storeHistory ) return false;
+        if( !this._storeHistory ) return false;
         this._history.push({'url':url, 'route':route});
         return this;
     },
@@ -77,7 +77,7 @@ export const navigation = {
      * @returns {null}
      */
     getDataItem: function(key){
-        return typeof this._data[key] !== 'undefined' ? this_.data[key] : null;
+        return typeof this._data[key] !== 'undefined' ? this._data[key] : null;
     },
     /**
      * Remove all data
