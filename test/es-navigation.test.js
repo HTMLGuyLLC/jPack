@@ -77,14 +77,14 @@ describe('navigation', function() {
         await page.evaluate(function () {
             var nav = jpack.navigation;
 
-            var parsed = nav._parseHTML("<head><title>Hey</title><meta name='current_route' content='hi'><link rel='canonical' content='/this-url'></head><body class='my-body'><div><span>text</span></div></body>", "span");
+            var parsed = nav._parseHTML("<head><title>Hey</title><meta name='current_route' content='hi'><link rel='canonical' content='/this-url'></head><body class='my-body your-body'><div><span>text</span></div></body>", "span");
 
             if( parsed.title !== 'Hey' ) throw `Parsed title is incorrect ${parsed.title}`;
             if( parsed.route !== 'hi' ) throw `Parsed route is incorrect ${parsed.route}`;
             if( parsed.metas.length !== 1 ) throw `Parsed metas is incorrect ${parsed.metas} (1)`;
             if( parsed.metas[0].content !== 'hi' ) throw `Parsed metas is incorrect ${parsed.metas} (2)`;
-            if( parsed.links ) throw `Found links when there were none`;
-            if( parsed.body_classes !== 'my-body' ) throw `Parsed body_classes is incorrect ${parsed.body_classes}`;
+            if( parsed.links.length !== 1 ) throw `Parsed links is incorrect ${parsed.links}`;
+            if( parsed.body_classes !== 'my-body your-body' ) throw `Parsed body_classes is incorrect ${parsed.body_classes}`;
             if( parsed.html !== '<span>text</span>' ) throw `Parsed HTML is incorrect ${parse.html}`;
 
         });

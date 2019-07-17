@@ -605,7 +605,7 @@ export const navigation = {
         //get the canonical link
         var links = doc.querySelectorAll('link[rel="canonical"]');
         //get body classes
-        var body_classes = doc.body.classList;
+        var body_classes = doc.body.classList.toString();
 
         //default to the incoming HTML
         var new_html = html;
