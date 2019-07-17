@@ -32,9 +32,10 @@ export const navigation = {
     getLastHistoryRecord(){
         return this._history.pop();
     },
-    _addHistoryItem(url, route = this.getRouteFromMeta()){
+    _addHistoryItem(url, route){
         if( !this.storeHistory ) return false;
         if( typeof url !== 'string' ) throw `${url} must be a string`;
+        route = typeof route === "undefined" ? this.getRouteFromMeta() : route;
         this._history.push({'url':url, 'route':route});
         return this;
     },
@@ -158,17 +159,21 @@ export const navigation = {
      * @param replace_el
      * @param push_state
      */
-    load: function (url, callback, incoming_el = this.getIncomingElement(), replace_el = this.getReplaceElement(), push_state = true) {
+    load: function (url, callback, incoming_el, replace_el, push_state = true) {
         const self = this;
 
-        if (typeof url !== 'string') throw `Provided URL (${url}) must be a string`;
+        //defaults
+        incoming_el = typeof incoming_el === "undefined" ? this.getIncomingElement() : incoming_el;
+        replace_el = typeof replace_el === "undefined" ? this.getReplaceElement() : replace_el;
 
+        //validate incoming data
+        if (typeof url !== 'string') throw `Provided URL (${url}) must be a string`;
         if (typeof incoming_el !== 'string') throw `incoming_el (${incoming_el}) must be a string`;
         if (typeof replace_el !== 'string') throw `replace_el (${replace_el}) must be a string`;
 
         //cache in case it changes during this process because axios is async
         const data = self.getData();
-        const current_route = this.getRouteFromMeta();
+        const current_route = self.getRouteFromMeta();
 
         self.showLoader();
 
@@ -415,11 +420,14 @@ export const navigation = {
      * @param data
      * @param one_time_callback
      */
-    _replacePageContent(html, url, incoming_el = this.getIncomingElement(), replace_el = this.getReplaceElement(), push_state = true, current_route = null, data = {}, one_time_callback = null) {
+    _replacePageContent(html, url, incoming_el, replace_el, push_state = true, current_route = null, data = {}, one_time_callback = null) {
         const self = this;
 
-        replace_el = typeof replace_el === 'undefined' || !replace_el ? self.getReplaceElement() : replace_el;
+        //defaults
+        incoming_el = typeof incoming_el === "undefined" ? this.getIncomingElement() : incoming_el;
+        replace_el = typeof replace_el === "undefined" ? this.getReplaceElement() : replace_el;
 
+        //validate incoming data
         if (typeof url !== 'string') throw `Provided url (${url}) must be a string`;
         if (typeof incoming_el !== 'string') throw `incoming_el (${incoming_el}) must be a string`;
         if (typeof replace_el !== 'string') throw `replace_el (${replace_el}) must be a string`;
