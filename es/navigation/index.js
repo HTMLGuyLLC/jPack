@@ -26,17 +26,26 @@ export const navigation = {
         return this;
     },
     /**
-     * Sets a single item in your data object
+     * Gets all data
+     *
+     * @returns {null}
+     */
+    getData: function () {
+        return this._data;
+    },
+    /**
+     * Sets a single value in your data object
      *
      * @param key
      * @param val
      */
     setDataItem: function(key, val){
+        if( typeof key !== 'string' ) throw `${key} is not a string`;
         this._data[key] = val;
         return this;
     },
     /**
-     * Gets a single item from your data object or if it doesn't exist it'll return null
+     * Gets a single value from your data object or if it doesn't exist it'll return null
      *
      * @param key
      * @returns {null}
@@ -54,12 +63,17 @@ export const navigation = {
         return this;
     },
     /**
-     * Gets all data
+     * Remove a single value
      *
-     * @returns {null}
+     * @param key
+     * @returns {navigation}
      */
-    getData: function () {
-        return this._data;
+    clearDataItem: function(key){
+        if( typeof key !== 'string' ) throw `${key} is not a string`;
+        if( typeof this._data[key] !== 'undefined' ){
+            delete this._data[key];
+        }
+        return this;
     },
     _data: {},
 
