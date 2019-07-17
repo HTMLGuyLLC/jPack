@@ -47,7 +47,7 @@ export const navigation = {
      * @returns {navigation}
      */
     setData: function (data) {
-        if( typeof data !== 'object' && data !== null ) throw `${data} is not an object`;
+        if( typeof data !== 'object' || data === null ) throw `${data} is not an object`;
         this._data = data;
         return this;
     },
