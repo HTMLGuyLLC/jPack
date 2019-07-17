@@ -132,12 +132,14 @@ resetConfig| |self|resets config options back to their defaults
 
 Event Methods | Params (name:type) | Return | Callback Params (name:type) | Notes
 --- | --- | --- | --- | ---
+onBeforeRequest|callback:function|self|el:Element, data:object, config:{ selector:string, replacedSelector:string, route:string/null}|adds a callback to run prior to the request, if the callback returns false, the request will not be made
+removeOnBeforeRequest|callback:function|self||removes an onbeforerequest callback (must provide the original function)
 onload|callback:function|self|el:Element, data:object, config:{ selector:string, replacedSelector:string, route:string/null} | add an onload callback
-removeOnload|callback:function|self||removes an onload callback
+removeOnload|callback:function|self||removes an onload callback (must provide the original function)
 onUnload|callback:function|self|el:Element, data:object, {selector:string, route:string/null}|add an unload callback
-removeOnunload|callback:function|self||removes an unload callback
+removeOnunload|callback:function|self||removes an unload callback (must provide the original function)
 onFail|callback:function|self|error:string, url:string, data:object, axios_error:object/null|add a callback when the load() request fails - receives 2 params (error:string, axios_error:object)
-removeOnFail|callback:function|self||removes a failure callback
+removeOnFail|callback:function|self||removes a failure callback (must provide the original function)
 
 Setters/Getters | Params (name:type) | Return | Notes
 --- | --- | --- | ---
@@ -175,6 +177,21 @@ navigation.setConfig({
 
 //attaches event handlers to automatically use XHR to reload pages when the user pushes the back and forward buttons in their browser (will not work if pushState is false)
 navigation.initHistoryHandlers();
+
+/**
+* Add as many onBeforeRequest callbacks as you'd like to run every time a page is loaded
+* 
+* el is the element about to be replaced
+* data the data object you set when you called .load() or using setData/setDataItem (see above method details) - the two objects are merged and passed
+* config is an object {selector, replacedSelector, route}
+*    selector is the "replaceSelector" used to grab the current element (to be replaced)
+*    incomingSelector is the selector that will be used to grab the new element
+*    route is the current page's route
+*/
+navigation.onBeforeRequest(function(el, data, config){ 
+   //...do something...like...show a custom loader? validate data?
+   return true; //if you return false from ANY of your onBeforeRequest callbacks, the request will be prevented!
+});
 
 /**
 * Add as many onload callbacks as you'd like to run every time a page is loaded

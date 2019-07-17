@@ -232,19 +232,28 @@ export const navigation = {
         //validate options has these keys (or none at all)
         type_checks.isDataObject(options, ['incomingElement', 'replaceElement', 'pushState'], false, true, true);
 
+        //override global data with passed data
+        data = {...self.getData(), ...data};
+
         //set values
-        const incomingElement = typeof options.incomingElement !== "undefined" ? options.incomingElement : this.getIncomingElement();
-        const replaceElement = typeof options.replaceElement !== "undefined" ? options.replaceElement : this.getReplaceElement();
+        const incomingElementSelector = typeof options.incomingElement !== "undefined" ? options.incomingElement : this.getIncomingElement();
+        const replaceElementSelector = typeof options.replaceElement !== "undefined" ? options.replaceElement : this.getReplaceElement();
+        const replaceElement = dom.getElement(replaceElementSelector, true);
         const pushState = typeof options.pushState !== "undefined" ? options.pushState : this.pushState;
 
         //cache route (axios is async)
         const current_route = self.getRouteFromMeta();
 
+        //run onBeforeRequest callbacks and if any return false, don't send the request
+        if( !self._triggerOnBeforeRequest(replaceElement, replaceElementSelector, incomingElementSelector, current_route, data) ){
+            return false;
+        }
+
         self.showLoader();
 
         axios.get(url).then(function (response) {
             self.hideLoader();
-            self._replacePageContent(response.data, url, incomingElement, replaceElement, pushState, current_route, data, onload);
+            self._replacePageContent(response.data, url, incomingElementSelector, replaceElement, pushState, current_route, data, onload);
         }).catch(function (error) {
             self.hideLoader();
 
@@ -400,6 +409,7 @@ export const navigation = {
      */
     _onloadCallbacks: [],
     onload: function (callback) {
+        if( typeof callback !== 'function' ) throw `${callback} must be a function`;
         this._onloadCallbacks.push(callback);
         return this;
     },
@@ -407,6 +417,7 @@ export const navigation = {
         this._onloadCallbacks.filter(function(ele){
             return ele !== callback;
         });
+        return this;
     },
 
     /**
@@ -417,6 +428,7 @@ export const navigation = {
      */
     _onUnloadCallbacks: [],
     onUnload: function (callback) {
+        if( typeof callback !== 'function' ) throw `${callback} must be a function`;
         this._onUnloadCallbacks.push(callback);
         return this;
     },
@@ -424,6 +436,7 @@ export const navigation = {
         this._onUnloadCallbacks.filter(function(ele){
             return ele !== callback;
         });
+        return this;
     },
 
     /**
@@ -434,6 +447,7 @@ export const navigation = {
      */
     _onFailCallbacks: [],
     onFail: function (callback) {
+        if( typeof callback !== 'function' ) throw `${callback} must be a function`;
         this._onFailCallbacks.push(callback);
         return this;
     },
@@ -441,6 +455,111 @@ export const navigation = {
         this._onFailCallbacks.filter(function(ele){
             return ele !== callback;
         });
+        return this;
+    },
+
+    /**
+     *
+     * Add as many callbacks as you'd like to run right before the request is made
+     *
+     * If any of them return false, the request will be prevented
+     *
+     * @param callback
+     * @returns self
+     */
+    onBeforeRequest: function(callback){
+        if( typeof callback !== 'function' ) throw `${callback} must be a function`;
+        this._onBeforeRequestCallbacks.push(callback);
+        return this;
+    },
+    removeOnBeforeRequest: function(callback){
+        this._onBeforeRequestCallbacks.filter(function(ele){
+            return ele !== callback;
+        });
+        return this;
+    },
+    _onBeforeRequestCallbacks: [],
+
+    /**
+     * We're on a new page, tell the world.
+     *
+     * Also includes the route of the new page (if it exists in a meta tag) so that you can kick off JS specific to that page
+     *
+     * @param el
+     * @param el_selector
+     * @param replaced_selector
+     * @param route
+     * @param data
+     */
+    _triggerOnload: function (el, el_selector, replaced_selector, route, data) {
+        this._onloadCallbacks.forEach(function(callback){
+            callback(el, data, {
+                selector:el,
+                replacedSelector:replaced_selector,
+                route: route
+            });
+        });
+        return this;
+    },
+
+    /**
+     * We're leaving the last page, tell the world.
+     *
+     * @param el
+     * @param el_selector
+     * @param route
+     * @param data
+     */
+    _triggerUnload: function (el, el_selector, route, data) {
+        this._onUnloadCallbacks.forEach(function(callback){
+            callback(el, data, {
+                selector:el_selector,
+                route: route
+            });
+        });
+        return this;
+    },
+
+    /**
+     * Navigation failed, tell the world.
+     *
+     * @param error
+     * @param url
+     * @param data
+     * @param axios_error
+     * @returns {navigation}
+     */
+    _triggerFail: function (error, url, data, axios_error) {
+        this._onFailCallbacks.forEach(function(callback){
+            callback(error, url, data, axios_error);
+        });
+        return this;
+    },
+
+    /**
+     * We're about to load the next page
+     *
+     * @param el
+     * @param el_selector
+     * @param incoming_selector
+     * @param route
+     * @param data
+     */
+    _triggerOnBeforeRequest: function (el, el_selector, incoming_selector, route, data) {
+        let prevent_request = false;
+        this._onUnloadCallbacks.forEach(function(callback){
+            //run the callback and get the result
+            const result = callback(el, data, {
+                selector:el_selector,
+                incomingSelector:incoming_selector,
+                route: route
+            });
+            //if the result was provided as false, prevent the request
+            if( typeof result === "boolean" && !result ){
+                prevent_request = true;
+            }
+        });
+        return !prevent_request;
     },
 
     /**
@@ -626,62 +745,6 @@ export const navigation = {
             body_classes: body_classes,
             html: new_html
         };
-    },
-
-    /**
-     * We're on a new page, tell the world.
-     *
-     * Also includes the route of the new page (if it exists in a meta tag) so that you can kick off JS specific to that page
-     *
-     * @param el
-     * @param el_selector
-     * @param replaced_selector
-     * @param route
-     * @param data
-     */
-    _triggerOnload: function (el, el_selector, replaced_selector, route, data) {
-        this._onloadCallbacks.forEach(function(callback){
-            callback(el, data, {
-                selector:el,
-                replacedSelector:replaced_selector,
-                route: route
-            });
-        });
-        return this;
-    },
-
-    /**
-     * We're leaving the last page, tell the world.
-     *
-     * @param el
-     * @param el_selector
-     * @param route
-     * @param data
-     */
-    _triggerUnload: function (el, el_selector, route, data) {
-        this._onUnloadCallbacks.forEach(function(callback){
-            callback(el, data, {
-                selector:el_selector,
-                route: route
-            });
-        });
-        return this;
-    },
-
-    /**
-     * Navigation failed, tell the world.
-     *
-     * @param error
-     * @param url
-     * @param data
-     * @param axios_error
-     * @returns {navigation}
-     */
-    _triggerFail: function (error, url, data, axios_error) {
-        this._onFailCallbacks.forEach(function(callback){
-            callback(error, url, data, axios_error);
-        });
-        return this;
     },
 
     /**
