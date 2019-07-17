@@ -29,6 +29,9 @@ export class ToggleOnMobile{
         //set the elements
         this.btn = dom.getElement(btn, true, true);
         this.toggle_el = dom.getElement(toggle_el, true, true);
+        //set the config
+        this.toggle_class = toggle_class;
+        this.hide_on_outside_click = hide_on_outside_click;
     }
 
     /**
