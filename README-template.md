@@ -120,7 +120,7 @@ setConfig|config:object|self|sets multiple configuration options at once (see ex
 initHistoryHandlers| |self|sets event listeners to handle back/forward navigation in the user's browser (only use if pushState is true)
 setIncomingElement|el:string|self|a selector string for the element being retrieved from another page which contains the HTML you want put on the current page
 setReplaceElement|el:string|self|a selector string for the element on the current page you want the new HTML to replace
-load|url:string, data:object, callback:function/null, incoming_el:string/null, replace_el:string/null, push_state:bool|void|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more
+load|url:string, data:object, onload:function/null, options:object{incomingElement:string, replaceElement:string, pushState:bool}|self|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more - all parameters passed to this method only pertain to this specific load. They do not persist on the navigation object.
 showLoader| |self|shows the loader after the delay
 hideLoader| |self|clears the loader timeout and hides it
 reload|callback:function|self|reloads the current page using .load()

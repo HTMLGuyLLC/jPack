@@ -2,6 +2,7 @@ import axios from 'axios';
 import {dom} from "../dom";
 import {request} from "../request";
 import {clone} from "../clone";
+import {type_checks} from "../type_checks";
 
 const navigationDefaults = {
     trackHistory:false,
@@ -223,32 +224,18 @@ export const navigation = {
      * @param url
      * @param data
      * @param onload
-     * @param options {incoming_el, replace_el, push_state}
+     * @param options {incomingElement, replaceElement, pushState}
      */
     load: function (url, data = {}, onload, options = {}) {
         const self = this;
 
-        //set default options
-        const defaults = {
-            incoming_el: this.getIncomingElement(),
-            replace_el: this.getReplaceElement(),
-            push_state: this.pushState,
-        };
+        //validate options has these keys (or none at all)
+        type_checks.isDataObject(options, ['incomingElement', 'replaceElement', 'pushState'], false, true, true);
 
-        //override defaults with incoming options
-        options = {...defaults, ...options};
-
-        //extract values
-        ({incoming_el, replace_el, push_state} = options);
-
-        //validate incoming data
-        if (typeof url !== 'string') throw `Provided URL (${url}) must be a string`;
-        if (typeof incoming_el !== 'string') throw `incoming_el (${incoming_el}) must be a string`;
-        if (typeof replace_el !== 'string') throw `replace_el (${replace_el}) must be a string`;
-        if( typeof push_state !== 'boolean' ) throw `push_state (${push_state}) must be a bool`;
-
-        //merge data set on navigation with data for this request
-        data = {...self._data, ...data};
+        //set values
+        const incomingElement = typeof options.incomingElement !== "undefined" ? options.incomingElement : this.getIncomingElement;
+        const replaceElement = typeof options.replaceElement !== "undefined" ? options.replaceElement : this.getReplaceElement;
+        const pushState = typeof options.pushState !== "undefined" ? options.pushState : this.pushState;
 
         //cache route (axios is async)
         const current_route = self.getRouteFromMeta();
@@ -257,7 +244,7 @@ export const navigation = {
 
         axios.get(url).then(function (response) {
             self.hideLoader();
-            self._replacePageContent(response.data, url, incoming_el, replace_el, push_state, current_route, data, onload);
+            self._replacePageContent(response.data, url, incomingElement, replaceElement, pushState, current_route, data, onload);
         }).catch(function (error) {
             self.hideLoader();
 
@@ -269,6 +256,8 @@ export const navigation = {
             self._triggerFail(error, url, data, axios_error);
             throw error;
         });
+
+        return this;
     },
 
     /**

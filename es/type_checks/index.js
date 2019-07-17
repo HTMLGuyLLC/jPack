@@ -46,6 +46,9 @@ export const type_checks = {
 
             const value_keys = Object.keys(value);
 
+            //if the object doesn't have any keys, then it's an empty object and we don't need to verify any further
+            if( !value_keys.length && !require_all_keys ) return true;
+
             keys.forEach(function(key) {
                 //if the key was found, we found atleast one
                 if( value_keys.includes(key) ){
