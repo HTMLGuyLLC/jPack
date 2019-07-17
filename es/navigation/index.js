@@ -224,7 +224,7 @@ export const navigation = {
      * @param url
      * @param data
      * @param onload
-     * @param options {incomingElement, replaceElement, pushState}
+     * @param options:{incomingElement, replaceElement, pushState}
      */
     load: function (url, data = {}, onload, options = {}) {
         const self = this;
@@ -233,8 +233,8 @@ export const navigation = {
         type_checks.isDataObject(options, ['incomingElement', 'replaceElement', 'pushState'], false, true, true);
 
         //set values
-        const incomingElement = typeof options.incomingElement !== "undefined" ? options.incomingElement : this.getIncomingElement;
-        const replaceElement = typeof options.replaceElement !== "undefined" ? options.replaceElement : this.getReplaceElement;
+        const incomingElement = typeof options.incomingElement !== "undefined" ? options.incomingElement : this.getIncomingElement();
+        const replaceElement = typeof options.replaceElement !== "undefined" ? options.replaceElement : this.getReplaceElement();
         const pushState = typeof options.pushState !== "undefined" ? options.pushState : this.pushState;
 
         //cache route (axios is async)
