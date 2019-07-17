@@ -16,19 +16,19 @@ The goal of this library is to allow me (and you, now that it's open source) to 
 
 <h1 id="whatsincluded">What's Included</h1>
 
-Component | Demo | Data Type | Singleton? | What it does
---- | --- | --- | --- | ---
-[navigation](#navigation) | | object | yes | Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta title swaps, and offers several callbacks
-[XHRForm](#xhrform) | | class | no | Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure
-[FormFromURL](#formfromurl) (extends XHRForm) | | class | no | Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form
-[request](#request) | [demo](https://jsfiddle.net/HTMLGuyLLC/73b2kotL/) | object | yes | Provides a wrapper for window.location and easy querystring interaction
-[Site](#site) | [demo](https://jsfiddle.net/HTMLGuyLLC/L6brcvo3/) | class | no | A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed
-[User](#user) | [demo](https://jsfiddle.net/HTMLGuyLLC/Lzp5w3rg) | class | no | A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks
-[strings](#strings) | [demo](https://jsfiddle.net/HTMLGuyLLC/ebof3hm4/) | object | yes | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
-[type_checks](#typechecks) | [demo](https://jsfiddle.net/HTMLGuyLLC/5p9q1ofj/) | object | yes | Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define
-[dom](#dom) | [demo](https://jsfiddle.net/HTMLGuyLLC/et42sLbm/) | object | yes | Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)
-[events](#events) | [demo](https://jsfiddle.net/HTMLGuyLLC/wv2hkzp5/) | object | yes | Includes methods for attaching event handlers including shorthand methods which create handlers that prevent the browser's default action (onclick, onsubmit)
-[ToggleOnMobile](#toggleonmobile) | [demo](https://jsfiddle.net/HTMLGuyLLC/68og394L/) | class | no | Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.  
+Component | Demo | Data Type | What it does
+--- | --- | --- | ---
+[navigation](#navigation) | | object | Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta title swaps, and offers several callbacks
+[XHRForm](#xhrform) | | class | Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure
+[FormFromURL](#formfromurl) (extends XHRForm) | | class | Grabs a form from a URL and places it on the current page (examples/FormModalFromURL shows how to put the form in a modal) and then uses an XHR request to submit the form
+[request](#request) | [demo](https://jsfiddle.net/HTMLGuyLLC/73b2kotL/) | object | Provides a wrapper for window.location and easy querystring interaction
+[Site](#site) | [demo](https://jsfiddle.net/HTMLGuyLLC/L6brcvo3/) | class | A generic website class with properties for id, name, and config - useful for multi-tenant applications where you need to know which site is being viewed
+[User](#user) | [demo](https://jsfiddle.net/HTMLGuyLLC/Lzp5w3rg) | class | A generic user class with properties for id, name, email, phone, etc - also allows for front-end permission checks
+[strings](#strings) | [demo](https://jsfiddle.net/HTMLGuyLLC/ebof3hm4/) | object | Contains methods for semi-common string manipulation like creating a getter from a string ('hi' = 'getHi')
+[type_checks](#typechecks) | [demo](https://jsfiddle.net/HTMLGuyLLC/5p9q1ofj/) | object | Validate the value of a variable with higher specificity than built-in functions. For instance, you can validate an object contains specific keys and throw errors if not, or if it contains keys that you didn't define
+[dom](#dom) | [demo](https://jsfiddle.net/HTMLGuyLLC/et42sLbm/) | object  | Has methods for converting just about anything into a native DOM Element or array of them (you can provide a string selector, jQuery object, native DOM object, etc). Also has some shortcuts for common DOM checks/manipulation (like removing an element, verifying an element exists in the DOM, or replacing an element with HTML)
+[events](#events) | [demo](https://jsfiddle.net/HTMLGuyLLC/wv2hkzp5/) | object | Includes methods for attaching event handlers including shorthand methods which create handlers that prevent the browser's default action (onclick, onsubmit)
+[ToggleOnMobile](#toggleonmobile) | [demo](https://jsfiddle.net/HTMLGuyLLC/68og394L/) | class | Toggle an element's visibility when you click a button. By default, the element is visible, but if the button is visible, the element will be hidden until the button is clicked. If the element is visible and the user clicks outside of it, the element is hidden. If the window is resized, the element will be shown or hidden based on visibility of the button.  
 
 # Installation
 
@@ -108,72 +108,87 @@ formdata-polyfill | XHRForm (and anything that extends it) | https://www.npmjs.c
 [back to top](#whatsincluded) <br><br>
 <i>Grabs HTML from a URL and replaces content on the current page. Handles browser history, meta and page title swaps, and offers several callbacks</i><br><br>
 
-Method/Property | Params (name:type) | Return | Notes
+Properties | Default | Notes
+--- | --- | ---
+pushState|true|enables pushing the new URL to the browser's history each time .load() is called
+loaderEnabled|true|enables a loader if the the .load() request takes too long
+trackHistory|false|stores the URL and route in an array each time .load() is called to track history
+
+Primary Methods | Params (name:type) | Return | Notes
 --- | --- | --- | ---
-storeHistory|n/a| |bool property that enables tracking history each time .load is called (right after onload callbacks are executed the history is updated, so if you grab the last history record from within your onload function, you will receive the one prior to that) - defaults to true
-getHistory| |array|returns an array of objects containing "url" and "route" starting with the first load and ending with the latest
-getLastHistoryRecord| |object|returns an object containing "url" and "route" for the last page grabbed by .load()
-setData|data:mixed|self|set data you want provided in the onload method for the next page
-setDataItem|key:string, val:mixed|self|set a single item in your data object
-getDataItem|key:string|self|returns a single item from your data object, or null if the key doesn't exist
-clearData| |self|must be called manually or the data will persist infinitely. you can set an onload callback to clear this every time
-getData| |mixed|returns the data you set
+setConfig|config:object|self|sets multiple configuration options at once (see examples below for more info)
+initHistoryHandlers| |self|sets event listeners to handle back/forward navigation in the user's browser (only use if pushState is true)
 setIncomingElement|el:string|self|a selector string for the element being retrieved from another page which contains the HTML you want put on the current page
-getIncomingElement| |string|
 setReplaceElement|el:string|self|a selector string for the element on the current page you want the new HTML to replace
-getReplaceElement| |string|
-load|url:string, callback:function/null, data:object, incoming_el:string/null, replace_el:string/null, push_state:bool|void|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more
-loaderEnabled|n/a|bool|property to toggle the slow request loader on/off
-setLoaderDelay|delay:int|self|set how long a request should take in ms before the loader displays
-getLoaderDelay| |self|
+load|url:string, data:object, callback:function/null, incoming_el:string/null, replace_el:string/null, push_state:bool|void|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more
 showLoader| |self|shows the loader after the delay
 hideLoader| |self|clears the loader timeout and hides it
-getRouteFromMeta|html:string|string|retrieves the value of a meta tag named "current_route" (or passed in JSON with a key of the same name) to be passed in the onload event to help trigger page-specific JS
 reload|callback:function|self|reloads the current page using .load()
 fullReload| |void|performs a full browser refresh of the current page
 redirect|url:string|void|redirects the user to a new page (no XHR request)
-onload|callback:function|self|add an onload callback (runs 100ms after unload)
-removeOnload|callback:function|self|removes an onload callback
-onUnload|callback:function|self|add an unload callback
-removeOnunload|callback:function|self|removes an unload callback
-onFail|callback:function|self|add a callback when the load() request fails - receives 2 params (error:string, axios_error:object)
-removeOnFail|callback:function|self|removes a failure callback
-initHistoryHandlers| |self|sets event listeners to handle back/forward navigation in the user's browser
+showLoader| |self|sets a timeout (using the loaderDelay) with a callback to show the loader
+hideLoader| |self|cancels the timeout if it hasn't shown yet and hides the loader
+resetConfig| |self|resets config options back to their defaults
+
+Event Methods | Params (name:type) | Return | Callback Params (name:type) | Notes
+--- | --- | --- | --- | ---
+onload|callback:function|self|el:Element, data:object, config:{ selector:string, replaced_selector:string, route:string/null} | add an onload callback
+removeOnload|callback:function|self||removes an onload callback
+onUnload|callback:function|self|el:Element, data:object, {selector:string, route:string/null}|add an unload callback
+removeOnunload|callback:function|self||removes an unload callback
+onFail|callback:function|self|error:string, url:string, data:object, axios_error:object/null|add a callback when the load() request fails - receives 2 params (error:string, axios_error:object)
+removeOnFail|callback:function|self||removes a failure callback
+
+Setters/Getters | Params (name:type) | Return | Notes
+--- | --- | --- | ---
+getConfig| |object|returns the config options as an object
+getIncomingElement| |string|
+getReplaceElement| |string|
+setData|data:object|self|sets a data object that is automatically passed to every .onload(), .onUnload(), and .onFail() callback 
+getData| |object| 
+setDataItem|key:string, val:mixed|self|sets a single data value
+getDataItem|key:string|self|returns null if it doesn't exist
+clearData| |self|clears all data
+setLoaderDelay|delay:int|self|set how long a request should take in ms before the loader displays
+getLoaderDelay| |self|
+getHistory| |array|returns an array of objects containing "url" and "route" starting with the first URL passed to .load() and ending with the latest
+getLastHistoryRecord| |object|returns an object containing "url" and "route" for the last page grabbed by .load()
 
 ##### To use:
 ```javascript
-import {navigation} from '@htmlguyllc/jpack/es/navigation'; 
-
-//handles browser back/forward buttons
-navigation.initHistoryHandlers();
-
-//a selector that contains the HTML you'd like to pull from the response
-//the default is "body"
-//if the response is a JSON object with an "html" key, it'll use the value of that
-navigation.setIncomingElement('#main-content'); 
-
-//a selector that will be replaced with the incoming HTML
-//WARNING: If IncomingElement does not match, this will be overwritten by the IncomingElement after it's replaced 
-// (since it presumably no longer exists at that point)
-//by default it'll replace anything in "body"
-navigation.setReplaceElement('#main-content');
-
-//enables a loader to show if a request takes more than 300ms
-//WARNING: No styling is provided at this time 
-// It uses Bootstrap 4's progress-bar classes
-navigation.loaderEnabled = true;
-navigation.setLoaderDelay(300);
+import {navigation} from '@htmlguyllc/jpack/es/navigation';
 
 /**
-* When loading a page using .load is complete, this callback will be executed
+* Shown with defaults, you don't need to provide all of these, just what you want to modify
+* If the defaults are fine, you don't need to call setConfig()
+*/
+navigation.setConfig({
+     trackHistory:false, //keep track of URLs loaded in an array (see setters/getters above for how to retrieve records)
+     pushState:true, //push new URLs to the browser's history
+     loaderEnabled:true, //show a loader during the request process
+     loaderDelay:300, //how long the request needs to take before the loader is shown
+     incomingElementSelector:'body', //what element in the content from the URL should be grabbed
+     replaceElementSelector:'body', //what element on the page should be replaced with the incoming one
+     loaderClasses:'progress page-navigation-loader', //the loader consists of two divs (outer/inner) and uses Bootstrap 4's progress-bar classes (no styling is included so you should either add Bootstrap, change these classes and add your own styling, or just disable the loader)
+     loaderInnerDivClasses:'progress-bar progress-bar-striped progress-bar-animated',
+});
+
+//attaches event handlers to automatically use XHR to reload pages when the user pushes the back and forward buttons in their browser (will not work if pushState is false)
+navigation.initHistoryHandlers();
+
+/**
+* Add as many onload callbacks as you'd like to run every time a page is loaded
 * 
 * el is the new element on the page
-* el_selector is the selector string used to grab that element from the URL
-* replaced_selector is the selector string for the element that was replaced (99.99% of the time no longer exists, but you may need it for something)
-* route is a value that can be set either as a meta tag in the HTML of the URL the content was pulled from or as a JSON value with the key "current_route"
-* data is the data you set to pass to the next page (this is the next page receiving it)
+* data the data object you set when you call .load() or using setData/setDataItem (see above method details)
+* config is an object {selector, replaced_selector, route}
+*    selector is the "incomingSelector" used to grab the new element
+*    replacedSelector is the selector used to find the element that was replaced
+*    route is the new page's route (if set in JSON or HTML response)
 */
-navigation.onload(function(el, el_selector, replaced_selector, route, data){
+navigation.onload(function(el, data, config){
+    
+    //some things you might want to run every time a page loads:
    
    //if gtag is set (google analytics), push a page view
    if( typeof gtag !== 'undefined' ) {
@@ -182,7 +197,7 @@ navigation.onload(function(el, el_selector, replaced_selector, route, data){
        });
    }
    
-   //you can grab the last page that was loaded (prior to this one) like this:
+   //if trackHistory is true, you can grab the last history record (or all - see getters/setters above)
    var last_history = navigation.getLastHistoryRecord();
    if( last_history ){
        const last_url = last_history.url;
@@ -192,72 +207,86 @@ navigation.onload(function(el, el_selector, replaced_selector, route, data){
    //scroll to the top of the page
    window.scrollTo(0, 0);
    
-   //.. do something...like init tooltip plugins
+   //.. do more...like init tooltip plugins
 });
 
 /**
-* Just before content is swapped for a new page, the unload callbacks are executed
+* Add as many unload callbacks as you'd like to run every time a page is loaded (just before the new HTML is replaced with the old)
 * 
-* el is the current element on the page that will be replaced
-* el_selector is the selector used to grab that element
-* route is the current route
-* data is any data you set to pass on (for the new request, not when this page was originally loaded)
+* Params are the same as onload except config doesn't have replacedSelector
+* 
+* Keep in mind this is the element that will be removed shortly (and config.selector is the selector used to retrieve that element) 
+* 
 */
-navigation.onUnload(function(el, el_selector, route, data){
-   //.. do something...like remove generic event handlers or destroy plugins 
+navigation.onUnload(function(el, data, config){
+   //.. do something...like remove event handlers or destroy plugins 
 });
 
 /**
-* When an exception occurs during the request or while processing the response, this function will be executed
+* Adds as many failure callbacks you'd like to run every time a page fails to load
 * 
 * error is the string message
 * url is the requested URL that failed
 * data is the data you provided to be passed onto that page
-* axios_error is an error object set by axios that will be availble if that is the point of origination
+* axios_error is an error object set by axios that will be available if that's where the error occurred
 */
 navigation.onFail(function(error, url, data, axios_error){
     //.. do something...like show an error popup for the user or log the issue
 });
 
-//now use the plugin to load pages
-//if you're lazy, the fastest way to integrate is to just add data-href to all internal links 
-//and then attach a handler like this:
-import {events} from '@htmlguyllc/jpack/es/events';
-events.onClick('[data-href]', function(){
-   navigation.load(this.href); 
+/**
+* Now load pages!
+* 
+* It might look strange to you that you're passing values that are already in-scope for your callback. 
+*    This is done for 2 reasons. 
+*       1) It protects the data you passed from modification (your object is cloned inside .load())
+*       2) It passes that object to all the global onload() callbacks as well
+*/
+let data = {pass_this:'hi!'};
+navigation.load('/my-url', data, function(el, data, config){ 
+    const passed = data.pass_this; //passed = 'hi!'
 });
-
-//set something that will be received onload of the next page
-navigation.setData({
-    product_id:1
-});
-//or you can set items individually
-navigation.setDataItem('product_id', 1);
 
 /**
-* same parameters apply when your onload callback is provided for one-time use
-*  when calling .load (see details above)
+* One of the easiest ways to use this plugin is to tie an event handler to onClick of any link containing a class or attribute
+* In this example, all you have to do is add data-href in your link (like this: <a href="my-url" data-href>Link</a>)
 */
-navigation.load('/my-page', function(el, el_selector, replaced_selector, route, data){
-    //my page is now loaded
-    
-    //get the product_id that was set using .setDataItem() above
-    const product_id = data.product_id;
-    
-    //get some_other_id that was provided as the third .load param (right below this callback)
-    //some_other_id is only for this onload callback and does not persist
-    //the product_id value above will persist unless cleared
-    const some_other_id = data.some_other_id;
-    
-    //now clear product_id it so it's gone for the next page load
-    navigation.clearData();
-}, {some_other_id: 2});
+import {events} from '@htmlguyllc/jpack/es/events';
 
-//in some cases, you'll want to grab a different element from the URL
-//this example grabs .popup-content from /my-popup and replaces .current-popup
-navigation.load('/my-popup', function(el, el_selector, replaced_selector, route, data){
-   //now the new element is on the page
-}, {}, '.popup-content', '.current-popup');
+events.onClick('[data-href]', function(){
+   navigation.load(this.href);
+});
+
+/**
+* Want to pass a value to all onload callbacks? It's easy!
+*/
+navigation.setData({
+    scrollToTop: true
+});
+//or
+navigation.setDataItem('scrollToTop', true);
+
+/**
+* Now load a page and use it!
+*/
+navigation.load('/my-url', {}, function(el, data){
+    if( data.scrollToTop ){
+        window.scrollTo(0,0);
+    }
+});
+
+/**
+* You can override global data per-request when you provide it to the .load() method
+*/
+navigation.load('/my-url', {
+    scrollToTop: false
+}, function(el, data){
+    if( data.scrollToTop ){
+        //won't be called
+        window.scrollTo(0,0);
+    }
+});
+
 ```
 
 ---

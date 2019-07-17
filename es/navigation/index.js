@@ -3,6 +3,17 @@ import {dom} from "../dom";
 import {request} from "../request";
 import {clone} from "../clone";
 
+const navigationDefaults = {
+    trackHistory:false,
+    pushState:true,
+    loaderEnabled:true,
+    loaderDelay:300,
+    incomingElement:'body',
+    replaceElement:'body',
+    loaderClasses:'progress page-navigation-loader',
+    loaderInnerDivClasses:'progress-bar progress-bar-striped progress-bar-animated',
+};
+
 /**
  * Allows you to simulate a page change by using an XHR request to grab content and replace it on the current page
  *
@@ -13,9 +24,60 @@ import {clone} from "../clone";
  */
 export const navigation = {
     /**
+     * Sets config options in bulk by extending the current values
+     *
+     * @param data
+     * @returns this
+     */
+    setConfig: function(data = {}){
+        data = {...this.getConfig(), ...data};
+
+        this.trackHistory = data.trackHistory;
+        this.pushState = data.pushState;
+        this.loaderEnabled = data.loaderEnabled;
+
+        this.setLoaderDelay(data.loaderDelay);
+        this.setIncomingElement(data.incomingElement);
+        this.setReplaceElement(data.replaceElement);
+
+        this._loaderClasses = data.loaderClasses;
+        this._loaderInnerDivClasses = data.loaderInnerDivClasses;
+
+        return this;
+    },
+
+    /**
+     * Resets config to defaults
+     *
+     * @returns this;
+     */
+    resetConfig: function(){
+        this.setConfig(navigationDefaults);
+        return this;
+    },
+
+    /**
+     * Returns the basic config options as an object
+     * @returns {{loaderInnerDivClasses: (*|string), pushState: *, loaderDelay: *, loaderClasses: string, trackHistory: *, loaderEnabled: *, replaceElement: (*|string), incomingElement: (*|string)}}
+     */
+    getConfig: function(){
+        return {
+            trackHistory:this.trackHistory,
+            pushState:this.pushState,
+            loaderEnabled:this.loaderEnabled,
+            loaderDelay:this.getLoaderDelay(),
+            incomingElement:this.getIncomingElement(),
+            replaceElement:this.getReplaceElement(),
+            loaderClasses:this._loaderClasses,
+            loaderInnerDivClasses:this._loaderInnerDivClasses
+        };
+    },
+
+    /**
      * Whether or not to keep track of the pages that were loaded in an array
      */
-    storeHistory: true,
+    trackHistory: navigationDefaults.trackHistory,
+    
     /**
      * Grabs all pages that were loaded previously (does not persist if the page is reloaded)
      *
@@ -33,7 +95,7 @@ export const navigation = {
         return this._history.pop();
     },
     _addHistoryItem(url, route){
-        if( !this.storeHistory ) return false;
+        if( !this.trackHistory ) return false;
         if( typeof url !== 'string' ) throw `${url} must be a string`;
         route = typeof route === "undefined" ? this.getRouteFromMeta() : route;
         this._history.push({'url':url, 'route':route});
@@ -116,14 +178,14 @@ export const navigation = {
      */
     setIncomingElement: function (selector_string) {
         if (typeof selector_string !== 'string') throw `${selector_string} must be a string`;
-        this._incomingElementSelector = selector_string;
+        this._incomingElement = selector_string;
     },
-    _incomingElementSelector: 'body',
+    _incomingElement: navigationDefaults.incomingElement,
     /**
      * @returns {string}
      */
     getIncomingElement: function () {
-        return this._incomingElementSelector;
+        return this._incomingElement;
     },
 
     /**
@@ -133,15 +195,20 @@ export const navigation = {
      */
     setReplaceElement: function (selector_string) {
         if (typeof selector_string !== 'string') throw `${selector_string} must be a string`;
-        this._replaceElementSelector = selector_string;
+        this._replaceElement = selector_string;
     },
-    _replaceElementSelector: 'body',
+    _replaceElement: navigationDefaults.replaceElement,
     /**
      * @returns {string}
      */
     getReplaceElement: function () {
-        return this._replaceElementSelector;
+        return this._replaceElement;
     },
+
+    /**
+     * Whether or not to push the page that was loaded to the browser's history
+     */
+    pushState: navigationDefaults.pushState,
 
     /**
      * Grabs HTML from a URL and replaces content on the current page
@@ -154,23 +221,31 @@ export const navigation = {
      * On error, it triggers onFail callbacks you've attached and provides the error message
      *
      * @param url
-     * @param callback
      * @param data
-     * @param incoming_el
-     * @param replace_el
-     * @param push_state
+     * @param onload
+     * @param options {incoming_el, replace_el, push_state}
      */
-    load: function (url, callback, data = {}, incoming_el, replace_el, push_state = true) {
+    load: function (url, data = {}, onload, options = {}) {
         const self = this;
 
-        //defaults
-        incoming_el = typeof incoming_el === "undefined" ? this.getIncomingElement() : incoming_el;
-        replace_el = typeof replace_el === "undefined" ? this.getReplaceElement() : replace_el;
+        //set default options
+        const defaults = {
+            incoming_el: this.getIncomingElement(),
+            replace_el: this.getReplaceElement(),
+            push_state: this.pushState,
+        };
+
+        //override defaults with incoming options
+        options = {...defaults, ...options};
+
+        //extract values
+        ({incoming_el, replace_el, push_state} = options);
 
         //validate incoming data
         if (typeof url !== 'string') throw `Provided URL (${url}) must be a string`;
         if (typeof incoming_el !== 'string') throw `incoming_el (${incoming_el}) must be a string`;
         if (typeof replace_el !== 'string') throw `replace_el (${replace_el}) must be a string`;
+        if( typeof push_state !== 'boolean' ) throw `push_state (${push_state}) must be a bool`;
 
         //merge data set on navigation with data for this request
         data = {...self._data, ...data};
@@ -182,7 +257,7 @@ export const navigation = {
 
         axios.get(url).then(function (response) {
             self.hideLoader();
-            self._replacePageContent(response.data, url, incoming_el, replace_el, push_state, current_route, data, callback);
+            self._replacePageContent(response.data, url, incoming_el, replace_el, push_state, current_route, data, onload);
         }).catch(function (error) {
             self.hideLoader();
 
@@ -199,7 +274,7 @@ export const navigation = {
     /**
      * Whether or not the loader at the top is enabled to display on slow requests
      */
-    loaderEnabled: true,
+    loaderEnabled: navigationDefaults.loaderEnabled,
 
     /**
      * Sets how long to delay during a slow request before showing the loader (in milliseconds)
@@ -214,7 +289,7 @@ export const navigation = {
         this._loaderDelay = delay_in_ms;
         return this;
     },
-    _loaderDelay: 300,
+    _loaderDelay: navigationDefaults.loaderDelay,
     getLoaderDelay: function () {
         return this._loaderDelay;
     },
@@ -255,8 +330,8 @@ export const navigation = {
      * Classes for the loader
      * Defaults are for bootstrap (with the exception of page-navigation-loader)
      */
-    _loaderClasses: 'progress page-navigation-loader',
-    _loaderInnerDivClasses: 'progress-bar progress-bar-striped progress-bar-animated',
+    _loaderClasses: navigationDefaults.loaderClasses,
+    _loaderInnerDivClasses: navigationDefaults.loaderInnerDivClasses,
 
     /**
      * If enabled, adds a loader to the page and caches a reference to it, then returns that reference
@@ -304,7 +379,7 @@ export const navigation = {
      */
     reload: function (callback) {
         callback = typeof callback !== 'function' ? null : callback;
-        this.load(request.getFullURL(), callback);
+        this.load(request.getFullURL(), {}, callback);
         return this;
     },
 
@@ -394,7 +469,7 @@ export const navigation = {
 
         //back button
         window.onpopstate = function (e) {
-            self.load(request.getURIWithQueryString(), null, {}, self.getIncomingElement(), self.getReplaceElement(), false);
+            self.load(request.getURIWithQueryString(), {}, null, self.getIncomingElement(), self.getReplaceElement(), false);
         };
 
         return this;
@@ -435,8 +510,10 @@ export const navigation = {
         if (typeof incoming_el !== 'string') throw `incoming_el (${incoming_el}) must be a string`;
         if (typeof replace_el !== 'string') throw `replace_el (${replace_el}) must be a string`;
 
+        //trigger the unload callbacks
         self._triggerUnload(dom.getElement(replace_el), replace_el, current_route, data);
 
+        //parse the response to grab anything that we need (title, meta, content, route, etc)
         var parsed = self._parseHTML(html, incoming_el);
 
         //if there is HTML to put on the page
@@ -573,7 +650,11 @@ export const navigation = {
      */
     _triggerOnload: function (el, el_selector, replaced_selector, route, data) {
         this._onloadCallbacks.forEach(function(callback){
-            callback(el, el_selector, replaced_selector, route, data);
+            callback(el, data, {
+                selector:el,
+                replacedSelector:replaced_selector,
+                route: route
+            });
         });
         return this;
     },
@@ -588,7 +669,10 @@ export const navigation = {
      */
     _triggerUnload: function (el, el_selector, route, data) {
         this._onUnloadCallbacks.forEach(function(callback){
-            callback(el, el_selector, route, data);
+            callback(el, data, {
+                selector:el_selector,
+                route: route
+            });
         });
         return this;
     },
