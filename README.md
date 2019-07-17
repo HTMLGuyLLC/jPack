@@ -132,7 +132,7 @@ resetConfig| |self|resets config options back to their defaults
 
 Event Methods | Params (name:type) | Return | Callback Params (name:type) | Notes
 --- | --- | --- | --- | ---
-onload|callback:function|self|el:Element, data:object, config:{ selector:string, replaced_selector:string, route:string/null} | add an onload callback
+onload|callback:function|self|el:Element, data:object, config:{ selector:string, replacedSelector:string, route:string/null} | add an onload callback
 removeOnload|callback:function|self||removes an onload callback
 onUnload|callback:function|self|el:Element, data:object, {selector:string, route:string/null}|add an unload callback
 removeOnunload|callback:function|self||removes an unload callback
@@ -181,7 +181,7 @@ navigation.initHistoryHandlers();
 * 
 * el is the new element on the page
 * data the data object you set when you call .load() or using setData/setDataItem (see above method details)
-* config is an object {selector, replaced_selector, route}
+* config is an object {selector, replacedSelector, route}
 *    selector is the "incomingSelector" used to grab the new element
 *    replacedSelector is the selector used to find the element that was replaced
 *    route is the new page's route (if set in JSON or HTML response)
