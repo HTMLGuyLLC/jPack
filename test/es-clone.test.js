@@ -83,7 +83,7 @@ describe('clone', function() {
             obj.name = 'tom';
             if( obj.name === objClone.name ) throw 'Obj was modified: '+JSON.stringify(obj);
             obj = 'string now';
-            if( objClone === 'string now' ) throw 'Obj was modified: '+JSON.stringify(obj);
+            if( objClone === obj ) throw 'Obj was modified: '+JSON.stringify(obj);
 
             //array
             var arr = [1,2];
@@ -96,7 +96,7 @@ describe('clone', function() {
             arr.push(3);
             if( arrClone[2] === 3 ) throw 'Array was modified: '+JSON.stringify(arrClone);
             arr = 'string now';
-            if( typeof arrClone === 'string' ) throw `Array was modified: ${arrClone}`;
+            if( arrClone === arr ) throw `Array was modified: ${arrClone}`;
         });
     });
 });

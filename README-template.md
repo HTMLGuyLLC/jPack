@@ -122,7 +122,7 @@ setIncomingElement|el:string|self|a selector string for the element being retrie
 getIncomingElement| |string|
 setReplaceElement|el:string|self|a selector string for the element on the current page you want the new HTML to replace
 getReplaceElement| |string|
-load|url:string, callback:function/null, incoming_el:string/null, replace_el:string/null, push_state:bool|void|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more
+load|url:string, callback:function/null, data:object, incoming_el:string/null, replace_el:string/null, push_state:bool|void|pulls content from the provided URL and puts it on the current page - also swaps out the page title, metas, and much more
 loaderEnabled|n/a|bool|property to toggle the slow request loader on/off
 setLoaderDelay|delay:int|self|set how long a request should take in ms before the loader displays
 getLoaderDelay| |self|
@@ -241,18 +241,23 @@ navigation.setDataItem('product_id', 1);
 navigation.load('/my-page', function(el, el_selector, replaced_selector, route, data){
     //my page is now loaded
     
-    //get the product_id that was set
+    //get the product_id that was set using .setDataItem() above
     const product_id = data.product_id;
     
-    //now clear it so it's gone for the next page load
+    //get some_other_id that was provided as the third .load param (right below this callback)
+    //some_other_id is only for this onload callback and does not persist
+    //the product_id value above will persist unless cleared
+    const some_other_id = data.some_other_id;
+    
+    //now clear product_id it so it's gone for the next page load
     navigation.clearData();
-});
+}, {some_other_id: 2});
 
 //in some cases, you'll want to grab a different element from the URL
 //this example grabs .popup-content from /my-popup and replaces .current-popup
 navigation.load('/my-popup', function(el, el_selector, replaced_selector, route, data){
    //now the new element is on the page
-}, '.popup-content', '.current-popup');
+}, {}, '.popup-content', '.current-popup');
 ```
 
 ---

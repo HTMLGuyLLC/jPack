@@ -151,15 +151,16 @@ export const navigation = {
      * 3) Replaces it on the page (and all the magic replacePageContent does, see comments on that method below)
      * 4) If there's a callback provided, it'll be run afterwards (it receives the newly replaced element as a param)
      *
-     * On error, it triggers a navigation failure and provides the error message
+     * On error, it triggers onFail callbacks you've attached and provides the error message
      *
      * @param url
      * @param callback
+     * @param data
      * @param incoming_el
      * @param replace_el
      * @param push_state
      */
-    load: function (url, callback, incoming_el, replace_el, push_state = true) {
+    load: function (url, callback, data = {}, incoming_el, replace_el, push_state = true) {
         const self = this;
 
         //defaults
@@ -171,8 +172,10 @@ export const navigation = {
         if (typeof incoming_el !== 'string') throw `incoming_el (${incoming_el}) must be a string`;
         if (typeof replace_el !== 'string') throw `replace_el (${replace_el}) must be a string`;
 
-        //cache in case it changes during this process because axios is async
-        const data = self.getData();
+        //merge data set on navigation with data for this request
+        data = {...self._data, ...data};
+
+        //cache route (axios is async)
         const current_route = self.getRouteFromMeta();
 
         self.showLoader();
@@ -391,7 +394,7 @@ export const navigation = {
 
         //back button
         window.onpopstate = function (e) {
-            self.load(request.getURIWithQueryString(), null, self.getIncomingElement(), self.getReplaceElement(), false);
+            self.load(request.getURIWithQueryString(), null, {}, self.getIncomingElement(), self.getReplaceElement(), false);
         };
 
         return this;
