@@ -1,60 +1,69 @@
 import axios from 'axios';
 import {dom} from "../dom";
 import {request} from "../request";
-import {events} from "../events";
 
 /**
  * Allows you to simulate a page change by using an XHR request to grab content and replace it on the current page
  *
  * Automatically updates the browser's history, swaps out meta tags, updates the title, and more
  *
- * Use onLoad and onUnload hooks to add additional logic for things like triggering a google analytics page view
+ * Use onload and onUnload hooks to add additional logic for things like triggering a google analytics page view
  *  or scrolling to the top of the new page
  */
 export const navigation = {
 
     /**
-     * Stores data to be provided to the onload callback after navigating to another page using .load()
-     */
-    _passthroughData: null,
-
-    /**
-     * Sets data to be provided to the next page
-     *  this data persists until cleared manually and will be provided to ALL subsequent onLoad handlers
+     * Sets data to be provided to the next page's onload callback
+     *  this data persists until cleared manually and will be provided to ALL subsequent onload handlers
      *   (or it can be grabbed manually from this object at any time)
      *
      * @param data
      * @returns {navigation}
      */
-    setPassthroughData: function (data) {
-        this._passthroughData = data;
+    setData: function (data) {
+        if( typeof data !== 'object' ) throw `${data} is not an object`;
+        this._data = data;
         return this;
     },
-
     /**
-     * Clears data provided for the next page
+     * Sets a single item in your data object
+     *
+     * @param key
+     * @param val
+     */
+    setDataItem: function(key, val){
+        this._data[key] = val;
+        return this;
+    },
+    /**
+     * Gets a single item from your data object or if it doesn't exist it'll return null
+     *
+     * @param key
+     * @param val
+     * @returns {null}
+     */
+    getDataItem: function(key, val){
+        return typeof this._data[key] !== 'undefined' ? this_.data[key] : null;
+    },
+    /**
+     * Remove all data
      *
      * @returns {navigation}
      */
-    clearPassthroughData: function () {
+    clearData: function () {
         this.setPassthroughData(null);
         return this;
     },
-
     /**
-     * Returns any data that has been set for passing to subsequent pages
+     * Gets all data
      *
      * @param data
      * @returns {null}
      */
-    getPassThroughData: function (data) {
-        return this._passthroughData;
+    getData: function (data) {
+        return this._data;
     },
-
-    /**
-     * The element in the response which contains the HTML you want to pull and put on the current page
-     */
-    _incomingElementSelector: 'body',
+    _data: {},
 
     /**
      * Sets the element in the response which contains the HTML you want to pull and put on the current page
@@ -65,20 +74,13 @@ export const navigation = {
         if (typeof selector_string !== 'string') throw `${selector_string} is not a string`;
         this._incomingElementSelector = selector_string;
     },
-
+    _incomingElementSelector: 'body',
     /**
-     * Returns the element in the response which contains the HTML you want to pull and put on the current page
-     *
      * @returns {string}
      */
     getIncomingElement: function () {
         return this._incomingElementSelector;
     },
-
-    /**
-     * This element on the current page will be replaced with incoming HTML
-     */
-    _replaceElementSelector: 'body',
 
     /**
      * Sets the selector string for the element on the current page that will be replaced with incoming HTML
@@ -89,10 +91,8 @@ export const navigation = {
         if (typeof selector_string !== 'string') throw `${selector_string} is not a string`;
         this._replaceElementSelector = selector_string;
     },
-
+    _replaceElementSelector: 'body',
     /**
-     * Returns the selectors string for the element on the current page that will be replaced with incoming HTML
-     *
      * @returns {string}
      */
     getReplaceElement: function () {
@@ -127,20 +127,22 @@ export const navigation = {
         if (typeof incoming_el !== 'string') throw `Provided incoming_el (${incoming_el}) is not a string`;
         if (typeof replace_el !== 'string') throw `Provided replace_el (${replace_el}) is not a string`;
 
+        //cache in case it changes during this process
+        const data = self.getData();
+        const current_route = this.getRouteFromMeta();
+
         self.showLoader();
 
         axios.get(url).then(function (response) {
             self.hideLoader();
 
-            const data = self.getPassThroughData();
-
-            self.replacePageContent(response.data, url, incoming_el, replace_el, push_state, data);
+            self._replacePageContent(response.data, url, incoming_el, replace_el, push_state, current_route, data);
 
             //if a callback was provided, run it and provide the parent element
             if (typeof callback === 'function') {
                 //wait for the onunload callbacks to run and the new content to be put on the page first
                 window.setTimeout(function () {
-                    callback(dom.getElement(replace_el), incoming_el, data);
+                    callback(dom.getElement(replace_el), incoming_el, replace_el, current_route, data);
                 }, 105);
             }
         }).catch(function (error) {
@@ -151,7 +153,7 @@ export const navigation = {
             const axios_error = typeof error === "object" && error.isAxiosError ? error : null;
             error = typeof error === "object" && error.isAxiosError ? error.response.statusText : error;
 
-            self.triggerNavigationFailure(error, axios_error);
+            self._triggerFail(error, url, data, axios_error);
             throw error;
         });
     },
@@ -160,9 +162,6 @@ export const navigation = {
      * Whether or not the loader at the top is enabled to display on slow requests
      */
     loaderEnabled: true,
-
-    //how long to delay during a slow request before showing the loader (in milliseconds)
-    _loaderDelay: 300,
 
     /**
      * Sets how long to delay during a slow request before showing the loader (in milliseconds)
@@ -177,14 +176,41 @@ export const navigation = {
         this._loaderDelay = delay_in_ms;
         return this;
     },
-
-    /**
-     * Gets how long to delay during a slow request before showing the loader (in milliseconds)
-     *
-     * @returns {number}
-     */
+    _loaderDelay: 300,
     getLoaderDelay: function () {
         return this._loaderDelay;
+    },
+
+    /**
+     * Shows a loader at the top of the page if the request takes more than the delay set above to complete
+     */
+    showLoader: function () {
+        const self = this;
+
+        if (!self.loaderEnabled) return;
+
+        self.loader_timeout = window.setTimeout(function () {
+            self._getLoaderEl().classList.add('active');
+        }, self.getLoaderDelay());
+
+        return this;
+    },
+
+    /**
+     * Hides the loader at the top of the page
+     */
+    hideLoader: function () {
+        var self = this;
+
+        if (!self.loaderEnabled) return;
+
+        //if the loader still hasn't shown yet, prevent it because the request was very fast
+        window.clearTimeout(self.loader_timeout);
+
+        //hide the loader
+        self._getLoaderEl().classList.remove('active');
+
+        return this;
     },
 
     /**
@@ -199,7 +225,7 @@ export const navigation = {
      *
      * @returns Element
      */
-    getLoaderEl: function () {
+    _getLoaderEl: function () {
         const self = this;
 
         if (!self.loaderEnabled) return;
@@ -220,101 +246,6 @@ export const navigation = {
     },
 
     /**
-     * Shows a loader at the top of the page if the request takes more than the delay set above to complete
-     */
-    showLoader: function () {
-        const self = this;
-
-        if (!self.loaderEnabled) return;
-
-        self.loader_timeout = window.setTimeout(function () {
-            self.getLoaderEl().classList.add('active');
-        }, self.getLoaderDelay());
-
-        return this;
-    },
-
-    /**
-     * Hides the loader at the top of the page
-     */
-    hideLoader: function () {
-        var self = this;
-
-        if (!self.loaderEnabled) return;
-
-        //if the loader still hasn't shown yet, prevent it because the request was very fast
-        window.clearTimeout(self.loader_timeout);
-
-        //hide the loader
-        self.getLoaderEl().classList.remove('active');
-
-        return this;
-    },
-
-    /**
-     * Parses the incoming HTML to grab key components like meta tags and the inner content of the parent element
-     *
-     * If no parent element is provided, it will just return the provided html
-     *
-     * @param html
-     * @param parent_el
-     * @returns {{metas: HTMLCollectionOf<HTMLElementTagNameMap[string]>, route: (*|any|Element), links: HTMLCollectionOf<HTMLElementTagNameMap[string]>, html: string, title: string, body_classes: DOMTokenList}}
-     */
-    parseHTML(html, parent_el) {
-        var self = this;
-
-        //default to null if not provided
-        parent_el = typeof parent_el === 'undefined' ? null : parent_el;
-
-        //must be a string or null
-        if (typeof parent_el !== 'string' && parent_el !== null) throw `Provided parent_el (${parent_el}) is not a string or null`;
-
-        //parse the incoming dom
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(html, "text/html");
-
-        //get page title
-        var title = doc.querySelector('title');
-        title = title ? title.innerText : null;
-
-        //get any meta tags
-        var metas = doc.head.getElementsByTagName('meta');
-        //get the canonical link
-        var links = doc.querySelectorAll('link[rel="canonical"]');
-        //get body classes
-        var body_classes = doc.body.classList;
-
-        //default to the incoming HTML
-        var new_html = html;
-
-        //if a parent element was provided, find it
-        if (parent_el) {
-            var sel = doc.querySelector(parent_el);
-            //if couldn't find the element
-            if (!sel) {
-                throw `Could not find parent selector ${parent_el}`;
-            }
-            //grab the outerHTML
-            new_html = sel.outerHTML;
-        }
-
-        //get the new page's route from the meta tag (if it exists)
-        var route = self.getRouteFromMeta(doc);
-
-        // Garbage collection, you don't need this anymore.
-        parser = doc = null;
-
-        return {
-            title: title,
-            route: route,
-            metas: metas,
-            links: links,
-            body_classes: body_classes,
-            html: new_html
-        };
-    },
-
-    /**
      * Gets the current route from the meta tag, if it exists
      *
      * If you don't provide HTML, it'll grab it from the current DOM
@@ -327,88 +258,6 @@ export const navigation = {
         var route = html.querySelector('[name="current_route"]');
         route = route ? route.content : null;
         return route;
-    },
-
-    /**
-     * Replaces content on the current page with new HTML
-     *
-     * 1) Triggers unload()
-     * 2) Waits 100ms
-     * 3) Parses the incoming HTML to grab key components
-     * 4) Replaces all meta tags (important for social media sharing among other things)
-     * 5) Replaces the canonical tag
-     * 6) Replaces any classes on the body since they are generally used to indicate which page you're on
-     * 7) Pushes to the browser's history
-     * 8) Sets the page title
-     * 9) Replaces content in the DOM
-     * 10) Triggers onload()
-     *
-     * @param html
-     * @param url
-     * @param incoming_el
-     * @param replace_el
-     * @param push_state
-     * @param data
-     */
-    replacePageContent(html, url, incoming_el, replace_el, push_state, data) {
-        var self = this;
-
-        push_state = typeof push_state === 'undefined' ? true : push_state;
-
-        incoming_el = typeof incoming_el === 'undefined' || !incoming_el ? self.getIncomingElement() : incoming_el;
-        replace_el = typeof replace_el === 'undefined' || !replace_el ? self.getReplaceElement() : replace_el;
-
-        if (typeof url !== 'string') throw `Provided url (${url}) is not a string`;
-        if (typeof incoming_el !== 'string') throw `Provided incoming_el (${incoming_el}) is not a string`;
-        if (typeof replace_el !== 'string') throw `Provided replace_el (${replace_el}) is not a string`;
-
-        //trigger nav complete event
-        //get replace_el again because it was replaced
-        self.triggerUnload(dom.getElement(replace_el), replace_el, self.getRouteFromMeta(), data);
-
-        //very slight 100ms delay to let the on unload handlers run first
-        window.setTimeout(function () {
-            var parsed = self.parseHTML(html, incoming_el);
-
-            //if there is HTML to put on the page
-            if (parsed.html.length) {
-
-                //remove all meta tags and replace from new page
-                dom.remove('meta');
-                document.head.append(parsed.metas);
-
-                //add the canonical link
-                // - possibly other tags will need to be whitelisted in the future.
-                // - the main concern is not putting JS/CSS into the current page that shouldn't be
-                dom.remove('[rel="canonical"]');
-                Array.from(parsed.links).forEach(function (link) {
-                    document.head.append(link);
-                });
-
-                //add body classes
-                document.body.classList = parsed.body_classes;
-
-                //push the state to the browser's history
-                push_state && history.pushState({url: url}, parsed.title, url);
-
-                //update the tab/page title
-                self.setTitle(parsed.title);
-
-                //replace content on the page
-                const new_content = dom.replaceElWithHTML(replace_el, parsed.html);
-
-                //trigger nav complete event
-                self.triggerOnLoad(new_content, incoming_el, replace_el, parsed.route, data);
-
-                //if the replace_el is the same as getReplaceElement(),
-                // then it should be updated to whatever the incoming_el is because it no longer exists
-                if (self.getReplaceElement() !== replace_el) {
-                    self.setReplaceElement(incoming_el);
-                }
-            }
-        }, 100);
-
-        return this;
     },
 
     /**
@@ -443,31 +292,20 @@ export const navigation = {
     },
 
     /**
-     * Sets the title of the page
-     *
-     * @param title
-     * @returns {navigation}
-     */
-    setTitle: function (title) {
-        document.title = title;
-        return this;
-    },
-
-    /**
-     * When a new page loads, you probably want to kickoff some page-specific JS.
-     *
-     * The callback receives the event.
-     * The event has a property called "detail" which will contain:
-     *  1) The replace_el (the element who's content was swapped out)
-     *  2) The route (you can define this in a meta tag called "current_route" which will be automatically grabbed and passed along)
-     *  3) Any data you set using .setPassthroughData()
+     * When arriving at a new page, you might need to instantiate some stuff
      *
      * @param callback
      * @returns {navigation}
      */
-    onLoad: function (callback) {
-        events.on('body', 'navigation.complete', callback);
+    _onloadCallbacks: [],
+    onload: function (callback) {
+        this._onloadCallbacks.push(callback);
         return this;
+    },
+    removeOnload: function(callback){
+        this._onloadCallbacks.filter(function(ele){
+            return ele !== callback;
+        });
     },
 
     /**
@@ -476,76 +314,32 @@ export const navigation = {
      * @param callback
      * @returns {navigation}
      */
+    _onUnloadCallbacks: [],
     onUnload: function (callback) {
-        events.on('body', 'navigation.started', callback);
+        this._onUnloadCallbacks.push(callback);
         return this;
+    },
+    removeOnUnload: function(callback){
+        this._onUnloadCallbacks.filter(function(ele){
+            return ele !== callback;
+        });
     },
 
     /**
-     * When the new page fails to load, you should probably tell the user
+     * When the new page fails to load, you should probably tell the user/try again/log the issue
      *
      * @param callback
      * @returns {navigation}
      */
-    onNavigationFailure: function (callback) {
-        events.on('body', 'navigation.failed', callback);
+    _onFailCallbacks: [],
+    onFail: function (callback) {
+        this._onFailCallbacks.push(callback);
         return this;
     },
-
-    /**
-     * We're on a new page, tell the world.
-     *
-     * Also includes the route of the new page (if it exists in a meta tag) so that you can kick off JS specific to that page
-     *
-     * @param el
-     * @param el_selector
-     * @param replaced_selector
-     * @param route
-     * @param data
-     */
-    triggerOnLoad: function (el, el_selector, replaced_selector, route, data) {
-        route = typeof route !== 'undefined' ? route : this.getRouteFromMeta();
-        events.trigger('body', 'navigation.complete', {
-            el: el,
-            el_selector: el_selector,
-            replaced_selector: replaced_selector,
-            route: route,
-            data: data
+    removeOnFail: function(callback){
+        this._onFailCallbacks.filter(function(ele){
+            return ele !== callback;
         });
-
-        return this;
-    },
-
-    /**
-     * We're leaving the last page, tell the world.
-     *
-     * @param el
-     * @param el_selector
-     * @param route
-     * @param data
-     */
-    triggerUnload: function (el, el_selector, route, data) {
-        events.trigger('body', 'navigation.started', {
-            el: el,
-            el_selector: el_selector,
-            route: route,
-            data: data
-        });
-        return this;
-    },
-
-    /**
-     * Navigation failed, tell the world.
-     *
-     * @param error
-     * @param axios_error
-     */
-    triggerNavigationFailure: function (error, axios_error) {
-        events.trigger('body', 'navigation.failed', {
-            error: error,
-            axios_error: axios_error
-        });
-        return this;
     },
 
     /**
@@ -566,6 +360,221 @@ export const navigation = {
             self.load(request.getURIWithQueryString(), null, null, null, false);
         };
 
+        return this;
+    },
+
+    /**
+     * Replaces content on the current page with new HTML
+     *
+     * 1) Triggers unload()
+     * 2) Waits 100ms
+     * 3) Parses the incoming HTML to grab key components
+     * 4) Replaces all meta tags (important for social media sharing among other things)
+     * 5) Replaces the canonical tag
+     * 6) Replaces any classes on the body since they are generally used to indicate which page you're on
+     * 7) Pushes to the browser's history
+     * 8) Sets the page title
+     * 9) Replaces content in the DOM
+     * 10) Triggers onload()
+     *
+     * @param html
+     * @param url
+     * @param incoming_el
+     * @param replace_el
+     * @param push_state
+     * @param current_route
+     * @param data
+     */
+    _replacePageContent(html, url, incoming_el, replace_el, push_state, current_route, data) {
+        const self = this;
+
+        push_state = typeof push_state === 'undefined' ? true : push_state;
+
+        incoming_el = typeof incoming_el === 'undefined' || !incoming_el ? self.getIncomingElement() : incoming_el;
+        replace_el = typeof replace_el === 'undefined' || !replace_el ? self.getReplaceElement() : replace_el;
+
+        if (typeof url !== 'string') throw `Provided url (${url}) is not a string`;
+        if (typeof incoming_el !== 'string') throw `Provided incoming_el (${incoming_el}) is not a string`;
+        if (typeof replace_el !== 'string') throw `Provided replace_el (${replace_el}) is not a string`;
+
+        self._triggerUnload(dom.getElement(replace_el), replace_el, current_route, data);
+
+        var parsed = self._parseHTML(html, incoming_el);
+
+        //if there is HTML to put on the page
+        if (parsed.html.length) {
+
+            //remove all meta tags and replace from new page
+            dom.remove('meta');
+            document.head.append(parsed.metas);
+
+            //add the canonical link
+            // - possibly other tags will need to be whitelisted in the future.
+            // - the main concern is not putting JS/CSS into the current page that shouldn't be
+            dom.remove('[rel="canonical"]');
+            Array.from(parsed.links).forEach(function (link) {
+                document.head.append(link);
+            });
+
+            //add body classes
+            document.body.classList = parsed.body_classes;
+
+            //push the state to the browser's history
+            push_state && history.pushState({url: url}, parsed.title, url);
+
+            //update the tab/page title
+            self._setTitle(parsed.title);
+
+            //replace content on the page
+            const new_content = dom.replaceElWithHTML(replace_el, parsed.html);
+
+            //trigger nav complete event
+            self._triggerOnload(new_content, incoming_el, replace_el, parsed.route, data);
+
+            //if the replace_el is the same as getReplaceElement(),
+            // then it should be updated to whatever the incoming_el is because it no longer exists
+            if (self.getReplaceElement() !== replace_el) {
+                self.setReplaceElement(incoming_el);
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Parses the incoming HTML (or JSON object) to grab key components like meta tags and the inner content of the parent element
+     *
+     * If no parent element is provided, it will just return the provided html
+     *
+     * @param html
+     * @param parent_el
+     * @returns {{metas: HTMLCollectionOf<HTMLElementTagNameMap[string]>, route: (*|any|Element), links: NodeListOf<Element>, html: HtmlOptions | string, title: any | HTMLTitleElement, body_classes: DOMTokenList}}
+     * @private
+     */
+    _parseHTML(html, parent_el) {
+        var self = this;
+
+        //default to null if not provided
+        parent_el = typeof parent_el === 'undefined' ? null : parent_el;
+
+        //must be a string or null
+        if (typeof parent_el !== 'string' && parent_el !== null) throw `Provided parent_el (${parent_el}) is not a string or null`;
+
+        route = null;
+        if( typeof html === "object" ){
+            if( html.html ){
+                if( html.route ){
+                    route = html.route;
+                }
+                html = html.html;
+            }else{
+                throw `Incoming JSON object does not contain HTML key`;
+            }
+        }
+
+        //parse the incoming dom
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, "text/html");
+
+        //get page title
+        var title = doc.querySelector('title');
+        title = title ? title.innerText : null;
+
+        //get any meta tags
+        var metas = doc.head.getElementsByTagName('meta');
+        //get the canonical link
+        var links = doc.querySelectorAll('link[rel="canonical"]');
+        //get body classes
+        var body_classes = doc.body.classList;
+
+        //default to the incoming HTML
+        var new_html = html;
+
+        //if a parent element was provided, find it
+        if (parent_el) {
+            var sel = doc.querySelector(parent_el);
+            //if couldn't find the element
+            if (!sel) {
+                throw `Could not find parent selector ${parent_el}`;
+            }
+            //grab the outerHTML
+            new_html = sel.outerHTML;
+        }
+
+        //if route didn't exist in the incoming JSON object, grab from the HTML
+        var route = route ? route : self.getRouteFromMeta(doc);
+
+        // Garbage collection, you don't need this anymore.
+        parser = doc = null;
+
+        return {
+            title: title,
+            route: route,
+            metas: metas,
+            links: links,
+            body_classes: body_classes,
+            html: new_html
+        };
+    },
+
+    /**
+     * We're on a new page, tell the world.
+     *
+     * Also includes the route of the new page (if it exists in a meta tag) so that you can kick off JS specific to that page
+     *
+     * @param el
+     * @param el_selector
+     * @param replaced_selector
+     * @param route
+     * @param data
+     */
+    _triggerOnload: function (el, el_selector, replaced_selector, route, data) {
+        this._onloadCallbacks.forEach(function(callback){
+            callback(el, el_selector, replaced_selector, route, data);
+        });
+        return this;
+    },
+
+    /**
+     * We're leaving the last page, tell the world.
+     *
+     * @param el
+     * @param el_selector
+     * @param route
+     * @param data
+     */
+    _triggerUnload: function (el, el_selector, route, data) {
+        this._onUnloadCallbacks.forEach(function(callback){
+            callback(el, el_selector, route, data);
+        });
+        return this;
+    },
+
+    /**
+     * Navigation failed, tell the world.
+     *
+     * @param error
+     * @param url
+     * @param data
+     * @param route
+     * @param axios_error
+     * @returns {navigation}
+     */
+    _triggerFail: function (error, url, data, axios_error) {
+        this._onFailCallbacks.forEach(function(callback){
+            callback(error, url, data, axios_error);
+        });
+        return this;
+    },
+
+    /**
+     * Sets the title of the page
+     *
+     * @param title
+     * @returns {navigation}
+     */
+    _setTitle: function (title) {
+        document.title = title;
         return this;
     },
 };

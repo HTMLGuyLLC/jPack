@@ -110,9 +110,11 @@ formdata-polyfill | XHRForm (and anything that extends it) | https://www.npmjs.c
 
 Method/Property | Params (name:type) | Return | Notes
 --- | --- | --- | ---
-setPassthroughData|data:mixed|self|set data you want provided in the onload method for the next page
-clearPassthroughData| |self|must be called manually or the data will persist infinitely. you can set an onload callback to clear this every time
-getPassthroughData| |mixed|returns the data you set
+setData|data:mixed|self|set data you want provided in the onload method for the next page
+setDataItem|key:string, val:mixed|self|set a single item in your data object
+getDataItem|key:string|self|returns a single item from your data object, or null if the key doesn't exist
+clearData| |self|must be called manually or the data will persist infinitely. you can set an onload callback to clear this every time
+getData| |mixed|returns the data you set
 setIncomingElement|el:string|self|a selector string for the element being retrieved from another page which contains the HTML you want put on the current page
 getIncomingElement| |string|
 setReplaceElement|el:string|self|a selector string for the element on the current page you want the new HTML to replace
@@ -121,22 +123,18 @@ load|url:string, callback:function/null, incoming_el:string/null, replace_el:str
 loaderEnabled|n/a|bool|property to toggle the slow request loader on/off
 setLoaderDelay|delay:int|self|set how long a request should take in ms before the loader displays
 getLoaderDelay| |self|
-getLoaderEl| |Element|
 showLoader| |self|shows the loader after the delay
 hideLoader| |self|clears the loader timeout and hides it
-parseHTML|html:string, parent_el:string|object|parses HTML from the request to get key components like metas and the HTML to be displayed
-getRouteFromMeta|html:string|string|retrieves the value of a meta tag named "current_route" to be passed in the onload event to help trigger page-specific JS
-replacePageContent|html:string, url:string, incoming_el:string, replace_el:string, push_state:bool | self|replaces HTML on the page with the new content, updates metas, runs the unload and load callbacks and more
+getRouteFromMeta|html:string|string|retrieves the value of a meta tag named "current_route" (or passed in JSON with a key of the same name) to be passed in the onload event to help trigger page-specific JS
 reload|callback:function|self|reloads the current page using .load()
 fullReload| |void|performs a full browser refresh of the current page
 redirect|url:string|void|redirects the user to a new page (no XHR request)
-setTitle|title:string|self|sets the page title
-onLoad|callback:function|self|add an onload callback (runs 100ms after unload)
+onload|callback:function|self|add an onload callback (runs 100ms after unload)
+removeOnload|callback:function|self|removes an onload callback
 onUnload|callback:function|self|add an unload callback
-onNavigationFailure|callback:function|self|add a callback when the load() request fails - receives 2 params (error:string, axios_error:object)
-triggerOnLoad|el:mixed, el_selector:string, route:string|self|triggers all onload callbacks
-triggerUnload|el:mixed, el_selector:string, route:string|self|triggers all unload callbacks
-triggerNavigationFailure|error:string, axios_error:object|self|triggers the nav failure and provides an error message
+removeOnunload|callback:function|self|removes an unload callback
+onFail|callback:function|self|add a callback when the load() request fails - receives 2 params (error:string, axios_error:object)
+removeOnFail|callback:function|self|removes a failure callback
 initHistoryHandlers| |self|sets event listeners to handle back/forward navigation in the user's browser
 
 ##### To use:
@@ -163,25 +161,16 @@ navigation.setReplaceElement('#main-content');
 navigation.loaderEnabled = true;
 navigation.setLoaderDelay(300);
 
-//things to do when a page loads
-navigation.onLoad(function(e){
-    var params = e.detail; //get info from the event
-    //if a current_route meta was set in the incoming HTML, it'll be provided to you here
-    //you can use this to kick off your page-specific JS
-    var route = params.route; 
-    //the data you set prior to loading the page, if any
-    var data = params.data; //or navigation.getPassthroughData()
-    //the DOM element that was added to the page replacing the previous
-    var el = params.el;
-    //el_selector is the IncomingElement selector that was used for this request
-    var el_selector = params.el_selector;
-    
-    //replaced_selector is the ReplaceElement selector that was used for this request
-    //Note: If el_selector does not match replaced_selector, ReplaceElement will be replaced with IncomingElement
-    //It's done right after this callback and because it's assumed the ReplaceElement doesn't exist anymore
-    //If there's a situation where it does and you need it to stay the same, just set it again in here
-    //like this: navigation.setReplaceElement(params.replaced_selector);
-    var replaced_selector = params.replaced_selector;
+/**
+* When loading a page using .load is complete, this callback will be executed
+* 
+* el is the new element on the page
+* el_selector is the selector string used to grab that element from the URL
+* replaced_selector is the selector string for the element that was replaced (99.99% of the time no longer exists, but you may need it for something)
+* route is a value that can be set either as a meta tag in the HTML of the URL the content was pulled from or as a JSON value with the key "current_route"
+* data is the data you set to pass to the next page (this is the next page receiving it)
+*/
+navigation.onload(function(el, el_selector, replaced_selector, route, data){
    
    //if gtag is set (google analytics), push a page view
    if( typeof gtag !== 'undefined' ) {
@@ -201,15 +190,17 @@ navigation.onUnload(function(){
    //.. do something...like remove generic event handlers or destroy plugins 
 });
 
-//things to do when a page fails to load
-navigation.onNavigationFailure(function(e){
-    var error_msg = e.detail.error;
-    var axios_error = e.detail.axios_error;
+/**
+* When an exception occurs during the request or while processing the response, this function will be executed
+* 
+* error is the string message
+* url is the requested URL that failed
+* data is the data you provided to be passed onto that page
+* axios_error is an error object set by axios that will be availble if that is the point of origination
+*/
+navigation.onFail(function(error, url, data, axios_error){
     //.. do something...like show an error popup for the user or log the issue
 });
-
-//to prevent duplicate code, you can run your onload callbacks immediately
-navigation.triggerOnLoad(dom.getElement('body'), 'body', navigation.getRouteFromMeta());
 
 //now use the plugin to load pages
 //if you're lazy, the fastest way to integrate is to just add data-href to all internal links 
@@ -220,28 +211,29 @@ events.onClick('[data-href]', function(){
 });
 
 //set something that will be received onload of the next page
-navigation.setPassthroughData({
+navigation.setData({
     product_id:1
 });
+//or you can set items individually
+navigation.setDataItem('product_id', 1);
 
-//you can use the load method at any time to load a new page 
-// the second param is an optional callback that only runs for that page
-navigation.load('/my-page', function(new_el, new_el_selector, pass_through_params){
+/**
+* same parameters apply when your onload callback is provided for one-time use
+*  when calling .load (see details above)
+*/
+navigation.load('/my-page', function(el, el_selector, replaced_selector, route, data){
     //my page is now loaded
     
-    //new_el is the new element on the page
-    //new_el_selector is the incomingSelector used for this request
+    //get the product_id that was set
+    const product_id = data.product_id;
     
-    //pass_through_data is any data that was set on navigation prior to this request
-    //so in this instance, it will be {product_id:1} (set above)
-    
-    //now clear that data so it's gone for the next page load
-    navigation.clearPassthroughData();
+    //now clear it so it's gone for the next page load
+    navigation.clearData();
 });
 
 //in some cases, you'll want to grab a different element from the URL
 //this example grabs .popup-content from /my-popup and replaces .current-popup
-navigation.load('/my-popup', function(new_el, el_sel, data){
+navigation.load('/my-popup', function(el, el_selector, replaced_selector, route, data){
    //now the new element is on the page
 }, '.popup-content', '.current-popup');
 ```
