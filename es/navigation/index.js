@@ -391,7 +391,7 @@ export const navigation = {
 
         //back button
         window.onpopstate = function (e) {
-            self.load(request.getURIWithQueryString(), null, null, null, false);
+            self.load(request.getURIWithQueryString(), null, self.getIncomingElement(), self.getReplaceElement(), false);
         };
 
         return this;
