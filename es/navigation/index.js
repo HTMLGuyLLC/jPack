@@ -39,10 +39,9 @@ export const navigation = {
      * Gets a single item from your data object or if it doesn't exist it'll return null
      *
      * @param key
-     * @param val
      * @returns {null}
      */
-    getDataItem: function(key, val){
+    getDataItem: function(key){
         return typeof this._data[key] !== 'undefined' ? this_.data[key] : null;
     },
     /**
@@ -51,7 +50,7 @@ export const navigation = {
      * @returns {navigation}
      */
     clearData: function () {
-        this.setPassthroughData(null);
+        this.setData({});
         return this;
     },
     /**
