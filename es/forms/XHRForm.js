@@ -368,7 +368,7 @@ export class XHRForm {
                 //if we are looking for an element within the response
                 if( typeof self.getIncomingElementSelector() === 'string' ){
                     //parse the incoming HTML
-                    const parsed = navigation.parseHTML(data, self.getIncomingElementSelector());
+                    const parsed = navigation._parseHTML(data, self.getIncomingElementSelector());
                     //if the form was not found in it, let's assume it doesn't contain the form. If not, then maybe
                     if( !parsed.html.length ){
                         return self.triggerOnError(`${self.getIncomingElementSelector()} could not be found in response from the server`, data, form);

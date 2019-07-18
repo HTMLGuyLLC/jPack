@@ -178,7 +178,7 @@ export class FormFromURL extends XHRForm {
             if( typeof data === 'string' ){
                 if( typeof self.getIncomingElementSelector() === 'string' ){
                     //parse the incoming HTML
-                    const parsed = navigation.parseHTML(data, self.getIncomingElementSelector());
+                    const parsed = navigation._parseHTML(data, self.getIncomingElementSelector());
                     //provide the form's HTML in an object containing other details like the route and the full response to insertForm
                     return self.insertForm(parsed, data);
                 }
