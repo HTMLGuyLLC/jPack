@@ -17,6 +17,7 @@ export const request = {
      * @returns {boolean}
      */
     isHttps: function(){
+        this.requireWindowLocation();
         return window.location.protocol === 'https:';
     },
 
@@ -28,6 +29,7 @@ export const request = {
      * @returns {string}
      */
     getDomain: function(){
+        this.requireWindowLocation();
         return window.location.hostname || window.location.host;
     },
 
@@ -39,6 +41,7 @@ export const request = {
      * @returns {string}
      */
     getDomainWithProtocol: function(){
+        this.requireWindowLocation();
         return window.location.origin;
     },
 
@@ -50,6 +53,7 @@ export const request = {
      * @returns {string}
      */
     getURI: function(){
+        this.requireWindowLocation();
         return window.location.pathname;
     },
 
@@ -61,6 +65,7 @@ export const request = {
      * @returns {string}
      */
     getURIWithQueryString: function(){
+        this.requireWindowLocation();
         return window.location.pathname + window.location.search;
     },
 
@@ -72,6 +77,7 @@ export const request = {
      * @returns {string}
      */
     getFullURL: function(){
+        this.requireWindowLocation();
         return window.location.href;
     },
 
@@ -86,5 +92,12 @@ export const request = {
      */
     appendSlash: function(url = ''){
         return url[url.length-1] !== '/' ? url+'/' : url;
+    },
+
+    /**
+     * Check for required window.location
+     */
+    requireWindowLocation: function(){
+        if( typeof window.location === "undefined" || !window.location ) throw `Window.Location is required for jpack.request`;
     },
 };
