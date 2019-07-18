@@ -253,7 +253,7 @@ export const navigation = {
 
         axios.get(url).then(function (response) {
             self.hideLoader();
-            self._replacePageContent(response.data, url, incomingElementSelector, replaceElement, pushState, current_route, data, onload);
+            self._replacePageContent(response.data, url, incomingElementSelector, replaceElementSelector, pushState, current_route, data, onload);
         }).catch(function (error) {
             self.hideLoader();
 
