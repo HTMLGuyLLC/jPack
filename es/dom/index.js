@@ -102,12 +102,9 @@ export const dom = {
     replaceElWithHTML: function(el, html, error_if_not_found = false){
         if( typeof html !== 'string' ) throw `${html} must be a string`;
 
-        const foundEl = this.getElement(el);
+        const foundEl = this.getElement(el, error_if_not_found);
 
-        if( !el ){
-            if( error_if_not_found ) throw `Could not find "${el}"`;
-            return null;
-        }
+        if( !el ) return null;
 
         //create element from HTML
         let newEl = (new DOMParser()).parseFromString(html, "text/html");
@@ -134,7 +131,6 @@ export const dom = {
         el = this.getElement(el, error_if_not_found, error_on_multiple);
 
         if( el === null ){
-            if( error_if_not_found ) throw `Could not find "${el}"`;
             return false;
         }
 

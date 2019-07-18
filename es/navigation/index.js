@@ -601,30 +601,32 @@ export const navigation = {
      *
      * @param html
      * @param url
-     * @param incoming_el
-     * @param replace_el
+     * @param incoming_el_selector
+     * @param replace_el_selector
      * @param push_state
      * @param current_route
      * @param data
      * @param one_time_callback
      */
-    _replacePageContent(html, url, incoming_el, replace_el, push_state = true, current_route = null, data = {}, one_time_callback = null) {
+    _replacePageContent(html, url, incoming_el_selector, replace_el_selector, push_state = true, current_route = null, data = {}, one_time_callback = null) {
         const self = this;
 
         //defaults
-        incoming_el = typeof incoming_el === "undefined" ? this.getIncomingElement() : incoming_el;
-        replace_el = typeof replace_el === "undefined" ? this.getReplaceElement() : replace_el;
+        incoming_el_selector = typeof incoming_el_selector === "undefined" ? this.getIncomingElement() : incoming_el_selector;
+        replace_el_selector = typeof replace_el_selector === "undefined" ? this.getReplaceElement() : replace_el_selector;
 
         //validate incoming data
         if (typeof url !== 'string') throw `Provided url (${url}) must be a string`;
-        if (typeof incoming_el !== 'string') throw `incoming_el (${incoming_el}) must be a string`;
-        if (typeof replace_el !== 'string') throw `replace_el (${replace_el}) must be a string`;
+        if (typeof incoming_el_selector !== 'string') throw `incoming_el_selector (${incoming_el_selector}) must be a string`;
+        if (typeof replace_el_selector !== 'string') throw `replace_el_selector (${replace_el_selector}) must be a string`;
+
+        const replace_el = dom.getElement(replace_el_selector, true); //error if not found
 
         //trigger the unload callbacks
-        self._triggerUnload(dom.getElement(replace_el), replace_el, current_route, data);
+        self._triggerUnload(replace_el, replace_el_selector, current_route, data);
 
         //parse the response to grab anything that we need (title, meta, content, route, etc)
-        var parsed = self._parseHTML(html, incoming_el);
+        var parsed = self._parseHTML(html, incoming_el_selector);
 
         //if there is HTML to put on the page
         if (parsed.html.length) {
@@ -654,20 +656,20 @@ export const navigation = {
             const new_content = dom.replaceElWithHTML(replace_el, parsed.html);
 
             //trigger nav complete event
-            self._triggerOnload(new_content, incoming_el, replace_el, parsed.route, data);
+            self._triggerOnload(new_content, incoming_el_selector, replace_el_selector, parsed.route, data);
 
             //if a callback was provided, run it and provide the parent element
             if (typeof one_time_callback === 'function') {
-                one_time_callback(new_content, incoming_el, replace_el, current_route, data);
+                one_time_callback(new_content, incoming_el_selector, replace_el_selector, current_route, data);
             }
 
             //add to history (if enabled)
             this._addHistoryItem(url, parsed.route);
 
-            //if the replace_el is the same as getReplaceElement(),
-            // then it should be updated to whatever the incoming_el is because it no longer exists
-            if (self.getReplaceElement() !== replace_el) {
-                self.setReplaceElement(incoming_el);
+            //if the replace_el_selector is not the same as getReplaceElement(),
+            // then it should be updated to whatever the incoming_el_selector is because it no longer exists
+            if (self.getReplaceElement() !== replace_el_selector) {
+                self.setReplaceElement(incoming_el_selector);
             }
         }
 
