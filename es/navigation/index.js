@@ -547,7 +547,7 @@ export const navigation = {
      */
     _triggerOnBeforeRequest: function (el, el_selector, incoming_selector, route, data) {
         let prevent_request = false;
-        this._onUnloadCallbacks.forEach(function(callback){
+        this._onBeforeRequestCallbacks.forEach(function(callback){
             //run the callback and get the result
             const result = callback(el, data, {
                 selector:el_selector,
