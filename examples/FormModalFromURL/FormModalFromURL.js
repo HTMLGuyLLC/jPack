@@ -107,7 +107,7 @@ export class FormModalFromURL extends FormFromURL{
             self.attachSubmitHandler(form);
 
             //trigger onload again (you can pas a param to say it's the second time if you want
-            self.triggerOnload(form);
+            self._triggerOnload(form);
 
             return;
         }
@@ -123,7 +123,7 @@ export class FormModalFromURL extends FormFromURL{
                 self.attachSubmitHandler(form);
 
                 //run the onload callback now that the form is there
-                self.triggerOnload(form);
+                self._triggerOnload(form);
             }
         };
 
