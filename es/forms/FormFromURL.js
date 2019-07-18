@@ -240,7 +240,7 @@ export class FormFromURL extends XHRForm {
         this.attachSubmitHandler(form);
 
         //run the onload callback now that the form is there
-        this.triggerOnload(form);
+        this._triggerOnload(form);
 
         return el;
     }
@@ -273,7 +273,7 @@ export class FormFromURL extends XHRForm {
     /**
      * @param form
      */
-    triggerOnload(form){
+    _triggerOnload(form){
         if(typeof this._onload === "undefined" ) return false;
 
         this._onload.forEach(function(onload){

@@ -311,26 +311,32 @@ navigation.load('/my-url', {
 [back to top](#whatsincluded) <br><br>
 <i>Adds an on-submit listener and sends the form values using XHR with callbacks for success/failure. Automatically prevents the user from submitting the form several times at once. It must finish processing before it can be submitted again.</i><br><br>
 
-Method/Property | Params (name:type) | Return | Notes
+Primary Methods | Params (name:type) | Return | Notes
 --- | --- | --- | ---
 constructor|form:Element,options:object |self|
+attachSubmitHandler|form:mixed|self|attaches the event listener to on submit of the passed form
+validate|form:Element|bool|passes the form to the validate callback and returns the response
+submitForm|form:Element|self|gets URL and method, checks form validity using .validate(), gets values, submits, and kicks off callbacks
+
+Event Methods | Params (name:type) | Return | Callback Params (name:type) | Notes
+--- | --- | --- | --- | ---
+onSuccess|callback:function|self|response:mixed, form:Element|adds an onSuccess callback (you can add as many as you'd like)
+clearOnSuccessCallbacks| |self||
+onError|callback:function|self|error:string, response:mixed, form:Element|adds an onError callback (you can add as many as you'd like)
+clearOnErrorCallbacks| |self||
+setPreSubmitCallback|callback:function|self|form:Element, form_values:string, url:string, method:string|pass a function you want to run right before the server request is sent - return false to prevent submission, return an object with form_values, url, or method if you want to override them
+setValidateCallback|callback:function|is_valid:bool|form:Element|pass a function to validate the form and return true if it's valid, false if it's not. False prevents form submission so you must display errors for the user within here. The default callback uses Bootstrap 4's "was-validated" class to show errors and HTML5's :invalid attribute to validate
+
+Setters/Getters | Params (name:type) | Return | Notes
+--- | --- | --- | ---
 setXHRSubmit|enabled:bool|self|enable/disable the XHR submission of the form
-setSubmitMethod|method:string|self|override the form and provide a method (GET, POST, PATCH)
-getSubmitMethod| |method:string|
 setSubmitURL|url:mixed|self|pass null to use the form's action, function to dynamically generate the URL (receives the form as a param), or string
 getSubmitURL| |url:string|returns whatever was set in the constructor or using setSubmitURL, not the final URL
 getFinalSubmitURL|form:Element|url:string|returns the URL the form will be submitted to after running the function (if it is one) and using all fallbacks
-attachSubmitHandler|form:mixed|self|attaches the event listener to on submit of the passed form
-onSuccess|callback:function|self|adds an onSuccess callback (you can add as many as you'd like)
-clearOnSuccessCallbacks| |self|
-triggerOnSuccess|response:mixed, form:Element|self|runs all onSuccess callbacks and passes the server's response and the form element
-onError|callback:function|self|adds an onError callback (you can add as many as you'd like)
-clearOnErrorCallbacks| |self|
-triggerOnError|error:string, response:mixed, form:Element|self|triggers all onError callbacks and passes the error string, server response, and form Element
-submitForm|form:Element|self|gets URL and method, checks form validity using .validate(), gets values, submits, and kicks off callbacks
+setSubmitMethod|method:string|self|override the form and provide a method (GET, POST, PATCH)
+getSubmitMethod| |method:string|
 getFormValues|form:Element|self|returns data from the form to be submitted - override this if you want to manipulate it first
-setValidateCallback|callback:function|is_valid:bool|pass a function to validate the form and return true if it's valid, false if it's not. False prevents form submission so you must display errors for the user within here. The default callback uses Bootstrap 4's "was-validated" class to show errors and HTML5's :invalid attribute to validate
-validate|form:Element|bool|passes the form to the validate callback and returns the response
+
 
 ##### To use:
 ```javascript
@@ -341,6 +347,10 @@ var remote_form = new XHRForm('form[name="my_form"]', {
         xhrSubmit: true, //wouldn't make a whole lotta sent to use this if this were false lol, but it's here for extending classes and incase you want to toggle it for whatever reason
         submitURL:null, //when null, the form's action will be used (if explicitly defined), otherwise it falls back to the URL the form was retrieved from
         submitMethod:null, //when null, the form's method will be used (if explicitly defined), otherwise it falls back to POST
+        onPreSubmit: function(form, form_values, url, method){ //called right before the request to the server
+            //return false; //you can return false to stop submission
+            return {form_values:form_values, url:url, method:method}; //you can return these if you want to override them (optional)
+        },
         onError: function(error, response, form){ alert(error); }, //although you can add more, you can only pass 1 to start with in the constructor
         onSuccess: function(response, form){ //although you can add more, you can only pass 1 to start with in the constructor 
             if(typeof response.success === "string"){ alert(response.success); }
@@ -385,7 +395,6 @@ getForm| |void|pulls the form from the URL and runs the insertForm method
 insertForm|parsed_content:object, response:mixed, form:Element/null|el:Element|inserts the form into the parent element, attaches the submit handler, triggers onload, and returns the parent element
 onload|callback:function|self|adds a callback function to be run when the form is loaded on the page
 clearOnloadCallbacks| |self|removes all onload callbacks
-triggerOnload|form:Element|self|runs all onload callbacks and passes the form to them
 
 __There are several methods and properties inherited from XHRForm that are not listed here. 
 See [XHRForm](#xhrform) above for those details__
@@ -402,6 +411,10 @@ var remote_form = new FormFromURL('/my-form', {
         xhrSubmit: true, 
         submitURL:null, //when null, the form's action will be used (if explicitly defined), otherwise it falls back to the URL the form was retrieved from
         submitMethod:null, //when null, the form's method will be used (if explicitly defined), otherwise it falls back to POST        
+        onPreSubmit: function(form, form_values, url, method){ //called right before the request to the server
+            //return false; //you can return false to stop submission
+            return {form_values:form_values, url:url, method:method}; //you can return these if you want to override them (optional)
+        },
         onError: function(error, response, form){ alert(error); }, //although you can add more, you can only pass 1 to start with in the constructor
         onSuccess: function(response, form){ //although you can add more, you can only pass 1 to start with in the constructor 
             if(typeof response.success === "string"){ alert(response.success); }

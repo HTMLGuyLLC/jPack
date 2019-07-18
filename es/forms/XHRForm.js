@@ -9,6 +9,10 @@ const XHRFormDefaults = {
     xhrSubmit: true, //submit the form using XHR instead of the default action
     submitURL:null, //will be grabbed from the form's action attribute, or fallback to the URL the form was retrieved from
     submitMethod:null, //will be grabbed from the form's method attribute, or fallback to "POST"
+    onPreSubmit: function(form, form_values, url, method){ //called right before the request to the server
+        //return false; //you can return false to stop submission
+        return {form_values:form_values, url:url, method:method}; //you can return these if you want to override them (optional)
+    },
     onError: function(error, response, form){ alert(error); }, //called when the form is submitted and fails
     onSuccess: function(response, form){ //called when the form is submitted successfully
         if(typeof response.success === "string"){ alert(response.success); }
@@ -42,10 +46,10 @@ export class XHRForm {
      * @param form
      * @param options
      */
-    constructor(form, options = {}){
+    constructor(form, options = {}) {
 
         //if options are undefined, set them
-        if( typeof options !== "object" || options === null ) throw `${options} must be an object`;
+        if (typeof options !== "object" || options === null) throw `${options} must be an object`;
 
         //extend defaults with provided options
         options = {...XHRFormDefaults, ...options};
@@ -53,6 +57,7 @@ export class XHRForm {
         this.setForm(form);
         this.setValidateCallback(options.validateForm);
         this.setXHRSubmit(options.xhrSubmit);
+        this.setPreSubmitCallback(options.onPreSubmit);
         this.setSubmitMethod(options.submitMethod);
         this.setSubmitURL(options.submitURL);
         this.onSuccess(options.onSuccess);
@@ -67,6 +72,15 @@ export class XHRForm {
     setValidateCallback(callback){
         if( typeof callback !== "function" ) throw `${callback} must be a function`;
         this._validateCallback = callback;
+        return this;
+    }
+
+    /**
+     * Attach a pre-submit handler (only one allowed)
+     */
+    setPreSubmitCallback(callback){
+        if( typeof callback !== 'function' && callback !== null ) throw `${callback} must be a function or null`;
+        this._preSubmit = callback;
         return this;
     }
 
@@ -241,20 +255,6 @@ export class XHRForm {
     }
 
     /**
-     * Triggers all onSuccess callbacks
-     *
-     * @param response
-     * @param form
-     */
-    triggerOnSuccess(response, form){
-        if(typeof this._onSuccess === "undefined" ) return false;
-        this._onSuccess.forEach(function(onSuccess){
-            onSuccess(response, form);
-        });
-        return this;
-    }
-
-    /**
      * Add a callback function to run when the form is submitted successfully
      *
      * @param callback
@@ -277,6 +277,20 @@ export class XHRForm {
     }
 
     /**
+     * Triggers all onSuccess callbacks
+     *
+     * @param response
+     * @param form
+     */
+    _triggerOnSuccess(response, form){
+        if(typeof this._onSuccess === "undefined" ) return false;
+        this._onSuccess.forEach(function(onSuccess){
+            onSuccess(response, form);
+        });
+        return this;
+    }
+
+    /**
      * Triggers the onError callbacks
      *
      * @param error
@@ -284,7 +298,7 @@ export class XHRForm {
      * @param form
      * @returns {XHRForm}
      */
-    triggerOnError(error, response, form){
+    _triggerOnError(error, response, form){
         if(typeof this._onError === "undefined" ) return false;
         this._onError.forEach(function(onError){
             onError(error, response, form);
@@ -345,10 +359,19 @@ export class XHRForm {
         navigation.showLoader();
 
         //get form values
-        const form_values = Array.from(
+        let form_values = Array.from(
             this.getFormValues(form),
             e => e.map(encodeURIComponent).join('=')
         ).join('&');
+
+        //run the preSubmit callback (if it exists), and stop if it returns false
+        if( typeof this._preSubmit === 'function' ) {
+            let result = this._preSubmit(form, form_values, url, method);
+            if (typeof result === 'boolean' && !result) return false;
+            if (typeof result === 'object' && result.url) url = result.url;
+            if (typeof result === 'object' && result.method) method = result.method;
+            if (typeof result === 'object' && result.form_values) form_values = result.form_values;
+        }
 
         axios({
             url: url,
@@ -371,7 +394,7 @@ export class XHRForm {
                     const parsed = navigation._parseHTML(data, self.getIncomingElementSelector());
                     //if the form was not found in it, let's assume it doesn't contain the form. If not, then maybe
                     if( !parsed.html.length ){
-                        return self.triggerOnError(`${self.getIncomingElementSelector()} could not be found in response from the server`, data, form);
+                        return self._triggerOnError(`${self.getIncomingElementSelector()} could not be found in response from the server`, data, form);
                     }
                     //provide the form's HTML in an object containing other details like the route and the full response to insertForm
                     return self.insertForm(parsed, data, form);
@@ -387,16 +410,18 @@ export class XHRForm {
 
                 //if it contains an error message, trigger the callback
                 if( data.error ){
-                    return self.triggerOnError(data.error, data, form);
+                    return self._triggerOnError(data.error, data, form);
                 }
 
                 //if it doesn't APPEAR to be the form again, or an error, let's call it a success
-                return self.triggerOnSuccess(data, form)
+                return self._triggerOnSuccess(data, form)
             }
         })
         .catch(function (error) {
             navigation.hideLoader();
             self._processing = false;
+            if( typeof error === 'object' && error.isAxiosError ) error = error.response.statusText;
+            self._triggerOnError(error, data, form);
             throw error;
         });
 
