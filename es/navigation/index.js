@@ -633,7 +633,9 @@ export const navigation = {
 
             //remove all meta tags and replace from new page
             dom.remove('meta');
-            document.head.append(parsed.metas);
+            parsed.metas.forEach(function(meta){
+                document.head.append(meta.outerHTML);
+            });
 
             //add the canonical link
             // - possibly other tags will need to be whitelisted in the future.
@@ -713,7 +715,7 @@ export const navigation = {
         title = title ? title.innerText : null;
 
         //get any meta tags
-        var metas = doc.head.getElementsByTagName('meta');
+        var metas = Array.from(doc.head.getElementsByTagName('meta'));
         //get the canonical link
         var links = doc.querySelectorAll('link[rel="canonical"]');
         //get body classes
