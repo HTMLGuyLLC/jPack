@@ -634,7 +634,7 @@ export const navigation = {
             //remove all meta tags and replace from new page
             dom.remove('meta');
             parsed.metas.forEach(function(meta){
-                document.head.append(meta.outerHTML);
+                document.head.append(meta);
             });
 
             //add the canonical link
