@@ -449,7 +449,7 @@ Your javascript
 ```javascript
 import {FormFromURL} from '@htmlguyllc/jpack/es/forms'; 
 new FormFromURL('/email-form', {
-    insertIntoElement: 'body.form-container',
+    insertIntoElement: '.form-container',
 }).getForm();
 ```
 Your HTML
