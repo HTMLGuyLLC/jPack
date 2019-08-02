@@ -443,7 +443,7 @@ remote_form.getForm();
 <i>
 - Success/failure messages will be shown in an alert
 - HTML5/browser validation is done on the required field prior to submit
-
+</i>
 Your javascript
 ```javascript
 import {FormFromURL} from '@htmlguyllc/jpack/es/forms'; 
