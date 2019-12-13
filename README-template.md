@@ -529,19 +529,13 @@ The easy way:
 Create an object named $site with values from your server (prior to including jpack) 
 ```php
 <?php
-    $user = []; //get user from database/API
+    $site = []; //get site from database/API
 ?>
 <script>
-const $user = {
-    id: <?php echo $user['id']; ?>,
-    fname: "<?php echo $user['fname']; ?>",
-    //..
-    permissions: JSON.parse("<?php echo json_encode($user['permissions']); ?>"),
-    additionalData: JSON.parse("<?php echo json_encode([
-        'user_type'=>$user['user_type'],
-        //whatever else you might want to pass
-    ]); ?>"),
-    //..
+const $site = {
+    id: <?php echo $site['id']; ?>,
+    name: "<?php echo $site['name']; ?>",
+    config: JSON.parse("<?php echo json_encode($site['config']); ?>"),
 };
 </script>
 ```
