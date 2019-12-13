@@ -344,7 +344,7 @@ import {XHRForm} from '@htmlguyllc/jpack/es/forms';
 
 //shown with defaults
 var remote_form = new XHRForm('form[name="my_form"]', {
-        xhrSubmit: true, //wouldn't make a whole lotta sent to use this if this were false lol, but it's here for extending classes and incase you want to toggle it for whatever reason
+        xhrSubmit: true, //wouldn't make a whole lotta sense to use this if this were false lol, but it's here for extending classes and incase you want to toggle it for whatever reason
         submitURL:null, //when null, the form's action will be used (if explicitly defined), otherwise it falls back to the URL the form was retrieved from
         submitMethod:null, //when null, the form's method will be used (if explicitly defined), otherwise it falls back to POST
         onPreSubmit: function(form, form_values, url, method){ //called right before the request to the server
