@@ -1,8 +1,3 @@
-jPack
----
-![BuildStatus](https://img.shields.io/badge/Build-Passing-brightgreen.svg "Building Status")
-
-
 # jPack
 jPack is a vanilla javascript library of components, classes, plugin wrappers, and utilities designed to make building custom websites and web applications simpler.
 
@@ -13,6 +8,10 @@ Much of what is included here is stuff that I've written several times, in sever
 The goal of this library is to allow me (and you, now that it's open source) to integrate slim, mostly dependency-free, components as-needed with more specific use-cases than what is currently offered elsewhere.
 
 ...where else can you get a component to grab a form from another page and stick it on the current one with XHR and XHR submission in [4 lines of custom JS](#4lineofjs)?   
+
+Build Status
+---
+![BuildStatus](https://img.shields.io/badge/Build-Passing-brightgreen.svg "Building Status")
 
 <h1 id="whatsincluded">What's Included</h1>
 
