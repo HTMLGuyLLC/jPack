@@ -46,8 +46,8 @@
     "parallel-webpack": "^2.4.0",
     "pre-commit": "^1.2.2",
     "puppeteer": "^1.18.1",
-    "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.6"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "jest": {
     "coverageReporters": [
